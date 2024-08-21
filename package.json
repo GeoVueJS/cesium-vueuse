@@ -13,10 +13,10 @@
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
     "taze": "taze -w -r major minor patch",
-    "=====================": "",
-    "build:lib": "tsx ./internals/build",
     "bumpp": "bumpp -r",
-    "publish": "pnpm publish -r"
+    "=====================": "",
+    "prepublish": "tsx ./internals/build",
+    "publish:ci": "pnpm publish -r"
   },
   "dependencies": {
     "@cesium-vueuse/core": "workspace:*",
