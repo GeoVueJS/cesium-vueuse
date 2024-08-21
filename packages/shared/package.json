@@ -6,6 +6,9 @@
     "bundle": true
   },
   "description": "",
+  "repository": {
+    "url": "https://github.com/vuegis/cesium-vueuse"
+  },
   "main": "index",
   "module": "index",
   "files": [
