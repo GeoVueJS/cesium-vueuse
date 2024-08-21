@@ -3,6 +3,7 @@
   "type": "module",
   "version": "1.0.1-beta.2",
   "private": true,
+  "packageManager": "pnpm@9.7.1",
   "scripts": {
     "docs:dev": "vitepress dev packages",
     "docs:build": "vitepress build packages",
@@ -50,6 +51,7 @@
     "magic-string": "^0.30.11",
     "markdown-it-vitepress-demo": "^0.2.2",
     "npm-run-all2": "^6.2.2",
+    "pnpm": "^9.7.1",
     "prettier": "^3.3.3",
     "rollup": "^4.21.0",
     "rollup-plugin-esbuild": "^6.1.1",
