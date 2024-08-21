@@ -17,7 +17,7 @@
     "bumpp": "bumpp -r",
     "=====================": "",
     "prepublish": "tsx ./internals/build",
-    "publish:ci": "pnpm publish -r --no-git-checks"
+    "publish:ci": "pnpm publish -r --no-git-checks --access public"
   },
   "dependencies": {
     "@cesium-vueuse/core": "workspace:*",
