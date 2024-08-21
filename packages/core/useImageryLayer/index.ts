@@ -46,7 +46,7 @@ export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
 ): ComputedRef<T | undefined>;
 
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
-  entities?: MaybeRefOrAsyncGetter<Array<ImageryLayer.ConstructorOptions | T | undefined>>,
+  layers?: MaybeRefOrAsyncGetter<Array<ImageryLayer.ConstructorOptions | T | undefined>>,
   options?: UseImageryLayerOptions
 ): ComputedRef<(T | undefined)[]>;
 
@@ -57,7 +57,7 @@ export function useImageryLayer<T extends ImageryLayer>(
   const {
     destroyOnRemove,
     collection,
-    isActive,
+    isActive = true,
     evaluating,
   } = options;
 
@@ -85,11 +85,11 @@ export function useImageryLayer<T extends ImageryLayer>(
     const _isActive = toValue(isActive);
     if (_isActive) {
       const list = Array.isArray(result.value) ? [...result.value] : [result.value];
-      const _collection = collection ?? viewer.value.imageryLayers;
-      list.forEach(item => (item && _collection.add(item)));
+      const _collection = collection ?? viewer.value?.imageryLayers;
+      list.forEach(item => (item && _collection?.add(item)));
       onCleanup(() => {
         const destroy = toValue(destroyOnRemove);
-        list.forEach(item => item && _collection.remove(item, destroy));
+        list.forEach(item => item && _collection?.remove(item, destroy));
       });
     }
   });

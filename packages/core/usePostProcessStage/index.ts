@@ -29,12 +29,12 @@ export interface UsePostProcessStageOptions {
 }
 
 export function usePostProcessStage<T extends PostProcessStage = PostProcessStage>(
-  entity?: MaybeRefOrAsyncGetter<T | undefined>,
+  stage?: MaybeRefOrAsyncGetter<T | undefined>,
   options?: UsePostProcessStageOptions
 ): ComputedRef<T | undefined>;
 
 export function usePostProcessStage<T extends PostProcessStage = PostProcessStage>(
-  entities?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
+  stages?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
   options?: UsePostProcessStageOptions
 ): ComputedRef<(T | undefined)[]>;
 
@@ -44,7 +44,7 @@ export function usePostProcessStage<T extends PostProcessStage>(
 ) {
   const {
     collection,
-    isActive,
+    isActive = true,
     evaluating,
   } = options;
 

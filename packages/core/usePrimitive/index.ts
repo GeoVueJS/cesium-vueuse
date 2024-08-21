@@ -33,12 +33,12 @@ export interface UsePrimitiveOptions {
 }
 
 export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
-  entity?: MaybeRefOrAsyncGetter<T | undefined>,
+  primitive?: MaybeRefOrAsyncGetter<T | undefined>,
   options?: UsePrimitiveOptions
 ): ComputedRef<T | undefined>;
 
 export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
-  entities?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
+  primitives?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
   options?: UsePrimitiveOptions
 ): ComputedRef<(T | undefined)[]>;
 
@@ -48,7 +48,7 @@ export function usePrimitive<T extends Primitive>(
 ) {
   const {
     collection,
-    isActive,
+    isActive = true,
     evaluating,
   } = options;
 
@@ -66,11 +66,11 @@ export function usePrimitive<T extends Primitive>(
     const _isActive = toValue(isActive);
     if (_isActive) {
       const list = Array.isArray(result.value) ? [...result.value] : [result.value];
-      const _collection = collection === 'ground' ? viewer.value.scene.groundPrimitives : (collection ?? viewer.value.scene.primitives);
+      const _collection = collection === 'ground' ? viewer.value?.scene.groundPrimitives : (collection ?? viewer.value?.scene.primitives);
 
-      list.forEach(item => (item && _collection.add(item)));
+      list.forEach(item => (item && _collection?.add(item)));
       onCleanup(() => {
-        list.forEach(item => item && _collection.remove(item));
+        list.forEach(item => item && _collection?.remove(item));
       });
     }
   });

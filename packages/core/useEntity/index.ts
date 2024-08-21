@@ -49,7 +49,7 @@ export function useEntity<T extends Entity>(
 ) {
   const {
     collection,
-    isActive,
+    isActive = true,
     evaluating,
   } = options;
 

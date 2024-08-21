@@ -23,10 +23,10 @@ export function useEntityCollection(collection?: MaybeRefOrGetter<EntityCollecti
   });
 
   function add<T extends Entity>(entity: T): T {
-    return entityCollection.value.add(entity) as any;
+    return entityCollection.value?.add(entity) as any;
   }
   function remove(entity: Entity): boolean {
-    return entityCollection.value.remove(entity);
+    return entityCollection.value?.remove(entity);
   }
   const effects = useCollectionScope(add, remove, []);
 

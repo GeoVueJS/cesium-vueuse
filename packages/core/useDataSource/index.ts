@@ -43,7 +43,7 @@ export function useDataSource<T extends CesiumDataSource = CesiumDataSource>(
 ): ComputedRef<T | undefined>;
 
 export function useDataSource<T extends CesiumDataSource = CesiumDataSource>(
-  entities?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
+  dataSources?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
   options?: UseDataSourceOptions
 ): ComputedRef<(T | undefined)[]>;
 
@@ -54,7 +54,7 @@ export function useDataSource<T extends CesiumDataSource>(
   const {
     destroyOnRemove,
     collection,
-    isActive,
+    isActive = true,
     evaluating,
   } = options;
 
@@ -72,11 +72,11 @@ export function useDataSource<T extends CesiumDataSource>(
     const _isActive = toValue(isActive);
     if (_isActive) {
       const list = Array.isArray(result.value) ? [...result.value] : [result.value];
-      const _collection = collection ?? viewer.value.dataSources;
-      list.forEach(item => (item && _collection.add(item)));
+      const _collection = collection ?? viewer.value?.dataSources;
+      list.forEach(item => (item && _collection?.add(item)));
       onCleanup(() => {
         const destroy = toValue(destroyOnRemove);
-        list.forEach(item => item && _collection.remove(item, destroy));
+        list.forEach(item => item && _collection?.remove(item, destroy));
       });
     }
   });
