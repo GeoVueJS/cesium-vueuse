@@ -1,11 +1,11 @@
 {
   "name": "@cesium-vueuse/core",
   "version": "0.0.1",
+  "buildInfo": {
+    "name": "CesiumVueuseCore",
+    "bundle": true
+  },
   "description": "",
-  "sideEffects": [
-    "./**/*.css",
-    "./**/*.scss"
-  ],
   "main": "index",
   "module": "index",
   "files": [
@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@cesium-vueuse/shared": "workspace:*",
-    "@vueuse/core": "^10.11.0",
+    "@vueuse/core": "^11.0.1",
     "cesium": "^1.120.0",
-    "vue": "^3.4.36"
+    "vue": "^3.4.38"
   }
 }

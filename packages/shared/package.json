@@ -2,14 +2,10 @@
   "name": "@cesium-vueuse/shared",
   "version": "1.0.0-beta.30",
   "buildInfo": {
-    "name": "X3dCore",
-    "target": "lib"
+    "name": "CesiumVueuseShared",
+    "bundle": true
   },
   "description": "",
-  "sideEffects": [
-    "./**/*.css",
-    "./**/*.scss"
-  ],
   "main": "index",
   "module": "index",
   "files": [
@@ -21,11 +17,8 @@
     "types": "./dist/index.d.ts"
   },
   "dependencies": {
-    "@ctrl/tinycolor": "^4.1.0",
-    "@floating-ui/dom": "^1.6.10",
-    "@vueuse/shared": "^10.11.0",
+    "@vueuse/shared": "^11.0.1",
     "cesium": "^1.120.0",
-    "dayjs": "^1.11.12",
-    "gcoord": "^1.0.6"
+    "vue": "^3.4.38"
   }
 }

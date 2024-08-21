@@ -4,7 +4,7 @@ import { ScreenSpaceEventType } from 'cesium';
 import type { GraphicsHandlerCallback, GraphicsPositiondEventType } from './types';
 import type { Cartesian2, KeyboardEventModifier, ScreenSpaceEventHandler, Viewer } from 'cesium';
 
-const POSITIOND_EVENT_TYPE_MAP = {
+const POSITIOND_EVENT_TYPE_MAP: Record<ScreenSpaceEventType, GraphicsPositiondEventType | undefined> = {
   [ScreenSpaceEventType.LEFT_DOWN]: 'LEFT_DOWN',
   [ScreenSpaceEventType.LEFT_UP]: 'LEFT_UP',
   [ScreenSpaceEventType.LEFT_CLICK]: 'LEFT_CLICK',
@@ -15,6 +15,11 @@ const POSITIOND_EVENT_TYPE_MAP = {
   [ScreenSpaceEventType.MIDDLE_DOWN]: 'MIDDLE_DOWN',
   [ScreenSpaceEventType.MIDDLE_UP]: 'MIDDLE_UP',
   [ScreenSpaceEventType.MIDDLE_CLICK]: 'MIDDLE_CLICK',
+  [ScreenSpaceEventType.MOUSE_MOVE]: undefined,
+  [ScreenSpaceEventType.WHEEL]: undefined,
+  [ScreenSpaceEventType.PINCH_START]: undefined,
+  [ScreenSpaceEventType.PINCH_END]: undefined,
+  [ScreenSpaceEventType.PINCH_MOVE]: undefined,
 };
 
 /**
@@ -33,11 +38,13 @@ export function createPositiondBind(
   return (type: ScreenSpaceEventType, context?: any) => {
     if (POSITIOND_EVENT_TYPE_MAP[type] && context) {
       const pick = viewer.scene.pick(context.position);
-      pick && callback({
-        type: POSITIOND_EVENT_TYPE_MAP[type],
-        modifier,
-        params: { scene: viewer.scene, context, pick },
-      });
+      if (pick) {
+        callback({
+          type: POSITIOND_EVENT_TYPE_MAP[type],
+          modifier,
+          params: { scene: viewer.scene, context, pick },
+        });
+      }
     }
   };
 }

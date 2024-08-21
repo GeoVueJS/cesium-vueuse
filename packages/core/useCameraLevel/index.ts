@@ -1,5 +1,5 @@
 import { Cartographic } from 'cesium';
-import { readonly, shallowRef, watchEffect } from 'vue';
+import { shallowReadonly, shallowRef, watchEffect } from 'vue';
 
 import { useCesiumEventListener } from '../useCesiumEventListener';
 import { useViewer } from '../useViewer';
@@ -33,6 +33,6 @@ export function useCameraLevel(options?: UseCameraLevelOptions): UseCameraLevelR
   };
 
   return {
-    cartographic: readonly(cartographic),
+    cartographic: shallowReadonly(cartographic),
   };
 }
