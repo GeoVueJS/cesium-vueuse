@@ -1,19 +1,22 @@
 {
   "name": "cesium-vueuse",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "docs:dev": "vitepress dev packages",
     "docs:build": "vitepress build packages",
     "docs:preview": "vitepress preview packages",
-    "build:lib": "tsx ./internals/build",
     "test:unit": "vitest",
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
-    "taze": "taze -w -r major minor patch"
+    "taze": "taze -w -r major minor patch",
+    "=====================": "",
+    "build:lib": "tsx ./internals/build",
+    "bumpp": "bumpp -r",
+    "publish": "pnpm publish -r"
   },
   "dependencies": {
     "@cesium-vueuse/core": "workspace:*",
@@ -38,6 +41,7 @@
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.5.1",
+    "bumpp": "^9.4.0",
     "cypress": "^13.13.3",
     "eslint": "^9.9.0",
     "eslint-plugin-format": "^0.1.2",
