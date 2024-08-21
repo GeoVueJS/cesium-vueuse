@@ -1,0 +1,25 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+    "baseUrl": ".",
+    "paths": {
+      "@cesium-vueuse/core": ["packages/core"]
+    }
+  },
+  "include": [
+    "env.d.ts",
+    "src/**/*.vue",
+    "packages/**/*",
+    "packages/.vitepress/theme/**/*.{vue,ts,tsx,json}",
+    "packages/.vitepress/theme/components.d.ts",
+    "packages/.vitepress/theme/auto-imports.d.ts"
+  ],
+  "exclude": [
+    "**/cache/**",
+    "src/**/__tests__/*",
+    "**/node_modules/**"
+  ]
+}

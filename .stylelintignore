@@ -1,0 +1,11 @@
+**/node_modules
+**/dist
+**/public
+
+**/**.*
+
+!*.vue
+!*.css
+!*.scss
+!*.less
+!*.postcss
