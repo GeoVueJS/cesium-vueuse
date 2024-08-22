@@ -14,7 +14,7 @@ export function useViewer(): Readonly<ShallowRef<Viewer | undefined>> {
   const injectViewer = inject(CREATE_VIEWER_INJECTION_KEY);
   const instanceViewer = instance ? CREATE_VIEWER_COLLECTION.get(instance) : undefined;
 
-  if (!instanceViewer || !injectViewer) {
+  if (!instanceViewer && !injectViewer) {
     console.warn('未检测到viewer实例的相关注入');
   }
   return instanceViewer ? shallowReadonly(instanceViewer)! : injectViewer!;
