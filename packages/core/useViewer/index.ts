@@ -1,4 +1,4 @@
-import { getCurrentInstance, inject, shallowReadonly } from 'vue';
+import { getCurrentInstance, inject } from 'vue';
 
 import { CREATE_VIEWER_COLLECTION, CREATE_VIEWER_INJECTION_KEY } from '../createViewer';
 
@@ -10,12 +10,15 @@ import type { ShallowRef } from 'vue';
  */
 export function useViewer(): Readonly<ShallowRef<Viewer | undefined>> {
   const instance = getCurrentInstance();
-
-  const injectViewer = inject(CREATE_VIEWER_INJECTION_KEY);
   const instanceViewer = instance ? CREATE_VIEWER_COLLECTION.get(instance) : undefined;
-
-  if (!instanceViewer && !injectViewer) {
-    console.warn('未检测到viewer实例的相关注入');
+  if (instanceViewer) {
+    return instanceViewer;
   }
-  return instanceViewer ? shallowReadonly(instanceViewer)! : injectViewer!;
+  else {
+    const injectViewer = inject(CREATE_VIEWER_INJECTION_KEY);
+    if (!injectViewer) {
+      throw new Error('当前组件或祖先级组件中未找到通过createViewer注入的Viewer对象');
+    }
+    return injectViewer;
+  }
 }
