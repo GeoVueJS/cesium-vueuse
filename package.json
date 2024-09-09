@@ -3,6 +3,7 @@
   "type": "module",
   "version": "1.0.1-beta.11",
   "private": true,
+  "description": "Cesium hooks like VueUse api.",
   "repository": {
     "url": "https://github.com/vuegis/cesium-vueuse"
   },
