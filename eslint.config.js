@@ -19,19 +19,6 @@ export default antfu({
     },
   },
   rules: {
-    // ============[import]===========
-    // 导入顺序
-    'import/order': [
-      'warn',
-      {
-        'groups': ['builtin', 'external', 'internal', 'unknown', 'parent', 'sibling', 'index', 'object', 'type'],
-        'newlines-between': 'always',
-        'alphabetize': {
-          order: 'asc',
-          orderImportKind: 'asc',
-        },
-      },
-    ],
     // 同一导入合并为一行
     'import/no-duplicates': 'warn',
     // ts 类型单独一行

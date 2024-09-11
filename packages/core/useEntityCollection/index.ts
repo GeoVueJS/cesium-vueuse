@@ -1,11 +1,11 @@
 import { toValue } from '@vueuse/core';
 import { computed } from 'vue';
 
-import { useCollectionScope } from '../useCollectionScope';
-import { useViewer } from '../useViewer';
-
 import type { MaybeRefOrGetter } from '@vueuse/core';
 import type { Entity, EntityCollection } from 'cesium';
+
+import { useCollectionScope } from '../useCollectionScope';
+import { useViewer } from '../useViewer';
 
 /**
  * UseEntityCollection构造参数

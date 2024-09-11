@@ -3,12 +3,12 @@ import { computedAsync } from '@vueuse/core';
 import { ImageryLayer } from 'cesium';
 import { computed, toValue, watchEffect } from 'vue';
 
-import { useViewer } from '../useViewer';
-
 import type { MaybeRefOrAsyncGetter } from '@cesium-vueuse/shared';
+
 import type { Arrayable } from '@vueuse/core';
 import type { ImageryLayerCollection, ImageryProvider } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
+import { useViewer } from '../useViewer';
 
 function toImageryLayer(layerOrProvider?: ImageryLayer | ImageryProvider): ImageryLayer | undefined {
   return layerOrProvider ? layerOrProvider instanceof ImageryLayer ? layerOrProvider : new ImageryLayer(layerOrProvider) : undefined;

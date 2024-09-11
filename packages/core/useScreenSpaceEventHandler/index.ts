@@ -1,11 +1,11 @@
 import { ScreenSpaceEventHandler, ScreenSpaceEventType } from 'cesium';
 import { computed, readonly, ref, toValue, watchEffect } from 'vue';
 
-import { useViewer } from '../useViewer';
-
 import type { Pausable } from '@vueuse/core';
+
 import type { KeyboardEventModifier } from 'cesium';
 import type { MaybeRefOrGetter } from 'vue';
+import { useViewer } from '../useViewer';
 
 export type InputAction<T extends ScreenSpaceEventType> = {
   [ScreenSpaceEventType.LEFT_DOWN]: ScreenSpaceEventHandler.PositionedEventCallback;

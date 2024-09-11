@@ -1,2 +1,2 @@
-export * from './utils';
 export * from './coord';
+export * from './utils';

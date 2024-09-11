@@ -3,11 +3,11 @@ import { createSharedComposable, throttledRef } from '@vueuse/core';
 import { ScreenSpaceEventType } from 'cesium';
 import { computed, shallowRef } from 'vue';
 
-import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
-import { useViewer } from '../useViewer';
-
 import type { Cartesian2, Cartesian3 } from 'cesium';
 import type { Ref } from 'vue';
+
+import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
+import { useViewer } from '../useViewer';
 
 function _useCesiumMouse(): UseCesiumMouseRetrun {
   const viewer = useViewer();

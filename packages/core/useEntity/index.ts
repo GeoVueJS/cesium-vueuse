@@ -3,12 +3,12 @@ import { computedAsync } from '@vueuse/core';
 import { Entity } from 'cesium';
 import { computed, toValue, watchEffect } from 'vue';
 
-import { useViewer } from '../useViewer';
-
 import type { MaybeRefOrAsyncGetter } from '@cesium-vueuse/shared';
+
 import type { Arrayable } from '@vueuse/core';
 import type { EntityCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
+import { useViewer } from '../useViewer';
 
 function toEntity(entityOrOption?: Entity | Entity.ConstructorOptions): Entity | undefined {
   return entityOrOption ? entityOrOption instanceof Entity ? entityOrOption : new Entity(entityOrOption) : undefined;

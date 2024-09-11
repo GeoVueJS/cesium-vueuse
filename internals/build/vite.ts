@@ -4,10 +4,10 @@ import * as path from 'node:path';
 import { minify } from 'rollup-plugin-esbuild';
 import { build as viteBuild } from 'vite';
 
-import { InternalPluginDts } from '../plugins/plugin-dts';
-import { InternalPluginVue } from '../plugins/plugin-vue';
-
 import type { OutputOptions } from 'rollup';
+import { InternalPluginDts } from '../plugins/plugin-dts';
+
+import { InternalPluginVue } from '../plugins/plugin-vue';
 
 /**
  * Build构造参数

@@ -1,9 +1,9 @@
 import { getCurrentInstance, inject } from 'vue';
 
-import { CREATE_VIEWER_COLLECTION, CREATE_VIEWER_INJECTION_KEY } from '../createViewer';
-
 import type { Viewer } from 'cesium';
+
 import type { ShallowRef } from 'vue';
+import { CREATE_VIEWER_COLLECTION, CREATE_VIEWER_INJECTION_KEY } from '../createViewer';
 
 /**
  * 获取当前组件或祖先级组件通过`createViewer`注入的Viewer对象

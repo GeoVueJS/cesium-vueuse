@@ -1,8 +1,8 @@
 import { computed, readonly, ref, shallowRef, watch } from 'vue';
 
+import type { Ref } from 'vue';
 import { useCesiumEventListener } from '../useCesiumEventListener';
 import { useViewer } from '../useViewer';
-import type { Ref } from 'vue';
 
 export interface UseCesiumFpsRetrun {
   interval: Readonly<Ref<number>>;

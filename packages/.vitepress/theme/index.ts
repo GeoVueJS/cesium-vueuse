@@ -1,9 +1,9 @@
 // https://vitepress.dev/guide/custom-theme
-import 'uno.css';
-import '@unocss/reset/tailwind.css';
-
 import Theme from 'vitepress/theme';
 import { h } from 'vue';
+
+import 'uno.css';
+import '@unocss/reset/tailwind.css';
 
 export default {
   extends: Theme,

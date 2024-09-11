@@ -1,8 +1,8 @@
 import { CallbackProperty, ConstantProperty, CustomDataSource, CzmlDataSource, GeoJsonDataSource, GpxDataSource, KmlDataSource } from 'cesium';
 
-import { isDef, isFunction } from './is';
-
 import type { DataSource, JulianDate, Property } from 'cesium';
+
+import { isDef, isFunction } from './is';
 
 export type CesiumDataSource = CustomDataSource | GeoJsonDataSource | CzmlDataSource | KmlDataSource | GpxDataSource | DataSource;
 

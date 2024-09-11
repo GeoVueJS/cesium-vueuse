@@ -3,10 +3,10 @@ import { useElementSize } from '@vueuse/core';
 import { Cartesian2, EllipsoidGeodesic } from 'cesium';
 import { computed, readonly, ref, toValue } from 'vue';
 
-import { useCesiumEventListener } from '../useCesiumEventListener';
-import { useViewer } from '../useViewer';
-
 import type { MaybeRefOrGetter } from 'vue';
+import { useCesiumEventListener } from '../useCesiumEventListener';
+
+import { useViewer } from '../useViewer';
 
 export interface UseScaleBarOptions {
   maxPixel?: MaybeRefOrGetter<number>;
