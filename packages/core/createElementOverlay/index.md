@@ -1,2 +1,2 @@
-:::: demo src="./demo/demo.vue" title="基础使用"
+:::: demo src="./demo.vue" title="基础使用"
 ::::

@@ -15,17 +15,23 @@ export const CREATE_VIEWER_INJECTION_KEY: InjectionKey<Readonly<ShallowRef<Viewe
 export const CREATE_VIEWER_COLLECTION = new WeakMap<ComponentInternalInstance, Readonly<ShallowRef<Viewer | undefined>>>();
 
 /**
- * 提供一个viewer,在后代组件中通过 {@link useViewer} 进行获取
- * @param viewer - 目标Viewer
+ * Pass in an existing Viewer instance,
+ * which can be accessed by the current component and its descendant components using {@link useViewer}
+ *
+ * When the Viewer instance referenced by this overloaded function becomes invalid, it will not trigger destruction.
  */
 export function createViewer(
   viewer: MaybeRefOrGetter<Viewer>,
 ): Readonly<ShallowRef<Viewer | undefined>>;
 
 /**
- * 初始化一个viewer,在后代组件中通过 {@link useViewer} 进行获取
- * @param element - 同 {@link Viewer}初始化函数
- * @param options - 同 {@link Viewer.ConstructorOptions}
+ * Initialize a Viewer instance, which can be accessed by the
+ * current component and its descendant components using {@link useViewer}.
+ *
+ * The Viewer instance created by this overloaded function will automatically be destroyed when it becomes invalid.
+ *
+ * @param element - The DOM element or ID that will contain the widget
+ * @param options - @see {Viewer.ConstructorOptions}
  */
 export function createViewer(
   element?: MaybeComputedElementRef,

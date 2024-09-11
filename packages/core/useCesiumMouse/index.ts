@@ -9,43 +9,47 @@ import type { Ref } from 'vue';
 import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
 import { useViewer } from '../useViewer';
 
-function _useCesiumMouse(): UseCesiumMouseRetrun {
-  const viewer = useViewer();
-
-  const _coordinate = shallowRef<Cartesian2>();
-
-  useScreenSpaceEventHandler({
-    type: ScreenSpaceEventType.MOUSE_MOVE,
-    inputAction: (ctx) => {
-      _coordinate.value = ctx.endPosition;
-    },
-  });
-
-  const coordinate = throttledRef(_coordinate, 16, false, true);
-
-  const position = computed(() => {
-    return coordinate.value ? canvasCoordToCartesian(coordinate.value, viewer.value.scene) : undefined;
-  });
-
-  return {
-    coordinate,
-    position,
-  };
-}
 export interface UseCesiumMouseRetrun {
   /**
-   * 鼠标在Cesium画布的坐标
+   * Mouse coordinates on Cesium canvas
    */
   coordinate?: Readonly<Ref<Cartesian2 | undefined>>;
   /**
-   * 鼠标在Cesium场景中的坐标对应的笛卡尔坐标
+   * The Mouse Cartesian coordinates on Cesium canvas
    */
   position?: Readonly<Ref<Cartesian3 | undefined>>;
 }
 
 /**
- * Cesium鼠标位置
- *
- * @returns 返回Cesium鼠标相关信息对象
+ * The base function passed into createSharedComposable to create useCesiumMouse
+ * @internal
+ */
+function _useCesiumMouse(): UseCesiumMouseRetrun {
+  const viewer = useViewer();
+
+  const coordinate = shallowRef<Cartesian2>();
+  const coordinateThrottled = throttledRef<Cartesian2 | undefined>(coordinate, 16, false, true);
+
+  useScreenSpaceEventHandler({
+    type: ScreenSpaceEventType.MOUSE_MOVE,
+    inputAction: (ctx) => {
+      coordinate.value = ctx.endPosition;
+    },
+  });
+
+  const position = computed(() => {
+    if (viewer.value?.scene) {
+      return coordinate.value ? canvasCoordToCartesian(coordinate.value, viewer.value.scene) : undefined;
+    }
+  });
+
+  return {
+    coordinate: coordinateThrottled,
+    position,
+  };
+}
+
+/**
+ * Reactive Mouse coordinates
  */
 export const useCesiumMouse: () => UseCesiumMouseRetrun = createSharedComposable(_useCesiumMouse);

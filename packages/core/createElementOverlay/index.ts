@@ -12,45 +12,57 @@ import { useViewer } from '../useViewer';
 
 export interface CreateElementOverlayOptions {
   /**
-   * 目标元素水平参照
+   * Horizontal origin of the target element
    * @default `center`
    */
   horizontalOrigin?: MaybeRefOrGetter<'center' | 'left' | 'right' | undefined>;
 
   /**
-   * 目标元素垂直参照
+   * Vertical origin of the target element
    * @default `bottom`
    */
   verticalOrigin?: MaybeRefOrGetter<'center' | 'bottom' | 'top' | undefined>;
 
   /**
-   * 像素偏移量
+   * Pixel offset presented by the target element
    * @default {x:0,y:0}
    */
   offset?: MaybeRefOrGetter<{ x: number; y: number } | undefined>;
 
   /**
-   * 位置计算基准
-   * true：参照浏览器视窗,false: 参照cesium画布
+   * The reference element for calculating the position of the target element
+   *  - `true` refer to the browser viewport
+   *  - `false` refer to the Cesium canvas
    * @default false
    */
   referenceWindow?: MaybeRefOrGetter<boolean>;
 
   /**
-   * 位置刷新时间间隔 ms
+   * Throttling interval when refreshing position
    * @default 8
    */
   ms?: number;
 }
 
 export interface CreateElementOverlayRetrun {
+  /**
+   * Calculation result of the target element's horizontal direction
+   */
   x: ComputedRef<number>;
+
+  /**
+   * Calculation result of the target element's vertical direction
+   */
   y: ComputedRef<number>;
+
+  /**
+   * Calculation `css` of the target element
+   */
   style: ComputedRef<{ left: string; top: string }>;
 }
 
 /**
- * 创建Cesium一个元素覆盖层
+ * Create a Cesium HtmlElement Overlay
  */
 export function createElementOverlay(
   target?: MaybeComputedElementRef,
@@ -136,8 +148,8 @@ export function createElementOverlay(
   });
 
   return {
-    style,
     x,
     y,
+    style,
   };
 }
