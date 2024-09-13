@@ -3,14 +3,14 @@ import svgo from 'svgo';
 export interface SvgTransformOptions {
   /**
    * 若图标为多色图标，是否启用多css颜色变量注入
-   * @defaultValue true
+   * @default true
    */
   multiColor?: boolean;
 
   /**
    * css颜色变量注入的前缀，仅在multiColor===true时生效
    * 将生成 --icon-${varPrefix}-color-${index}
-   * @defaultValue custom
+   * @default custom
    */
   varPrefix?: string;
 }

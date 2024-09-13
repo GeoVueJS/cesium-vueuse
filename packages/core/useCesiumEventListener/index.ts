@@ -6,11 +6,16 @@ import type { MaybeRefOrGetter } from 'vue';
 
 export interface UseCesiumEventListenerOptions {
   /**
-   * 初始化时是否暂停
+   * Default value of pause
    */
   pause?: boolean;
 }
 
+/**
+ * Easily use the `addEventListener` in `Cesium.Event` instances,
+ * when the dependent data changes or the component is unmounted,
+ * the listener function will automatically reload or destroy.
+ */
 export function useCesiumEventListener<T extends FunctionArgs<any[]>>(
   event: MaybeRefOrGetter<Event<T> | undefined>,
   listener: T,

@@ -13,20 +13,13 @@ export type CesiumDataSource = DataSource | CustomDataSource | CzmlDataSource | 
 
 export interface UseDataSourceOptions {
   /**
-   * 传递给移除函数的第二项参数
-   *
-   * `dataSources.remove(dataSource,destroyOnRemove)`
-   */
-  destroyOnRemove?: boolean;
-
-  /**
-   * 添加到的集合容器
+   *  The collection of DataSource to be added
    * @default useViewer().value.dataSources
    */
   collection?: DataSourceCollection;
 
   /**
-   * 是否激活
+   * default value of `isActive`
    * @defalut true
    */
   isActive?: MaybeRefOrGetter<boolean>;
@@ -35,20 +28,38 @@ export interface UseDataSourceOptions {
    * Ref passed to receive the updated of async evaluation
    */
   evaluating?: Ref<boolean>;
+
+  /**
+   * The second parameter passed to the `remove` function
+   *
+   * `dataSources.remove(dataSource,destroyOnRemove)`
+   */
+  destroyOnRemove?: boolean;
+
 }
 
+/**
+ * Add `DataSource` to the `DataSourceCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `DataSource`
+ *
+ * overLoaded1: The dataSoure parameter supports passing in a single dataSource
+ */
 export function useDataSource<T extends CesiumDataSource = CesiumDataSource>(
-  entity?: MaybeRefOrAsyncGetter<T | undefined>,
+  dataSource?: MaybeRefOrAsyncGetter<T | undefined>,
   options?: UseDataSourceOptions
 ): ComputedRef<T | undefined>;
 
+/**
+ * Add `DataSource` to the `DataSourceCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `DataSource`
+ *
+ * overLoaded2: The dataSoure parameter supports passing in an array of `dataSource`.
+ */
 export function useDataSource<T extends CesiumDataSource = CesiumDataSource>(
-  dataSources?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
+  dataSources?: MaybeRefOrAsyncGetter<T[] | undefined>,
   options?: UseDataSourceOptions
-): ComputedRef<(T | undefined)[]>;
+): ComputedRef<T[] | undefined>;
 
 export function useDataSource<T extends CesiumDataSource>(
-  data?: MaybeRefOrAsyncGetter<Arrayable<T | undefined>>,
+  dataSources?: MaybeRefOrAsyncGetter<Arrayable<T | undefined>>,
   options: UseDataSourceOptions = {},
 ) {
   const {
@@ -59,7 +70,7 @@ export function useDataSource<T extends CesiumDataSource>(
   } = options;
 
   const result = computedAsync(
-    () => toAwaitedValue(data),
+    () => toAwaitedValue(dataSources),
     undefined,
     {
       evaluating,

@@ -16,13 +16,13 @@ function toEntity(entityOrOption?: Entity | Entity.ConstructorOptions): Entity |
 
 export interface UseEntityOptions {
   /**
-   * 添加到的集合容器
+   * The collection of Entity to be added
    * @default useViewer().value.entities
    */
   collection?: EntityCollection;
 
   /**
-   * 是否激活
+   * default value of `isActive`
    * @defalut true
    */
   isActive?: MaybeRefOrGetter<boolean>;
@@ -32,16 +32,24 @@ export interface UseEntityOptions {
    */
   evaluating?: Ref<boolean>;
 }
-
+/**
+ * Add `Entity` to the `EntityCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Entity`
+ *
+ * overLoaded1: The dataSoure parameter supports passing in a single Entity
+ */
 export function useEntity<T extends Entity = Entity>(
   entity?: MaybeRefOrAsyncGetter<Entity.ConstructorOptions | T | undefined>,
   options?: UseEntityOptions
 ): ComputedRef<T | undefined>;
 
+/**
+ * Add `Entity` to the `EntityCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Entity`
+ * overLoaded2: The dataSoure parameter supports passing in an array of `Entity`.
+ */
 export function useEntity<T extends Entity = Entity>(
   entities?: MaybeRefOrAsyncGetter<Array<Entity.ConstructorOptions | T | undefined>>,
   options?: UseEntityOptions
-): ComputedRef<(T | undefined)[]>;
+): ComputedRef<T[] | undefined>;
 
 export function useEntity<T extends Entity>(
   data?: MaybeRefOrAsyncGetter<Arrayable<T | undefined>>,

@@ -6,7 +6,11 @@ import type { ShallowRef } from 'vue';
 import { CREATE_VIEWER_COLLECTION, CREATE_VIEWER_INJECTION_KEY } from '../createViewer';
 
 /**
- * 获取当前组件或祖先级组件通过`createViewer`注入的Viewer对象
+ * Obtain the `Viewer` instance injected through `createViewer` in the current component or its ancestor components.
+ *
+ * note:
+ * - If `createViewer` and `useViewer` are called in the same component, the `Viewer` instance injected by `createViewer` will be used preferentially.
+ * - When calling `createViewer` and `useViewer` in the same component, `createViewer` should be called before `useViewer`.
  */
 export function useViewer(): Readonly<ShallowRef<Viewer | undefined>> {
   const instance = getCurrentInstance();
@@ -17,7 +21,7 @@ export function useViewer(): Readonly<ShallowRef<Viewer | undefined>> {
   else {
     const injectViewer = inject(CREATE_VIEWER_INJECTION_KEY);
     if (!injectViewer) {
-      throw new Error('当前组件或祖先级组件中未找到通过createViewer注入的Viewer对象');
+      throw new Error('The `Viewer` instance injected by `createViewer` was not found in the current component or its ancestor components. Have you called `createViewer`?');
     }
     return injectViewer;
   }

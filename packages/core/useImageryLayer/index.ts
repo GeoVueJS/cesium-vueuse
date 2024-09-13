@@ -11,25 +11,23 @@ import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
 import { useViewer } from '../useViewer';
 
 function toImageryLayer(layerOrProvider?: ImageryLayer | ImageryProvider): ImageryLayer | undefined {
-  return layerOrProvider ? layerOrProvider instanceof ImageryLayer ? layerOrProvider : new ImageryLayer(layerOrProvider) : undefined;
+  return layerOrProvider
+    ? layerOrProvider instanceof ImageryLayer
+      ? layerOrProvider
+      : new ImageryLayer(layerOrProvider)
+    : undefined;
 }
 
 export interface UseImageryLayerOptions {
-  /**
-   * 传递给移除函数的第二项参数
-   *
-   * `imageryLayers.remove(layer,destroyOnRemove)`
-   */
-  destroyOnRemove?: MaybeRefOrGetter<boolean>;
 
   /**
-   * 添加到的集合容器
+   * The collection of ImageryLayer to be added
    * @default useViewer().value.imageryLayers
    */
   collection?: ImageryLayerCollection;
 
   /**
-   * 是否激活
+   * default value of `isActive`
    * @defalut true
    */
   isActive?: MaybeRefOrGetter<boolean>;
@@ -38,17 +36,32 @@ export interface UseImageryLayerOptions {
    * Ref passed to receive the updated of async evaluation
    */
   evaluating?: Ref<boolean>;
-}
 
+  /**
+   * 传递给移除函数的第二项参数
+   *
+   * `imageryLayers.remove(layer,destroyOnRemove)`
+   */
+  destroyOnRemove?: MaybeRefOrGetter<boolean>;
+}
+/**
+ * Add `ImageryLayer` to the `ImageryLayerCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `ImageryLayer`
+ *
+ * overLoaded1: The dataSoure parameter supports passing in a single ImageryLayer
+ */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
-  layer?: MaybeRefOrAsyncGetter<ImageryLayer.ConstructorOptions | T | undefined>,
+  layer?: MaybeRefOrAsyncGetter< T | ImageryProvider | undefined>,
   options?: UseImageryLayerOptions
 ): ComputedRef<T | undefined>;
-
+/**
+ * Add `ImageryLayer` to the `ImageryLayerCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `ImageryLayer`
+ *
+ * overLoaded1: The dataSoure parameter supports passing in a single ImageryLayer
+ */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
-  layers?: MaybeRefOrAsyncGetter<Array<ImageryLayer.ConstructorOptions | T | undefined>>,
+  layers?: MaybeRefOrAsyncGetter<Arrayable<T | ImageryProvider | undefined>>,
   options?: UseImageryLayerOptions
-): ComputedRef<(T | undefined)[]>;
+): ComputedRef<T[] | undefined>;
 
 export function useImageryLayer<T extends ImageryLayer>(
   data?: MaybeRefOrAsyncGetter<Arrayable<T | undefined>>,

@@ -3,29 +3,93 @@ import { useElementSize } from '@vueuse/core';
 import { Cartesian2, EllipsoidGeodesic } from 'cesium';
 import { computed, readonly, ref, toValue } from 'vue';
 
-import type { MaybeRefOrGetter } from 'vue';
+import type { MaybeRefOrGetter, Ref } from 'vue';
 import { useCesiumEventListener } from '../useCesiumEventListener';
 
 import { useViewer } from '../useViewer';
 
 export interface UseScaleBarOptions {
+  /**
+   * The maximum width of the scale (px)
+   * @default 100
+   */
   maxPixel?: MaybeRefOrGetter<number>;
+
+  /**
+   * Throttling calculation interval (ms)
+   * @default 8
+   */
   ms?: number;
 }
 
 export interface UseScaleBarRetrun {
+  /**
+   * The actual distance of a single pixel in the current canvas
+   */
+  pixelDistance: Readonly<Ref<number>>;
+
+  /**
+   * The width of the scale.(px)
+   */
+  width: Readonly<Ref<number>>;
+
+  /**
+   * The actual distance corresponding to the width of the scale (m)
+   */
+  distance: Readonly<Ref<number>>;
+
+  /**
+   * Formatted content of distance.
+   * eg. 100m,100km
+   */
+  label: Readonly<Ref<string>>;
 }
 
-const distances = [50000000, 30000000, 20000000, 10000000, 5000000, 3000000, 2000000, 1000000, 500000, 300000, 200000, 100000, 50000, 30000, 20000, 10000, 5000, 3000, 2000, 1000, 500, 300, 200, 100, 50, 30, 20, 10, 5, 3, 2, 1];
+const distances = [
+  50000000,
+  30000000,
+  20000000,
+  10000000,
+  5000000,
+  3000000,
+  2000000,
+  1000000,
+  500000,
+  300000,
+  200000,
+  100000,
+  50000,
+  30000,
+  20000,
+  10000,
+  5000,
+  3000,
+  2000,
+  1000,
+  500,
+  300,
+  200,
+  100,
+  50,
+  30,
+  20,
+  10,
+  5,
+  3,
+  2,
+  1,
+];
 
-export function useScaleBar(options: UseScaleBarOptions = {}): UseScaleBarRetrun | undefined {
+/**
+ * Reactive generation of scale bars
+ */
+export function useScaleBar(options: UseScaleBarOptions = {}): UseScaleBarRetrun {
   const { maxPixel, ms = 8 } = options;
   const maxPixelRef = computed(() => toValue(maxPixel) || 100);
 
   const viewer = useViewer();
   const canvasSize = useElementSize(() => viewer.value?.canvas);
 
-  // 单位像素实际距离
   const pixelDistance = ref(0);
 
   useCesiumEventListener(

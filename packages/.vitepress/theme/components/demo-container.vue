@@ -42,12 +42,6 @@ const codeVisible = ref(false);
     rd="4px"
   >
     <slot name="desc" />
-    <!-- <div class="demo-content">
-      <demo-cesium v-if="cesium">
-        <slot />
-      </demo-cesium>
-      <slot v-else />
-    </div> -->
     <slot />
     <div>
       <div flex="~ justify-end items-center" h="44px" p="x-10px">

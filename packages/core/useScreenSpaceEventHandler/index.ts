@@ -1,5 +1,5 @@
 import { ScreenSpaceEventHandler, ScreenSpaceEventType } from 'cesium';
-import { computed, readonly, ref, toValue, watchEffect } from 'vue';
+import { computed, readonly, ref, toValue, watch, watchEffect } from 'vue';
 
 import type { Pausable } from '@vueuse/core';
 
@@ -27,50 +27,62 @@ export type InputAction<T extends ScreenSpaceEventType> = {
 
 export interface UseScreenSpaceEventHandlerOptions<T extends ScreenSpaceEventType> {
   /**
-   * 事件类型
-   * @defaultValue `ScreenSpaceEventType.LEFT_CLICK`
+   * Types of mouse event
+   * @default `ScreenSpaceEventType.LEFT_CLICK`
    */
   type?: MaybeRefOrGetter<T>;
 
   /**
-   * 监听事件
+   * Callback function for listening
    */
   inputAction?: InputAction<T>;
 
   /**
-   * 修饰键
+   * Modifier key
    */
   modifier?: MaybeRefOrGetter<KeyboardEventModifier | undefined>;
 
   /**
-   * 初始化时是否暂停
+   * Default value of pause
    */
   pause?: boolean;
 }
 
+/**
+ * Easily use the `ScreenSpaceEventHandler`,
+ * when the dependent data changes or the component is unmounted,
+ * the listener function will automatically reload or destroy.
+ */
 export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType = ScreenSpaceEventType.LEFT_CLICK>(
   options: UseScreenSpaceEventHandlerOptions<T> = {},
 ): Pausable {
   const {
     pause,
     modifier,
+    inputAction,
   } = options;
   const viewer = useViewer();
   const isActive = ref(!pause);
 
-  const handler = computed<ScreenSpaceEventHandler>((oldValue) => {
-    oldValue?.destroy();
-    return new ScreenSpaceEventHandler(viewer.value.canvas);
+  const handler = computed(() => {
+    if (viewer.value) {
+      return new ScreenSpaceEventHandler(viewer.value.canvas);
+    }
   });
 
-  watchEffect((cleanup) => {
-    const type = toValue(options.type) ?? ScreenSpaceEventType.LEFT_CLICK;
-    const inputAction = options.inputAction;
-    const _modifier = toValue(modifier);
-    if (isActive.value && inputAction) {
-      handler.value.setInputAction(inputAction, type, _modifier);
-      cleanup(() => handler.value.removeInputAction(type, _modifier));
+  watch(handler, (_value, oldValue) => {
+    oldValue?.destroy();
+  });
+
+  watchEffect((onCleanup) => {
+    if (!handler.value || !isActive.value || !inputAction) {
+      return;
     }
+    const type = toValue(options.type) ?? ScreenSpaceEventType.LEFT_CLICK;
+    const _modifier = toValue(modifier);
+    const _handler = toValue(handler)!;
+    _handler.setInputAction(inputAction, type, _modifier);
+    onCleanup(() => _handler!.removeInputAction(type, _modifier));
   });
 
   return {

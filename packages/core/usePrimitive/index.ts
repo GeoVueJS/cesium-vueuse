@@ -13,15 +13,14 @@ export type CesiumPrimitive = Primitive | Cesium3DTileset;
 
 export interface UsePrimitiveOptions {
   /**
-   * 添加到的集合容器
-   *
-   * ground 则为 useViewer().scene.groundPrimitives
+   * The collection of Primitive to be added
+   * - `ground` : `useViewer().scene.groundPrimitives`
    * @default useViewer().scene.primitives
    */
   collection?: PrimitiveCollection | 'ground';
 
   /**
-   * 是否激活
+   * default value of `isActive`
    * @defalut true
    */
   isActive?: MaybeRefOrGetter<boolean>;
@@ -32,15 +31,24 @@ export interface UsePrimitiveOptions {
   evaluating?: Ref<boolean>;
 }
 
+/**
+ * Add `Primitive` to the `PrimitiveCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Primitive`
+ *
+ * overLoaded1: The dataSoure parameter supports passing in a single Primitive
+ */
 export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
   primitive?: MaybeRefOrAsyncGetter<T | undefined>,
   options?: UsePrimitiveOptions
 ): ComputedRef<T | undefined>;
 
+/**
+ * Add `Primitive` to the `PrimitiveCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Primitive`
+ * overLoaded2: The dataSoure parameter supports passing in an array of `Primitive`.
+ */
 export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
   primitives?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
   options?: UsePrimitiveOptions
-): ComputedRef<(T | undefined)[]>;
+): ComputedRef<T[] | undefined>;
 
 export function usePrimitive<T extends Primitive>(
   data?: MaybeRefOrAsyncGetter<Arrayable<T | undefined>>,

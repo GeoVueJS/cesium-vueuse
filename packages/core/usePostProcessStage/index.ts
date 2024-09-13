@@ -11,13 +11,13 @@ import { useViewer } from '../useViewer';
 
 export interface UsePostProcessStageOptions {
   /**
-   * 添加到的集合容器
+   * The collection of PostProcessStage to be added
    * @default useViewer().scene.postProcessStages
    */
   collection?: PostProcessStageCollection;
 
   /**
-   * 是否激活
+   * default value of `isActive`
    * @defalut true
    */
   isActive?: MaybeRefOrGetter<boolean>;
@@ -36,7 +36,7 @@ export function usePostProcessStage<T extends PostProcessStage = PostProcessStag
 export function usePostProcessStage<T extends PostProcessStage = PostProcessStage>(
   stages?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
   options?: UsePostProcessStageOptions
-): ComputedRef<(T | undefined)[]>;
+): ComputedRef<T[] | undefined>;
 
 export function usePostProcessStage<T extends PostProcessStage>(
   data?: MaybeRefOrAsyncGetter<Arrayable<T | undefined>>,

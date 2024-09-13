@@ -10,7 +10,7 @@ export interface UseCameraLevelOptions {
 export interface UseCameraLevelRetrun {
 }
 
-export function useCameraLevel(options?: UseCameraLevelOptions): UseCameraLevelRetrun | undefined {
+export function useCameraLevel(options?: UseCameraLevelOptions): UseCameraLevelRetrun {
   const viewer = useViewer();
   const cartographic = shallowRef<Cartographic>();
   const setCartographic = () => {
@@ -23,8 +23,8 @@ export function useCameraLevel(options?: UseCameraLevelOptions): UseCameraLevelR
   watchEffect(setCartographic);
   useCesiumEventListener(() => viewer.value?.camera.changed, setCartographic);
 
-  const zoom = () => {
-    /* 根据camera高度近似计算当前层级 */
+  const onZoom = () => {
+    // Calculate the current approximate level based on the camera height
     const A = 40487.57;
     const B = 0.00007096758;
     const C = 91610.74;

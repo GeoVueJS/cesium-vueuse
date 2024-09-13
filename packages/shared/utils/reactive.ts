@@ -20,12 +20,20 @@ export interface ToAsyncValueOptions {
 /**
  * 类似Vue自带的`toValue`,但能处理异步函数，所以返回的值为一个Promise
  *
- * 建议配合VueUse的computedAsync使用
- *
- * 如
+ * 配合VueUse的computedAsync使用
  *
  * @param source 源值，可以是响应式引用或异步获取器
  * @param options 转换选项
+ *
+ *
+ * @example
+ * ```ts
+ *
+ * const data = computedAsync(async ()=> {
+ *  return await toAwaitedValue(promiseRef)
+ * })
+ *
+ * ```
  */
 export async function toAwaitedValue<T>(source: MaybeRefOrAsyncGetter<T>, options: ToAsyncValueOptions = {}): Promise<T> {
   const { raw = true } = options;

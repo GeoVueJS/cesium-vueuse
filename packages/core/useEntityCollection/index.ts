@@ -26,7 +26,7 @@ export function useEntityCollection(collection?: MaybeRefOrGetter<EntityCollecti
     return entityCollection.value?.add(entity) as any;
   }
   function remove(entity: Entity): boolean {
-    return entityCollection.value?.remove(entity);
+    return !!entityCollection.value?.remove(entity);
   }
   const effects = useCollectionScope(add, remove, []);
 

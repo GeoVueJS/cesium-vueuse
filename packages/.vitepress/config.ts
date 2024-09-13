@@ -5,15 +5,6 @@ import { defineConfig } from 'vitepress';
 
 import { generateSidebar } from './utils/generateSidebar';
 
-// const sidebar = generateSidebar([
-//   {
-//     documentRootPath: './packages',
-//     scanStartPath: './',
-//     resolvePath: '',
-//     useFolderLinkFromIndexFile: true,
-//   },
-// ]);
-
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   srcDir: './',
@@ -40,7 +31,7 @@ export default defineConfig({
         ],
         sidebar: generateSidebar({
           base: '/',
-          filter: path => path.split('.').length === 2 && path.endsWith('.md'),
+          filter: path => path.split('.').length === 2 && path.endsWith('.md') && !path.startsWith('index'),
         }),
 
       },
