@@ -23,12 +23,12 @@ const POSITIOND_EVENT_TYPE_MAP: Record<ScreenSpaceEventType, GraphicsPositiondEv
 };
 
 /**
- * 创建单位置的鼠标绑定函数
+ * Create a mouse binding function for a single position.
+ * eg. left-click of the mouse.
  *
- * @param viewer 视图对象
- * @param modifier 键盘事件修饰符
- * @param callback 图形位置回调函数
- * @returns 绑定函数
+ * @param viewer Viewer instance
+ * @param modifier modifier key
+ * @param callback Callback function for the position of the graphics object at the time of mouse click
  */
 export function createPositiondBind(
   viewer: Viewer,
@@ -50,12 +50,11 @@ export function createPositiondBind(
 }
 
 /**
- * 创建悬停绑定函数
+ * Create a hover binding function
  *
- * @param viewer 视图对象
- * @param modifier 键盘事件修饰符
- * @param callback 图形悬停回调函数
- * @returns 返回一个处理鼠标移动事件的函数
+ * @param viewer Viewer instance
+ * @param modifier modifier key
+ * @param callback Callback function for the position of the graphics object during mouse hover
  */
 export function createHoverBind(
   viewer: Viewer,
@@ -66,7 +65,7 @@ export function createHoverBind(
   let stopPrev: (() => void) | null;
   const listener = (context: ScreenSpaceEventHandler.MotionEvent) => {
     const pick = viewer.scene.pick(context.endPosition);
-    // 告知前一次循环的hover事件已结束hover
+    // Notify that the hover event of the previous loop has ended
     if (!pick || pick !== preHoverPick) {
       stopPrev?.();
       stopPrev = null;
@@ -83,7 +82,7 @@ export function createHoverBind(
       _emit(true);
     }
   };
-  const fn = throttle(listener, 32); // 节流
+  const fn = throttle(listener, 32);
   return (type: ScreenSpaceEventType, context?: any) => {
     if (context && type === ScreenSpaceEventType.MOUSE_MOVE) {
       fn(context);
@@ -92,12 +91,11 @@ export function createHoverBind(
 }
 
 /**
- * 创建一个拖拽绑定函数
+ * Create a mouse drag binding function
  *
- * @param viewer Cesium Viewer实例
- * @param modifier 键盘事件修饰符，可选
- * @param callback 拖拽回调函数
- * @returns 返回一个处理拖拽事件的函数
+ * @param viewer Viewer instance
+ * @param modifier modifier key
+ * @param callback Callback function for the position of the graphics object during mouse dragging
  */
 export function createDragBind(
   viewer: Viewer,
@@ -105,7 +103,8 @@ export function createDragBind(
   callback: GraphicsHandlerCallback<'DRAG'>,
 ) {
   let pick: any;
-  let moved = false; // 鼠标当前是否存在移动行为
+  // Is there currently any mouse movement behavior
+  let moved = false;
   let startPosition: Cartesian2 | undefined;
 
   return (type: ScreenSpaceEventType, context?: any) => {
@@ -114,12 +113,14 @@ export function createDragBind(
     }
     if (type === ScreenSpaceEventType.LEFT_DOWN) {
       pick = viewer.scene.pick(context.position);
-      startPosition = context.position.clone(); // 鼠标下按，该点为起始点
+      // Mouse button pressed, this point is the starting point
+      startPosition = context.position.clone();
     }
 
     if (pick && type === ScreenSpaceEventType.MOUSE_MOVE) {
       let params: any;
-      // 此前没有鼠标移动行为，则此次为拖拽循环中第一次触发，startPosition应为鼠标下按时的坐标
+      // If there is no previous mouse movement, this is the first trigger in the drag loop,
+      // and the `startPosition` should be the coordinate when the mouse button was pressed
       if (!moved) {
         moved = true;
         params = {
@@ -144,7 +145,7 @@ export function createDragBind(
       callback({ type: 'DRAG', modifier, params });
     }
 
-    // 鼠标抬起，结束拖拽循环
+    // Mouse up, end drag loop
     if (pick && type === ScreenSpaceEventType.LEFT_UP) {
       const params = {
         context: {

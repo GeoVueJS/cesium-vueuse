@@ -11,7 +11,11 @@ import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
 import { useViewer } from '../useViewer';
 
 function toEntity(entityOrOption?: Entity | Entity.ConstructorOptions): Entity | undefined {
-  return entityOrOption ? entityOrOption instanceof Entity ? entityOrOption : new Entity(entityOrOption) : undefined;
+  return entityOrOption
+    ? entityOrOption instanceof Entity
+      ? entityOrOption
+      : new Entity(entityOrOption)
+    : undefined;
 }
 
 export interface UseEntityOptions {
@@ -32,19 +36,21 @@ export interface UseEntityOptions {
    */
   evaluating?: Ref<boolean>;
 }
+
 /**
- * Add `Entity` to the `EntityCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Entity`
+ * Add `Entity` to the `EntityCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Entity`.
  *
- * overLoaded1: The dataSoure parameter supports passing in a single Entity
+ * overLoaded1: Parameter supports passing in a single value.
  */
 export function useEntity<T extends Entity = Entity>(
-  entity?: MaybeRefOrAsyncGetter<Entity.ConstructorOptions | T | undefined>,
+  entity?: MaybeRefOrAsyncGetter<T | Entity.ConstructorOptions | undefined>,
   options?: UseEntityOptions
 ): ComputedRef<T | undefined>;
 
 /**
- * Add `Entity` to the `EntityCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Entity`
- * overLoaded2: The dataSoure parameter supports passing in an array of `Entity`.
+ * Add `Entity` to the `EntityCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Entity`.
+ *
+ * overLoaded2: Parameter supports passing in an array.
  */
 export function useEntity<T extends Entity = Entity>(
   entities?: MaybeRefOrAsyncGetter<Array<Entity.ConstructorOptions | T | undefined>>,

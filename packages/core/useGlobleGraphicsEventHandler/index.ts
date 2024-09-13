@@ -1,4 +1,3 @@
-import { createSharedComposable } from '@vueuse/core';
 import { KeyboardEventModifier, ScreenSpaceEventHandler, ScreenSpaceEventType } from 'cesium';
 import { watchEffect } from 'vue';
 
@@ -8,13 +7,21 @@ import { createDragBind, createHoverBind, createPositiondBind } from './bind';
 
 import type { GraphicsEventType, GraphicsHandlerCallback, GraphicsPositiondEventType } from './types';
 
-function _useGlobleGraphicsEventHandler<T extends GraphicsEventType>() {
+export interface UseGlobleGraphicsEventHandlerReturn<T extends GraphicsEventType> {
+  add: (listener: GraphicsHandlerCallback<T>) => () => boolean;
+  remove: (listener: GraphicsHandlerCallback<T>) => boolean;
+}
+
+/**
+ * 便捷的监听鼠标在图形上的操作事件，在组件卸载时自动移除所有事件监听
+ */
+export function useGlobleGraphicsEventHandler<T extends GraphicsEventType>(): UseGlobleGraphicsEventHandlerReturn<T> {
   const viewer = useViewer();
   const listeners = new Set<GraphicsHandlerCallback<T>>();
-  const callback = (...rest: any[]) => {
+
+  const callback = (...rest: unknown[]) => {
     listeners.forEach((fn) => {
       try {
-        // @ts-expect-error rest params
         fn(...rest);
       }
       catch (error) {
@@ -23,20 +30,22 @@ function _useGlobleGraphicsEventHandler<T extends GraphicsEventType>() {
     });
   };
   watchEffect((onCleanup) => {
-    if (!viewer.value) {
+    const _viewer = viewer.value;
+    if (!_viewer) {
       return;
     }
     const handler = new ScreenSpaceEventHandler(viewer.value.canvas);
     onCleanup(() => handler.destroy());
+
     const modifier = [undefined, ...Object.values(KeyboardEventModifier)] as (KeyboardEventModifier | undefined)[];
     modifier.forEach((modifier) => {
-      const positiondBind = createPositiondBind(viewer.value, modifier, callback as GraphicsHandlerCallback<GraphicsPositiondEventType>);
-      const dragBind = createDragBind(viewer.value, modifier, callback as GraphicsHandlerCallback<'DRAG'>);
-      const hoverBind = createHoverBind(viewer.value, modifier, callback as GraphicsHandlerCallback<'HOVER'>);
+      const positiondBind = createPositiondBind(_viewer, modifier, callback as GraphicsHandlerCallback<GraphicsPositiondEventType>);
+      const dragBind = createDragBind(_viewer, modifier, callback as GraphicsHandlerCallback<'DRAG'>);
+      const hoverBind = createHoverBind(_viewer, modifier, callback as GraphicsHandlerCallback<'HOVER'>);
       Object.values(ScreenSpaceEventType).forEach((type) => {
         type = type as ScreenSpaceEventType;
         handler.setInputAction(
-          (context) => {
+          (context: any) => {
             positiondBind(type, context);
             hoverBind(type, context);
             dragBind(type, context);
@@ -51,14 +60,14 @@ function _useGlobleGraphicsEventHandler<T extends GraphicsEventType>() {
   const remove = (listener: GraphicsHandlerCallback<T>) => {
     return listeners.delete(listener);
   };
+
   const add = (listener: GraphicsHandlerCallback<T>) => {
     listeners.add(listener);
     return () => remove(listener);
   };
+
   return {
     add,
     remove,
   };
 }
-
-export const useGlobleGraphicsEventHandler = createSharedComposable(_useGlobleGraphicsEventHandler);

@@ -38,28 +38,30 @@ export interface UseImageryLayerOptions {
   evaluating?: Ref<boolean>;
 
   /**
-   * 传递给移除函数的第二项参数
+   * The second parameter passed to the `remove` function
    *
    * `imageryLayers.remove(layer,destroyOnRemove)`
    */
   destroyOnRemove?: MaybeRefOrGetter<boolean>;
 }
+
 /**
- * Add `ImageryLayer` to the `ImageryLayerCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `ImageryLayer`
+ * Add `ImageryLayer` to the `ImageryLayerCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `ImageryLayer`.
  *
- * overLoaded1: The dataSoure parameter supports passing in a single ImageryLayer
+ * overLoaded1: Parameter supports passing in a single value.
  */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
   layer?: MaybeRefOrAsyncGetter< T | ImageryProvider | undefined>,
   options?: UseImageryLayerOptions
 ): ComputedRef<T | undefined>;
+
 /**
- * Add `ImageryLayer` to the `ImageryLayerCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `ImageryLayer`
+ * Add `ImageryLayer` to the `ImageryLayerCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `ImageryLayer`.
  *
- * overLoaded1: The dataSoure parameter supports passing in a single ImageryLayer
+ * overLoaded2: Parameter supports passing in an array.
  */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
-  layers?: MaybeRefOrAsyncGetter<Arrayable<T | ImageryProvider | undefined>>,
+  layers?: MaybeRefOrAsyncGetter<Array<T | ImageryProvider | undefined>>,
   options?: UseImageryLayerOptions
 ): ComputedRef<T[] | undefined>;
 

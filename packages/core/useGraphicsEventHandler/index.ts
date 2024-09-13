@@ -30,7 +30,7 @@ export interface GraphicsEventConfig {
 
 export function useGraphicsEventHandler<T = any>(
   graphics: MaybeRefOrGetter<Arrayable<T>>,
-  config: GraphicsEventConfig = {},
+  config: GraphicsEventConfig,
 ): Pausable {
   const { add, remove } = useGlobleGraphicsEventHandler();
 
@@ -58,11 +58,10 @@ export function useGraphicsEventHandler<T = any>(
     }
 
     const picks = Object.values(params.pick);
-    const graphicses = graphicsList.value;
 
     for (const pick of picks) {
-      if (graphicses.includes(pick as any)) {
-        handler({ type, modifier, params } as any);
+      if (graphicsList.value.includes(pick)) {
+        handler({ type, modifier, params });
       }
     }
   };

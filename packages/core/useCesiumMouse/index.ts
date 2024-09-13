@@ -1,5 +1,5 @@
 import { canvasCoordToCartesian } from '@cesium-vueuse/shared';
-import { createSharedComposable, throttledRef } from '@vueuse/core';
+import { throttledRef } from '@vueuse/core';
 import { ScreenSpaceEventType } from 'cesium';
 import { computed, shallowRef } from 'vue';
 
@@ -21,10 +21,9 @@ export interface UseCesiumMouseRetrun {
 }
 
 /**
- * The base function passed into createSharedComposable to create useCesiumMouse
- * @internal
+ * Reactive Mouse coordinates
  */
-function _useCesiumMouse(): UseCesiumMouseRetrun {
+export function useCesiumMouse(): UseCesiumMouseRetrun {
   const viewer = useViewer();
 
   const coordinate = shallowRef<Cartesian2>();
@@ -48,8 +47,3 @@ function _useCesiumMouse(): UseCesiumMouseRetrun {
     position,
   };
 }
-
-/**
- * Reactive Mouse coordinates
- */
-export const useCesiumMouse: () => UseCesiumMouseRetrun = createSharedComposable(_useCesiumMouse);

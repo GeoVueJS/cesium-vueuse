@@ -6,9 +6,6 @@ import type { ShallowReactive } from 'vue';
 
 export type EffcetRemovePredicate<T> = (instance: T) => boolean;
 
-/**
- * useCollectionScope 返回参数
- */
 export interface UseCollectionScopeReturn<
   T,
   AddArgs extends any[],
@@ -17,19 +14,38 @@ export interface UseCollectionScopeReturn<
   RemoveReturn = any,
 > {
   /**
-   * 储存此次副作用的添加值 该值使用`ShallowReactive`进行封装，具有Vue响应式功能
+   * A `Set` for storing sideEffect content,
+   * which is encapsulated using `ShallowReactive` to provide Vue's reactive functionality
    */
   scope: Readonly<ShallowReactive<Set<T>>>;
+
+  /**
+   * Add sideEffect content
+   */
   add: <R extends T>(i: R, ...args: AddArgs) => AddReturn extends Promise<T> ? Promise<R> : R;
+
+  /**
+   * Remove specified sideEffect content
+   */
   remove: (i: T, ...args: RemoveArgs) => RemoveReturn;
+
+  /**
+   * Remove all sideEffect content that meets the specified criteria
+   */
   removeWhere: (predicate: EffcetRemovePredicate<T>, ...args: RemoveArgs) => void;
+
+  /**
+   * Remove all sideEffect content within current scope
+   */
   removeScope: (...args: RemoveArgs) => void;
 }
 
 /**
- * CesiumCollection相关副作用范围化
- * @param addFn - 副作用函数 如: entites.add
- * @param removeFn - 清除副作用函数  如: entities.remove
+ * Scope the sideEffects of Cesium-related `Collection` and automatically remove them on unmounted
+ * - note: This is a basic function that is intended to be called by other lower-level function
+ * @param addFn - add sideEffect function.  eg.`entites.add`
+ * @param removeFn - Clean sideEffect function.  eg.`entities.remove`
+ * @param removeScopeArgs - The parameters to pass for `removeScope` triggered when the component is unmounted
  */
 export function useCollectionScope<
   T,
@@ -40,7 +56,7 @@ export function useCollectionScope<
 >(
   addFn: (i: T, ...args: AddArgs) => AddReturn,
   removeFn: (i: T, ...args: RemoveArgs) => RemoveReturn,
-  clearArgs: RemoveArgs,
+  removeScopeArgs: RemoveArgs,
 ): UseCollectionScopeReturn<T, AddArgs, AddReturn, RemoveArgs, RemoveReturn> {
   const scope = new Set<T>();
 
@@ -80,7 +96,7 @@ export function useCollectionScope<
     });
   };
 
-  tryOnScopeDispose(() => removeScope(...clearArgs));
+  tryOnScopeDispose(() => removeScope(...removeScopeArgs));
 
   return {
     scope: shallowReadonly(scope),

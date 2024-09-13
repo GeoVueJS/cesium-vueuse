@@ -32,9 +32,9 @@ export interface UsePrimitiveOptions {
 }
 
 /**
- * Add `Primitive` to the `PrimitiveCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Primitive`
+ * Add `Primitive` to the `PrimitiveCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Primitive`.
  *
- * overLoaded1: The dataSoure parameter supports passing in a single Primitive
+ * overLoaded1: Parameter supports passing in a single value.
  */
 export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
   primitive?: MaybeRefOrAsyncGetter<T | undefined>,
@@ -42,8 +42,9 @@ export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
 ): ComputedRef<T | undefined>;
 
 /**
- * Add `Primitive` to the `PrimitiveCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Primitive`
- * overLoaded2: The dataSoure parameter supports passing in an array of `Primitive`.
+ * Add `Primitive` to the `PrimitiveCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `Primitive`.
+ *
+ * overLoaded2: Parameter supports passing in an array.
  */
 export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
   primitives?: MaybeRefOrAsyncGetter<Array<T | undefined>>,

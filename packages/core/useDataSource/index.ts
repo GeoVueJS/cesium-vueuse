@@ -13,7 +13,7 @@ export type CesiumDataSource = DataSource | CustomDataSource | CzmlDataSource | 
 
 export interface UseDataSourceOptions {
   /**
-   *  The collection of DataSource to be added
+   * The collection of DataSource to be added
    * @default useViewer().value.dataSources
    */
   collection?: DataSourceCollection;
@@ -34,14 +34,14 @@ export interface UseDataSourceOptions {
    *
    * `dataSources.remove(dataSource,destroyOnRemove)`
    */
-  destroyOnRemove?: boolean;
+  destroyOnRemove?: MaybeRefOrGetter<boolean>;
 
 }
 
 /**
- * Add `DataSource` to the `DataSourceCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `DataSource`
+ * Add `DataSource` to the `DataSourceCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `DataSource`.
  *
- * overLoaded1: The dataSoure parameter supports passing in a single dataSource
+ * overLoaded1: Parameter supports passing in a single value.
  */
 export function useDataSource<T extends CesiumDataSource = CesiumDataSource>(
   dataSource?: MaybeRefOrAsyncGetter<T | undefined>,
@@ -49,9 +49,9 @@ export function useDataSource<T extends CesiumDataSource = CesiumDataSource>(
 ): ComputedRef<T | undefined>;
 
 /**
- * Add `DataSource` to the `DataSourceCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `DataSource`
+ * Add `DataSource` to the `DataSourceCollection`, automatically update when the data changes, and destroy the side effects caused by the previous `DataSource`.
  *
- * overLoaded2: The dataSoure parameter supports passing in an array of `dataSource`.
+ * overLoaded2: Parameter supports passing in an array.
  */
 export function useDataSource<T extends CesiumDataSource = CesiumDataSource>(
   dataSources?: MaybeRefOrAsyncGetter<T[] | undefined>,

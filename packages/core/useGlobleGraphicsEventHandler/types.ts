@@ -14,6 +14,9 @@ export type GraphicsPositiondEventType =
   'MIDDLE_UP' |
   'MIDDLE_CLICK';
 
+/**
+ * All mouse event type
+ */
 export type GraphicsEventType =
   'LEFT_DOWN' |
   'LEFT_UP' |
@@ -28,12 +31,18 @@ export type GraphicsEventType =
   'HOVER' |
   'DRAG';
 
+/**
+ * Parameters for mouse click event callback
+ */
 export interface GraphicsPositiondParams {
   scene: Scene;
   context: ScreenSpaceEventHandler.PositionedEvent;
   pick: any;
 }
 
+/**
+ * Parameters for mouse hover event callback
+ */
 export interface GraphicsHoverParams {
   scene: Scene;
   context: ScreenSpaceEventHandler.MotionEvent;
@@ -41,6 +50,9 @@ export interface GraphicsHoverParams {
   hover: boolean;
 }
 
+/**
+ * Parameters for mouse drag event callback
+ */
 export interface GraphicsDragParams {
   scene: Scene;
   context: ScreenSpaceEventHandler.MotionEvent;
@@ -48,17 +60,30 @@ export interface GraphicsDragParams {
   draging: boolean;
 }
 
-export type GraphicsHandlerCallbackParams<T extends GraphicsEventType> = T extends GraphicsPositiondEventType ? GraphicsPositiondParams :
-  T extends 'HOVER' ? GraphicsHoverParams :
-    T extends 'DRAG' ? GraphicsDragParams :
+/**
+ * Parameters for graphics mouse interaction event callback
+ */
+export type GraphicsHandlerCallbackParams<T extends GraphicsEventType> =
+T extends GraphicsPositiondEventType ?
+  GraphicsPositiondParams :
+  T extends 'HOVER' ?
+    GraphicsHoverParams :
+    T extends 'DRAG' ?
+      GraphicsDragParams :
       unknown;
 
+/**
+ * Context for graphics mouse interaction event callback
+ */
 export interface GraphicsHandlerCallbackContext<T extends GraphicsEventType> {
   type: T;
   modifier: KeyboardEventModifier | undefined;
   params: GraphicsHandlerCallbackParams<T>;
 }
 
+/**
+ * Graphics mouse interaction event callback
+ */
 export type GraphicsHandlerCallback<T extends GraphicsEventType> = (
   context: GraphicsHandlerCallbackContext<T>
 ) => void;
