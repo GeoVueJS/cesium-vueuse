@@ -23,35 +23,35 @@ export interface UseDataSourceCollectionScopeOptions {
 
 export interface UseDataSourceCollectionScopeRetrun {
   /**
-   * A `Set` for storing sideEffect content,
+   * A `Set` for storing SideEffect instance,
    * which is encapsulated using `ShallowReactive` to provide Vue's reactive functionality
    */
   scope: Readonly<ShallowReactive<Set<CesiumDataSource>>>;
 
   /**
-   * Add sideEffect content
+   * Add SideEffect instance
    */
   add: <T extends CesiumDataSource>(dataSource: T) => Promise<T>;
 
   /**
-   * Remove specified sideEffect content
+   * Remove specified SideEffect instance
    */
   remove: (dataSource: CesiumDataSource, destroy?: boolean) => boolean;
 
   /**
-   * Remove all sideEffect content that meets the specified criteria
+   * Remove all SideEffect instance that meets the specified criteria
    */
   removeWhere: (predicate: EffcetRemovePredicate<CesiumDataSource>, destroy?: boolean) => void;
 
   /**
-   * Remove all sideEffect content within current scope
+   * Remove all SideEffect instance within current scope
    */
   removeScope: (destroy?: boolean) => void;
 }
 
 /**
  * Make `add` and `remove` operations of `DataSourceCollection` scoped,
- * automatically remove `DataSource` when component is unmounted.
+ * automatically remove `DataSource` instance when component is unmounted.
  */
 export function useDataSourceCollectionScope(options: UseDataSourceCollectionScopeOptions = {}): UseDataSourceCollectionScopeRetrun {
   const { collection: _collection, destroyOnRemove } = options;
@@ -61,11 +61,14 @@ export function useDataSourceCollectionScope(options: UseDataSourceCollectionSco
     return toValue(_collection) ?? viewer.value?.dataSources;
   });
 
-  const addFn = <T extends CesiumDataSource>(dataSource: T) => {
-    return collection.value!.add(dataSource);
+  const addFn = <T extends CesiumDataSource>(dataSource: T): Promise<T> => {
+    if (!collection.value) {
+      throw new Error('collection is not defined');
+    }
+    return collection.value.add(dataSource) as Promise<T>;
   };
 
-  const removeFn = <T extends CesiumDataSource>(dataSource: T, destroy?: boolean) => {
+  const removeFn = (dataSource: CesiumDataSource, destroy?: boolean) => {
     return !!collection.value?.remove(dataSource, destroy);
   };
 

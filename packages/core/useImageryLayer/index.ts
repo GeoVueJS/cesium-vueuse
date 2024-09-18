@@ -1,22 +1,13 @@
 import { toAwaitedValue } from '@cesium-vueuse/shared';
 import { computedAsync } from '@vueuse/core';
-import { ImageryLayer } from 'cesium';
-import { computed, toValue, watchEffect } from 'vue';
-
+import { toValue, watchEffect } from 'vue';
 import type { MaybeRefOrAsyncGetter } from '@cesium-vueuse/shared';
 
 import type { Arrayable } from '@vueuse/core';
-import type { ImageryLayerCollection, ImageryProvider } from 'cesium';
+
+import type { ImageryLayer, ImageryLayerCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
 import { useViewer } from '../useViewer';
-
-function toImageryLayer(layerOrProvider?: ImageryLayer | ImageryProvider): ImageryLayer | undefined {
-  return layerOrProvider
-    ? layerOrProvider instanceof ImageryLayer
-      ? layerOrProvider
-      : new ImageryLayer(layerOrProvider)
-    : undefined;
-}
 
 export interface UseImageryLayerOptions {
 
@@ -51,7 +42,7 @@ export interface UseImageryLayerOptions {
  * overLoaded1: Parameter supports passing in a single value.
  */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
-  layer?: MaybeRefOrAsyncGetter< T | ImageryProvider | undefined>,
+  layer?: MaybeRefOrAsyncGetter< T | undefined>,
   options?: UseImageryLayerOptions
 ): ComputedRef<T | undefined>;
 
@@ -61,7 +52,7 @@ export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
  * overLoaded2: Parameter supports passing in an array.
  */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
-  layers?: MaybeRefOrAsyncGetter<Array<T | ImageryProvider | undefined>>,
+  layers?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
   options?: UseImageryLayerOptions
 ): ComputedRef<T[] | undefined>;
 
@@ -76,23 +67,13 @@ export function useImageryLayer<T extends ImageryLayer>(
     evaluating,
   } = options;
 
-  const maybeList = computedAsync(
+  const result = computedAsync(
     () => toAwaitedValue(data),
     [],
     {
       evaluating,
     },
   );
-
-  const result = computed(() => {
-    if (Array.isArray(maybeList.value)) {
-      return maybeList.value.map(data => toImageryLayer(data));
-    }
-    else {
-      const data = maybeList.value;
-      return toImageryLayer(data);
-    }
-  });
 
   const viewer = useViewer();
 

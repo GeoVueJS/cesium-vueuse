@@ -9,7 +9,7 @@ import type { Cesium3DTileset, Primitive, PrimitiveCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
 import { useViewer } from '../useViewer';
 
-export type CesiumPrimitive = Primitive | Cesium3DTileset;
+export type CesiumPrimitive = Primitive | PrimitiveCollection | Cesium3DTileset;
 
 export interface UsePrimitiveOptions {
   /**

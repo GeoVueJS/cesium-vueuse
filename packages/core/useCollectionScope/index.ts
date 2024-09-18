@@ -14,37 +14,37 @@ export interface UseCollectionScopeReturn<
   RemoveReturn = any,
 > {
   /**
-   * A `Set` for storing sideEffect content,
+   * A `Set` for storing SideEffect instance,
    * which is encapsulated using `ShallowReactive` to provide Vue's reactive functionality
    */
   scope: Readonly<ShallowReactive<Set<T>>>;
 
   /**
-   * Add sideEffect content
+   * Add SideEffect instance
    */
   add: <R extends T>(i: R, ...args: AddArgs) => AddReturn extends Promise<T> ? Promise<R> : R;
 
   /**
-   * Remove specified sideEffect content
+   * Remove specified SideEffect instance
    */
   remove: (i: T, ...args: RemoveArgs) => RemoveReturn;
 
   /**
-   * Remove all sideEffect content that meets the specified criteria
+   * Remove all SideEffect instance that meets the specified criteria
    */
   removeWhere: (predicate: EffcetRemovePredicate<T>, ...args: RemoveArgs) => void;
 
   /**
-   * Remove all sideEffect content within current scope
+   * Remove all SideEffect instance within current scope
    */
   removeScope: (...args: RemoveArgs) => void;
 }
 
 /**
- * Scope the sideEffects of Cesium-related `Collection` and automatically remove them on unmounted
+ * Scope the SideEffects of Cesium-related `Collection` and automatically remove them on unmounted
  * - note: This is a basic function that is intended to be called by other lower-level function
- * @param addFn - add sideEffect function.  eg.`entites.add`
- * @param removeFn - Clean sideEffect function.  eg.`entities.remove`
+ * @param addFn - add SideEffect function.  eg.`entites.add`
+ * @param removeFn - Clean SideEffect function.  eg.`entities.remove`
  * @param removeScopeArgs - The parameters to pass for `removeScope` triggered when the component is unmounted
  */
 export function useCollectionScope<

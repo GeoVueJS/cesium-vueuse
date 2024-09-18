@@ -1,6 +1,6 @@
 export * from './createElementOverlay';
 export * from './createViewer';
-export * from './useCameraLevel';
+export * from './useCameraState';
 export * from './useCesiumEventListener';
 export * from './useCesiumFps';
 export * from './useCesiumMouse';
