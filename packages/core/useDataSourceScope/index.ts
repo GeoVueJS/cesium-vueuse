@@ -6,7 +6,7 @@ import { useCollectionScope } from '../useCollectionScope';
 import { useViewer } from '../useViewer';
 import type { EffcetRemovePredicate } from '../useCollectionScope';
 
-export interface UseDataSourceCollectionScopeOptions {
+export interface UseDataSourceScopeOptions {
   /**
    * The collection of DataSource to be added
    * @default useViewer().value.dataSources
@@ -21,7 +21,7 @@ export interface UseDataSourceCollectionScopeOptions {
   destroyOnRemove?: boolean;
 }
 
-export interface UseDataSourceCollectionScopeRetrun {
+export interface UseDataSourceScopeRetrun {
   /**
    * A `Set` for storing SideEffect instance,
    * which is encapsulated using `ShallowReactive` to provide Vue's reactive functionality
@@ -53,7 +53,7 @@ export interface UseDataSourceCollectionScopeRetrun {
  * Make `add` and `remove` operations of `DataSourceCollection` scoped,
  * automatically remove `DataSource` instance when component is unmounted.
  */
-export function useDataSourceCollectionScope(options: UseDataSourceCollectionScopeOptions = {}): UseDataSourceCollectionScopeRetrun {
+export function useDataSourceScope(options: UseDataSourceScopeOptions = {}): UseDataSourceScopeRetrun {
   const { collection: _collection, destroyOnRemove } = options;
   const viewer = useViewer();
 

@@ -5,7 +5,7 @@ import { useCollectionScope } from '../useCollectionScope';
 import { useViewer } from '../useViewer';
 import type { EffcetRemovePredicate } from '../useCollectionScope';
 
-export interface UseEntityCollectionScopeOptions {
+export interface UseEntityScopeOptions {
   /**
    * The collection of Entity to be added
    * @default useViewer().value.entities
@@ -13,7 +13,7 @@ export interface UseEntityCollectionScopeOptions {
   collection?: MaybeRefOrGetter<EntityCollection>;
 }
 
-export interface UseEntityCollectionScopeRetrun {
+export interface UseEntityScopeRetrun {
   /**
    * A `Set` for storing SideEffect instance,
    * which is encapsulated using `ShallowReactive` to provide Vue's reactive functionality
@@ -45,7 +45,7 @@ export interface UseEntityCollectionScopeRetrun {
  * Make `add` and `remove` operations of `EntityCollection` scoped,
  * automatically remove `Entity` instance when component is unmounted.
  */
-export function useEntityCollectionScope(options: UseEntityCollectionScopeOptions = {}): UseEntityCollectionScopeRetrun {
+export function useEntityScope(options: UseEntityScopeOptions = {}): UseEntityScopeRetrun {
   const { collection: _collection } = options;
   const viewer = useViewer();
 

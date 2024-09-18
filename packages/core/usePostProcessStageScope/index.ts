@@ -5,7 +5,7 @@ import { useCollectionScope } from '../useCollectionScope';
 import { useViewer } from '../useViewer';
 import type { EffcetRemovePredicate } from '../useCollectionScope';
 
-export interface UsePostProcessStageCollectionScopeOptions {
+export interface UsePostProcessStageScopeOptions {
   /**
    * The collection of PostProcessStage to be added
    * @default useViewer().value.postProcessStages
@@ -13,7 +13,7 @@ export interface UsePostProcessStageCollectionScopeOptions {
   collection?: MaybeRefOrGetter<PostProcessStageCollection>;
 }
 
-export interface UsePostProcessStageCollectionScopeRetrun {
+export interface UsePostProcessStageScopeRetrun {
   /**
    * A `Set` for storing SideEffect instance,
    * which is encapsulated using `ShallowReactive` to provide Vue's reactive functionality
@@ -45,7 +45,7 @@ export interface UsePostProcessStageCollectionScopeRetrun {
  * Make `add` and `remove` operations of `PostProcessStageCollection` scoped,
  * automatically remove `PostProcessStage` instance when component is unmounted.
  */
-export function usePostProcessStageCollectionScope(options: UsePostProcessStageCollectionScopeOptions = {}): UsePostProcessStageCollectionScopeRetrun {
+export function usePostProcessStageScope(options: UsePostProcessStageScopeOptions = {}): UsePostProcessStageScopeRetrun {
   const { collection: _collection } = options;
   const viewer = useViewer();
 

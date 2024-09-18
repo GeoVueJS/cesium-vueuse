@@ -6,7 +6,7 @@ import { useViewer } from '../useViewer';
 import type { EffcetRemovePredicate } from '../useCollectionScope';
 import type { CesiumPrimitive } from '../usePrimitive';
 
-export interface UsePrimitiveCollectionScopeOptions {
+export interface UsePrimitiveScopeOptions {
   /**
    * The collection of Primitive to be added
    * @default useViewer().value.scene.primitives
@@ -14,7 +14,7 @@ export interface UsePrimitiveCollectionScopeOptions {
   collection?: MaybeRefOrGetter<PrimitiveCollection>;
 }
 
-export interface UsePrimitiveCollectionScopeRetrun {
+export interface UsePrimitiveScopeRetrun {
   /**
    * A `Set` for storing SideEffect instance,
    * which is encapsulated using `ShallowReactive` to provide Vue's reactive functionality
@@ -46,7 +46,7 @@ export interface UsePrimitiveCollectionScopeRetrun {
  * Make `add` and `remove` operations of `PrimitiveCollection` scoped,
  * automatically remove `Primitive` instance when component is unmounted.
  */
-export function usePrimitiveCollectionScope(options: UsePrimitiveCollectionScopeOptions = {}): UsePrimitiveCollectionScopeRetrun {
+export function usePrimitiveScope(options: UsePrimitiveScopeOptions = {}): UsePrimitiveScopeRetrun {
   const { collection: _collection } = options;
   const viewer = useViewer();
 

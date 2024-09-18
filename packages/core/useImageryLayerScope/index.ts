@@ -5,7 +5,7 @@ import { useCollectionScope } from '../useCollectionScope';
 import { useViewer } from '../useViewer';
 import type { EffcetRemovePredicate } from '../useCollectionScope';
 
-export interface UseImageryLayerCollectionScopeOptions {
+export interface UseImageryLayerScopeOptions {
   /**
    * The collection of ImageryLayer to be added
    * @default useViewer().value.imageryLayers
@@ -20,7 +20,7 @@ export interface UseImageryLayerCollectionScopeOptions {
   destroyOnRemove?: boolean;
 }
 
-export interface UseImageryLayerCollectionScopeRetrun {
+export interface UseImageryLayerScopeRetrun {
   /**
    * A `Set` for storing SideEffect instance,
    * which is encapsulated using `ShallowReactive` to provide Vue's reactive functionality
@@ -52,7 +52,7 @@ export interface UseImageryLayerCollectionScopeRetrun {
  * Make `add` and `remove` operations of `ImageryLayerCollection` scoped,
  * automatically remove `ImageryLayer` instance when component is unmounted.
  */
-export function useImageryLayerCollectionScope(options: UseImageryLayerCollectionScopeOptions = {}): UseImageryLayerCollectionScopeRetrun {
+export function useImageryLayerScope(options: UseImageryLayerScopeOptions = {}): UseImageryLayerScopeRetrun {
   const { collection: _collection, destroyOnRemove } = options;
   const viewer = useViewer();
 
