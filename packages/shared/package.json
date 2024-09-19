@@ -1,6 +1,6 @@
 {
   "name": "@cesium-vueuse/shared",
-  "version": "1.0.1-beta.11",
+  "version": "1.0.1-beta.12",
   "buildInfo": {
     "name": "CesiumVueuseShared",
     "bundle": true
