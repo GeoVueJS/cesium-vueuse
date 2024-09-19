@@ -1,7 +1,7 @@
 import { isFunction } from '@cesium-vueuse/shared';
 import { computed, readonly, ref, toValue, watchEffect } from 'vue';
 
-import type { Arrayable, Pausable } from '@vueuse/core';
+import type { AnyFn, Arrayable, Pausable } from '@vueuse/core';
 
 import type { KeyboardEventModifier } from 'cesium';
 import type { MaybeRefOrGetter } from 'vue';
@@ -50,14 +50,14 @@ export function useGraphicsEventHandler<T = any>(
       return;
     }
 
-    const handler = isFunction(event) ? event : event.callback;
+    const handler: AnyFn = isFunction(event) ? event : event.callback;
     const eventModifier = isFunction(event) ? undefined : event.modifier;
 
     if (!handler || `${eventModifier}` !== `${modifier}`) {
       return;
     }
 
-    const picks = Object.values(params.pick);
+    const picks = Object.values(params.pick) as any[];
 
     for (const pick of picks) {
       if (graphicsList.value.includes(pick)) {
