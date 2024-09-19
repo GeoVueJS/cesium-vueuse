@@ -7,7 +7,7 @@ import { useViewer } from '../useViewer';
 
 export interface UseCameraStateOptions {
   /**
-   * The camera to use.
+   * The camera to use
    * @default useViewer().value.scene.camera
    */
   camera?: MaybeRefOrGetter<Camera | undefined>;
@@ -130,8 +130,7 @@ export function useCameraState(options: UseCameraStateOptions = {}): UseCameraSt
   const setChangedSymbol = () => changedSymbol.value = Symbol('camera change');
 
   watch(camera, () => setChangedSymbol());
-
-  useCesiumEventListener(event, () => changedSymbol.value = Symbol('camera change'));
+  useCesiumEventListener(event, () => setChangedSymbol());
 
   const level = computed(() =>
     (changedSymbol.value && camera.value!.positionCartographic.height)

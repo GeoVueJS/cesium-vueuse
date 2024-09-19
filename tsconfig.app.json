@@ -14,8 +14,8 @@
     "src/**/*.vue",
     "packages/**/*",
     "packages/.vitepress/theme/**/*.{vue,ts,tsx,json}",
-    "packages/.vitepress/theme/components.d.ts",
-    "packages/.vitepress/theme/auto-imports.d.ts"
+    "packages/.vitepress/components.d.ts",
+    "packages/.vitepress/auto-imports.d.ts"
   ],
   "exclude": [
     "**/cache/**",

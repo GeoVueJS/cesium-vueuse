@@ -1,6 +1,5 @@
 import { fileURLToPath, URL } from 'node:url';
 
-import vueJsx from '@vitejs/plugin-vue-jsx';
 import UnoCSS from 'unocss/vite';
 import AutoImport from 'unplugin-auto-import/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
@@ -8,6 +7,7 @@ import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import VueDevTools from 'vite-plugin-vue-devtools';
+import { DemoAutoResolver } from './utils/normalizeDemo';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 
@@ -16,21 +16,24 @@ export default defineConfig({
     CESIUM_BASE_URL: JSON.stringify('/cesium/'),
   },
   plugins: [
-    vueJsx(),
     VueDevTools(),
     UnoCSS(),
     Components({
       dirs: fileURLToPath(new URL('./theme/components', import.meta.url)),
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
-      resolvers: [ElementPlusResolver()],
-      dts: fileURLToPath(new URL('./theme/components.d.ts', import.meta.url)),
+      resolvers: [
+        ElementPlusResolver(),
+        DemoAutoResolver(),
+
+      ],
+      dts: fileURLToPath(new URL('./components.d.ts', import.meta.url)),
+
     }),
     AutoImport({
       resolvers: [ElementPlusResolver()],
-      dts: fileURLToPath(new URL('./theme/auto-imports.d.ts', import.meta.url)),
+      dts: fileURLToPath(new URL('./auto-imports.d.ts', import.meta.url)),
     }),
     viteStaticCopy({
-
       targets: [
         {
           src: `${root}/node_modules/cesium/Build/Cesium/Workers/**`,

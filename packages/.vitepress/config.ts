@@ -1,8 +1,8 @@
 import { fileURLToPath, URL } from 'node:url';
 
-import demoBlock from 'markdown-it-vitepress-demo';
 import { defineConfig } from 'vitepress';
 
+import { markdownDemoContainer } from './plugins/demoContainer';
 import { generateSidebar } from './utils/generateSidebar';
 
 // https://vitepress.dev/reference/site-config
@@ -16,7 +16,7 @@ export default defineConfig({
   },
   markdown: {
     config(md) {
-      md.use(demoBlock);
+      md.use(markdownDemoContainer);
     },
   },
   locales: {

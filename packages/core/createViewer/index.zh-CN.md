@@ -1,9 +1,13 @@
 # createViewer
 
-## Demo
+::: demo src="./demo.vue" title="Demo block"
 
-<script setup>
-import Demo from './demo.vue'
-</script>
+This is a `description` that can be written using Markdown.
 
-<Demo />
+:::
+
+::: demo src="./demo.vue" title="Demo block2"
+
+This is a `description` that can be written using Markdown.
+
+:::

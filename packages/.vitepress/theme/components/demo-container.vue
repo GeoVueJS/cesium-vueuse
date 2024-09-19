@@ -1,73 +1,65 @@
 <script lang="ts" setup>
 import { useClipboard } from '@vueuse/core';
-import { ElMessage } from 'element-plus';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
-const props = withDefaults(
-  defineProps<{
-    sfcTsCode: string;
-    // if using ts, sfcJsCode will transform the to js
-    sfcJsCode: string;
-    sfcTsHtml: string;
-    sfcJsHtml: string;
-    title: string;
-    cesium?: boolean;
-    metadata: object;
-  }>(),
-  {
-    cesium: true,
-  },
-);
+const props = defineProps<{
+  codeHtml: string;
+  code: string;
+}>();
 
-const sfcCode = computed(() => decodeURIComponent(props.sfcTsCode || props.sfcJsCode));
-
-const highlightedHtml = computed(() => decodeURIComponent(props.sfcTsHtml || props.sfcJsHtml));
-
-const { copy } = useClipboard({ source: sfcCode });
-
-async function copyAsync() {
-  await copy();
-  ElMessage.success('复制成功');
-}
-
-const codeVisible = ref(false);
+const { copy, copied } = useClipboard({
+  source: () => decodeURIComponent(props.code),
+});
+const sourceVisible = ref(false);
 </script>
 
 <template>
-  <div
-    class="demo-container"
-    of="hidden"
-    b="1px solid"
-    b-color="[--vp-c-divider]"
-    rd="4px"
-  >
-    <slot name="desc" />
-    <slot />
-    <div>
-      <div flex="~ justify-end items-center" h="44px" p="x-10px">
-        <el-button :style="{ color: 'var(--vp-c-brand-1)' }" @click="copyAsync()">
-          <template #icon>
-            <i class="i-tabler:copy" />
-          </template>
-        </el-button>
-        <el-button :style="{ color: 'var(--vp-c-brand-1)' }" @click="codeVisible = !codeVisible">
-          <template #icon>
-            <i class="i-tabler:code" />
-          </template>
-        </el-button>
-      </div>
-      <div
-        v-show="codeVisible"
-        b-t="1px solid"
-        b-color="[--vp-c-divider]"
-        p="20px"
-      >
-        <div
-          m="0!"
-          rd="0px!"
-          v-html="highlightedHtml"
-        />
-      </div>
+  <slot />
+  <div class="demo-container">
+    <slot name="demo" />
+    <div class="handle-bar">
+      <button p="8px" mx="8px" class="i-tabler:brand-github" />
+      <button
+        p="8px"
+        mx="8px"
+        :class="{ 'i-tabler:copy': !copied, 'i-tabler:check': copied }"
+        @click="copy()"
+      />
+      <button p="8px" mx="8px" class="i-tabler:code" @click="sourceVisible = !sourceVisible" />
     </div>
+
+    <div
+      class="preview-code-area"
+      transition="all 300"
+      :class="{
+        'preview-code-area--active': sourceVisible,
+      }"
+      v-html="decodeURIComponent(props.codeHtml)"
+    />
   </div>
 </template>
+
+<style lang="scss" scoped>
+.demo-container {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  .handle-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 40px;
+    padding: 0 10px;
+  }
+  .preview-code-area {
+    z-index: 1;
+    position: relative;
+    transition: all 3s ease;
+    overflow: hidden;
+    height: 0;
+    &.preview-code-area--active {
+      border-top: 1px solid var(--vp-c-divider);
+      height: auto;
+    }
+  }
+}
+</style>

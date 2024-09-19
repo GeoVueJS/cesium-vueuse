@@ -1,7 +1,6 @@
 // https://vitepress.dev/guide/custom-theme
 import Theme from 'vitepress/theme';
 import { h } from 'vue';
-
 import 'uno.css';
 import '@unocss/reset/tailwind.css';
 
@@ -13,6 +12,5 @@ export default {
     });
   },
   // enhanceApp({ app, router, siteData }) {
-  //   // ...
   // },
 };

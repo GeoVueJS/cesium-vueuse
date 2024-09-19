@@ -7,8 +7,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    DemoContainer: typeof import('./components/demo-container.vue')['default']
-    ElButton: typeof import('element-plus/es')['ElButton']
+    'AutoDemo__core_createViewer_demo$vue': typeof import('./../core/createViewer/demo.vue')['default']
+    'AutoDemo_core_createViewer_demo$vue': typeof import('./../core/createViewer/demo.vue')['default']
+    DemoContainer: typeof import('./theme/components/demo-container.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
