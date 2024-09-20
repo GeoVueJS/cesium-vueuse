@@ -46,7 +46,7 @@ jobs:
 
       - run: pnpm run docs:build
 
-      - name: Build
+      - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./packages/.vitepress/dist
