@@ -6,7 +6,7 @@
 
     "body": [
       "<!-- ${1:请输入页面名称} -->",
-      "<script lang=\"ts\" setup>",
+      "<script setup lang=\"ts\">",
       "  defineOptions({ name: '${RELATIVE_FILEPATH/(.+pages)(.+).vue/${2:/pascalcase}/g}' });",
       "definePage({",
         "meta: {",
@@ -30,9 +30,8 @@
     "description": "新建setup-script组件",
 
     "body": [
-      "<!-- ${1:请输入组件名称或备注} -->",
-      "<script lang=\"ts\" setup>",
-      "  defineOptions({ name: '${RELATIVE_FILEPATH/(.+?(\\\\|\\/))((-|\\w|(\\.\\w+))+)((\\\\|\\/)index)*.vue/${3:/pascalcase}/g}' });",
+      "<script setup lang=\"ts\">",
+      "${2}",
       "</script>",
       "",
       "<template>",

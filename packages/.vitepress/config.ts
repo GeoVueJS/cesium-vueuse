@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vitepress';
 
 import { markdownDemoContainer } from './plugins/demoContainer';
+import { markdownDtsContainer } from './plugins/dtsContainer';
 import { generateSidebar } from './utils/generateSidebar';
 
 // https://vitepress.dev/reference/site-config
@@ -17,6 +18,7 @@ export default defineConfig({
   markdown: {
     config(md) {
       md.use(markdownDemoContainer);
+      md.use(markdownDtsContainer);
     },
   },
   locales: {

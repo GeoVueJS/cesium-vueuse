@@ -11,15 +11,15 @@
   },
   "include": [
     "env.d.ts",
-    "src/**/*.vue",
     "packages/**/*",
-    "packages/.vitepress/theme/**/*.{vue,ts,tsx,json}",
+    "packages/.vitepress/theme/**/*.{vue,ts,json}",
     "packages/.vitepress/components.d.ts",
-    "packages/.vitepress/auto-imports.d.ts"
+    "packages/.vitepress/auto-imports.d.ts",
+    "packages/**/*.{vue,ts,json}"
+
   ],
   "exclude": [
     "**/cache/**",
-    "src/**/__tests__/*",
     "**/node_modules/**"
   ]
 }

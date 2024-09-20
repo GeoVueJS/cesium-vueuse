@@ -10,6 +10,7 @@ export default antfu({
   },
   vue: {
     overrides: {
+      'vue/valid-template-root': 'off',
       'vue/max-attributes-per-line': [
         'warn',
         {

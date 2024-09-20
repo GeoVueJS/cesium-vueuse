@@ -1,13 +1,15 @@
-<script lang="ts" setup>
-import { useEntity } from '../useEntity';
+<script setup lang="ts">
+import { createViewer } from '@cesium-vueuse/core';
+import { shallowRef } from 'vue';
+import 'cesium/Build/Cesium/Widgets/widgets.css';
 
-useEntity(() => {
-  return new Cesium.Entity({
-    position: Cesium.Cartesian3.fromDegrees(110, 20, 100),
-    point: {
-      pixelSize: 10,
-      color: Cesium.Color.RED,
-    },
-  });
+const elRef = shallowRef<HTMLElement>();
+
+createViewer(elRef, {
+// ... options
 });
 </script>
+
+<template>
+  <div ref="elRef" class="absolute inset-0" />
+</template>
