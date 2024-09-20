@@ -1,24 +1,85 @@
 <script lang="ts" setup>
 import { useClipboard } from '@vueuse/core';
-import { ref } from 'vue';
+import { defineAsyncComponent, ref } from 'vue';
+import type { AsyncComponentLoader } from 'vue';
 
-const props = defineProps<{
-  codeHtml: string;
+const props = withDefaults(defineProps<{
+  /**
+   * Relative path to demo file
+   */
+  src: string;
+
+  /**
+   * use cesium container
+   * @default true
+   */
+  cesium?: boolean;
+
+  /**
+   * Relative root path to demo file
+   * - note:automatically generated
+   */
+  path: string;
+
+  /**
+   * demo's asynchronous component loading function
+   * - note:automatically generated
+   */
+  aysncDemo: AsyncComponentLoader;
+  /**
+   * content to demo file
+   */
   code: string;
-}>();
+  /**
+   * highlighted code html
+   */
+  codeHtml: string;
+}>(), {
+  cesium: true,
+});
 
 const { copy, copied } = useClipboard({
   source: () => decodeURIComponent(props.code),
 });
 const sourceVisible = ref(false);
+
+const demo = defineAsyncComponent(props.aysncDemo);
+
+function openGithub() {
+  window.open(`https://github.com/vuegis/cesium-vueuse/blob/main/${props.path}`);
+}
 </script>
 
 <template>
-  <slot />
-  <div class="demo-container">
-    <slot name="demo" />
-    <div class="handle-bar">
-      <button p="8px" mx="8px" class="i-tabler:brand-github" />
+  <div
+    class="demo-container"
+    b="1px [var(--vp-c-divider)]"
+    rd="4px"
+    of="hidden"
+  >
+    <client-only>
+      <div class="relative min-h-400px">
+        <Suspense>
+          <component :is="defineAsyncComponent(() => import('./cesium-container.vue'))" v-if="cesium">
+            <component :is="demo" />
+          </component>
+          <component :is="demo" v-else />
+          <template #fallback>
+            <div class="absolute inset-0" flex="~ justify-center items-center">
+              <span class="i-svg-spinners:3-dots-scale block" text="50px [var(--vp-c-brand-1)]" />
+            </div>
+          </template>
+        </Suspense>
+      </div>
+    </client-only>
+    <div
+      class="handle-bar"
+      size="h-40px"
+      p="x-10px"
+      flex="~ justify-end items-center"
+      b-t="1px [var(--vp-c-divider)]"
+    >
+      <button p="8px" mx="8px" class="i-tabler:brand-github" @click="openGithub" />
       <button
         p="8px"
         mx="8px"
@@ -30,7 +91,6 @@ const sourceVisible = ref(false);
 
     <div
       class="preview-code-area"
-      transition="all 300"
       :class="{
         'preview-code-area--active': sourceVisible,
       }"
@@ -41,24 +101,20 @@ const sourceVisible = ref(false);
 
 <style lang="scss" scoped>
 .demo-container {
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 4px;
-  .handle-bar {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 40px;
-    padding: 0 10px;
-  }
   .preview-code-area {
     z-index: 1;
     position: relative;
-    transition: all 3s ease;
+    transition: height 3s ease;
     overflow: hidden;
     height: 0;
     &.preview-code-area--active {
       border-top: 1px solid var(--vp-c-divider);
       height: auto;
+    }
+
+    :deep()div[class*='language-'] {
+      margin: 0px;
+      border-radius: 0;
     }
   }
 }

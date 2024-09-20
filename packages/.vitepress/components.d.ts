@@ -7,8 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    'AutoDemo__core_createViewer_demo$vue': typeof import('./../core/createViewer/demo.vue')['default']
-    'AutoDemo_core_createViewer_demo$vue': typeof import('./../core/createViewer/demo.vue')['default']
+    CesiumContainer: typeof import('./theme/components/cesium-container.vue')['default']
     DemoContainer: typeof import('./theme/components/demo-container.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

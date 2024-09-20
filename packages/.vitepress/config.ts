@@ -33,7 +33,12 @@ export default defineConfig({
           base: '/',
           filter: path => path.split('.').length === 2 && path.endsWith('.md') && !path.startsWith('index'),
         }),
-
+        editLink: {
+          text: 'Edit this page on GitHub',
+          pattern: (payload) => {
+            return `https://github.com/vuegis/cesium-vueuse/edit/main/packages/${payload.relativePath}`;
+          },
+        },
       },
     },
     zh: {

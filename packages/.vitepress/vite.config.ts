@@ -7,7 +7,6 @@ import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import VueDevTools from 'vite-plugin-vue-devtools';
-import { DemoAutoResolver } from './utils/normalizeDemo';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 
@@ -23,8 +22,6 @@ export default defineConfig({
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
       resolvers: [
         ElementPlusResolver(),
-        DemoAutoResolver(),
-
       ],
       dts: fileURLToPath(new URL('./components.d.ts', import.meta.url)),
 

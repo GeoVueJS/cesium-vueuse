@@ -1,13 +1,18 @@
+---
+related: useViewer
+---
+
 # createViewer
 
-::: demo src="./demo.vue" title="Demo block"
+<script>
 
-This is a `description` that can be written using Markdown.
+</script>
 
+Initialize a Viewer instance, which can be accessed by the current component and its descendant components using `useViewer`.
+
+## Usage
+
+:::demo src="./demo.vue"
 :::
 
-::: demo src="./demo.vue" title="Demo block2"
-
-This is a `description` that can be written using Markdown.
-
-:::
+## Type Definitions

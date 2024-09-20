@@ -1,10 +1,10 @@
 import { toAwaitedValue } from '@cesium-vueuse/shared';
 import { computedAsync } from '@vueuse/core';
 import { Entity } from 'cesium';
+
 import { computed, toValue, watchEffect } from 'vue';
 
 import type { MaybeRefOrAsyncGetter } from '@cesium-vueuse/shared';
-
 import type { Arrayable } from '@vueuse/core';
 import type { EntityCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
@@ -68,7 +68,9 @@ export function useEntity<T extends Entity>(
   } = options;
 
   const maybeList = computedAsync(
-    () => toAwaitedValue(data),
+    () => {
+      return toAwaitedValue(data);
+    },
     [],
     {
       evaluating,

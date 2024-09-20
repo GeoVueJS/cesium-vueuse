@@ -8,5 +8,4 @@ declare module '@vue/runtime-dom' {
 
 declare global {
   export type GlobalComponents = import('vue').GlobalComponents;
-  export * as Cesium from 'cesium';
 }
