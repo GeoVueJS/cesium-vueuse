@@ -2,7 +2,7 @@
 import Theme from 'vitepress/theme';
 import { h } from 'vue';
 import 'uno.css';
-
+import './theme.css';
 import '@unocss/reset/tailwind.css';
 
 export default {

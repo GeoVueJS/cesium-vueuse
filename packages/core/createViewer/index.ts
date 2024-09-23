@@ -1,5 +1,5 @@
 import { Viewer } from 'cesium';
-import { getCurrentInstance, provide, shallowReadonly, shallowRef, toRaw, toValue, watchEffect } from 'vue';
+import { computed, getCurrentInstance, provide, shallowReadonly, shallowRef, toRaw, toValue, watchEffect } from 'vue';
 
 import type { MaybeComputedElementRef } from '@vueuse/core';
 import type { ComponentInternalInstance, InjectionKey, MaybeRefOrGetter, ShallowRef } from 'vue';
@@ -66,5 +66,7 @@ export function createViewer(...args: any) {
     }
   });
 
-  return readonlyViewer;
+  return computed(() => {
+    return viewer.value?.isDestroyed() ? undefined : viewer.value;
+  });
 }

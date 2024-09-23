@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useClipboard } from '@vueuse/core';
+import { refAutoReset, useClipboard } from '@vueuse/core';
 import * as Cesium from 'cesium';
 import { defineAsyncComponent, ref } from 'vue';
 import type { AsyncComponentLoader } from 'vue';
@@ -46,6 +46,8 @@ const { copy, copied } = useClipboard({
 });
 const sourceVisible = ref(false);
 
+const reset = refAutoReset(true, 1);
+
 const demo = defineAsyncComponent(props.aysncDemo);
 
 function openGithub() {
@@ -61,8 +63,8 @@ function openGithub() {
     of="hidden"
   >
     <client-only>
-      <div class="relative min-h-400px">
-        <Suspense>
+      <div class="relative min-h-500px">
+        <Suspense v-if="reset">
           <component :is="defineAsyncComponent(() => import('./cesium-container.vue'))" v-if="cesium">
             <component :is="demo" />
           </component>
@@ -82,6 +84,12 @@ function openGithub() {
       flex="~ justify-end items-center"
       b-t="1px [var(--vp-c-divider)]"
     >
+      <button
+        p="8px"
+        mx="8px"
+        class="i-tabler:reload"
+        @click="reset = false"
+      />
       <button p="8px" mx="8px" class="i-tabler:brand-github" @click="openGithub" />
       <button
         p="8px"

@@ -9,6 +9,14 @@ import type { Ref } from 'vue';
 import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
 import { useViewer } from '../useViewer';
 
+export interface UseCesiumMouseOptions {
+  /**
+   * Throttled sampling (ms)
+   * @default 8
+   */
+  delay?: number;
+}
+
 export interface UseCesiumMouseRetrun {
   /**
    * Mouse coordinates on Cesium canvas
@@ -23,16 +31,18 @@ export interface UseCesiumMouseRetrun {
 /**
  * Reactive Mouse coordinates
  */
-export function useCesiumMouse(): UseCesiumMouseRetrun {
+export function useCesiumMouse(options: UseCesiumMouseOptions = {}): UseCesiumMouseRetrun {
+  const { delay = 8 } = options;
+
   const viewer = useViewer();
 
   const coordinate = shallowRef<Cartesian2>();
-  const coordinateThrottled = throttledRef<Cartesian2 | undefined>(coordinate, 16, false, true);
+  const coordinateThrottled = throttledRef<Cartesian2 | undefined>(coordinate, delay, false, true);
 
   useScreenSpaceEventHandler({
     type: ScreenSpaceEventType.MOUSE_MOVE,
     inputAction: (ctx) => {
-      coordinate.value = ctx.endPosition;
+      coordinate.value = ctx.endPosition.clone();
     },
   });
 
