@@ -1,22 +1,13 @@
 import { toAwaitedValue } from '@cesium-vueuse/shared';
 import { computedAsync } from '@vueuse/core';
-import { Entity } from 'cesium';
-
-import { computed, toValue, watchEffect } from 'vue';
+import { toValue, watchEffect } from 'vue';
 
 import type { MaybeRefOrAsyncGetter } from '@cesium-vueuse/shared';
+
 import type { Arrayable } from '@vueuse/core';
-import type { EntityCollection } from 'cesium';
+import type { Entity, EntityCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
 import { useViewer } from '../useViewer';
-
-function toEntity(entityOrOption?: Entity | Entity.ConstructorOptions): Entity | undefined {
-  return entityOrOption
-    ? entityOrOption instanceof Entity
-      ? entityOrOption
-      : new Entity(entityOrOption)
-    : undefined;
-}
 
 export interface UseEntityOptions {
   /**
@@ -43,7 +34,7 @@ export interface UseEntityOptions {
  * overLoaded1: Parameter supports passing in a single value.
  */
 export function useEntity<T extends Entity = Entity>(
-  entity?: MaybeRefOrAsyncGetter<T | Entity.ConstructorOptions | undefined>,
+  entity?: MaybeRefOrAsyncGetter<T | undefined>,
   options?: UseEntityOptions
 ): ComputedRef<T | undefined>;
 
@@ -53,7 +44,7 @@ export function useEntity<T extends Entity = Entity>(
  * overLoaded2: Parameter supports passing in an array.
  */
 export function useEntity<T extends Entity = Entity>(
-  entities?: MaybeRefOrAsyncGetter<Array<Entity.ConstructorOptions | T | undefined>>,
+  entities?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
   options?: UseEntityOptions
 ): ComputedRef<T[] | undefined>;
 
@@ -67,25 +58,13 @@ export function useEntity<T extends Entity>(
     evaluating,
   } = options;
 
-  const maybeList = computedAsync(
-    () => {
-      return toAwaitedValue(data);
-    },
+  const result = computedAsync(
+    () => toAwaitedValue(data),
     [],
     {
       evaluating,
     },
   );
-
-  const result = computed(() => {
-    if (Array.isArray(maybeList.value)) {
-      return maybeList.value.map(data => toEntity(data));
-    }
-    else {
-      const data = maybeList.value;
-      return toEntity(data);
-    }
-  });
 
   const viewer = useViewer();
 

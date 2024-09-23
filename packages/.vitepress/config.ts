@@ -35,6 +35,9 @@ export default defineConfig({
           base: '/',
           filter: path => path.split('.').length === 2 && path.endsWith('.md') && !path.startsWith('index'),
         }),
+        lastUpdated: {
+          text: 'Last Updated',
+        },
         editLink: {
           text: 'Edit this page on GitHub',
           pattern: (payload) => {
@@ -56,13 +59,21 @@ export default defineConfig({
           base: '/zh',
           filter: path => path.endsWith('.zh-CN.md'),
         }),
-
+        lastUpdated: {
+          text: '最后更新于',
+        },
+        editLink: {
+          text: '在github中编辑此页',
+          pattern: (payload) => {
+            return `https://github.com/vuegis/cesium-vueuse/edit/main/packages/${payload.relativePath.replace('zh/', '')}`;
+          },
+        },
       },
     },
   },
   themeConfig: {
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' },
+      { icon: 'github', link: 'https://github.com/vuegis/cesium-vueuse' },
     ],
   },
 });

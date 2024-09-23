@@ -17,5 +17,7 @@ Initialize a Viewer instance, which can be accessed by the current component and
 
 ## Type Definitions
 
+:::details
 :::dts ./index.ts ./index.ts
+:::
 :::

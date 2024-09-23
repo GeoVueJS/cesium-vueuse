@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { createViewer } from '@cesium-vueuse/core';
-import * as Cesium from 'cesium';
 import { shallowRef } from 'vue';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
@@ -18,8 +17,6 @@ createViewer(elRef, {
   sceneModePicker: false,
   baseLayerPicker: false,
 });
-
-Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxM2QxOTZmOC00NGEwLTRjOTMtODUzYi03ZmM3MmFhMDhmYjEiLCJpZCI6ODUxMDcsImlhdCI6MTcyNTI3NjU4NH0.ZmrKQrRWFRCQLRSUEuPvVa6kFYvJ_3othkPumVfvQmU';
 </script>
 
 <template>
