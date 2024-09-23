@@ -7,7 +7,10 @@
     "paths": {
       "@cesium-vueuse/core": ["packages/core"],
       "@cesium-vueuse/shared": ["packages/shared"]
-    }
+    },
+    "types": [
+      "vite/client"
+    ]
   },
   "include": [
     "env.d.ts",
