@@ -1,8 +1,7 @@
+import type { ShallowReactive } from 'vue';
 import { isPromise } from '@cesium-vueuse/shared';
 import { tryOnScopeDispose } from '@vueuse/core';
 import { shallowReadonly } from 'vue';
-
-import type { ShallowReactive } from 'vue';
 
 export type EffcetRemovePredicate<T> = (instance: T) => boolean;
 

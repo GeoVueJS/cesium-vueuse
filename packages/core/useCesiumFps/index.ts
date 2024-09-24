@@ -1,8 +1,16 @@
-import { computed, readonly, ref, shallowRef, watch } from 'vue';
-
 import type { Ref } from 'vue';
+import { watchThrottled } from '@vueuse/core';
+import { computed, readonly, ref, shallowRef } from 'vue';
 import { useCesiumEventListener } from '../useCesiumEventListener';
 import { useViewer } from '../useViewer';
+
+export interface UseCesiumFpsOptions {
+  /**
+   * Throttled sampling (ms)
+   * @default 8
+   */
+  delay?: number;
+}
 
 export interface UseCesiumFpsRetrun {
   /**
@@ -19,7 +27,9 @@ export interface UseCesiumFpsRetrun {
 /**
  * Reactive get the frame rate of Cesium
  */
-export function useCesiumFps(): UseCesiumFpsRetrun {
+export function useCesiumFps(options: UseCesiumFpsOptions = {}): UseCesiumFpsRetrun {
+  const { delay = 8 } = options;
+
   const viewer = useViewer();
   const p = shallowRef(performance.now());
 
@@ -30,11 +40,14 @@ export function useCesiumFps(): UseCesiumFpsRetrun {
 
   const interval = ref(0);
 
-  watch(p, (value, oldValue) => {
+  watchThrottled(p, (value, oldValue) => {
     interval.value = value - oldValue;
+  }, {
+    throttle: delay,
   });
+
   const fps = computed(() => {
-    return Number.parseFloat((1000 / interval.value).toFixed(1));
+    return 1000 / interval.value;
   });
 
   return {

@@ -1,7 +1,5 @@
 import { fileURLToPath, URL } from 'node:url';
-
 import { defineConfig } from 'vitepress';
-
 import { markdownDemoContainer } from './plugins/demoContainer';
 import { markdownDtsContainer } from './plugins/dtsContainer';
 import { generateSidebar } from './utils/generateSidebar';

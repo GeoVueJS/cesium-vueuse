@@ -1,8 +1,8 @@
+import type MarkdownIt from 'markdown-it';
+import type { MarkdownEnv } from 'vitepress';
 import fs from 'node:fs';
 import path from 'node:path';
 import mdContainer from 'markdown-it-container';
-import type MarkdownIt from 'markdown-it';
-import type { MarkdownEnv } from 'vitepress';
 
 // eslint-disable-next-line regexp/no-super-linear-backtracking
 const dtsRE = /^dts\s*(.*)$/;

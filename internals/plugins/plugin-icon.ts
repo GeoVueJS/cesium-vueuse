@@ -1,8 +1,6 @@
 import { fileURLToPath } from 'node:url';
-
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders';
 import Icons from 'unplugin-icons/vite';
-
 import { svgTransform } from '../svg-icon';
 
 export function InternalPluginIcon() {

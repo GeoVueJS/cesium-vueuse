@@ -1,7 +1,7 @@
-import { refThrottled } from '@vueuse/core';
-import { computed, shallowRef, toValue, watch } from 'vue';
 import type { Camera, Cartesian3, Cartographic, Rectangle } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
+import { refThrottled } from '@vueuse/core';
+import { computed, shallowRef, toValue, watch } from 'vue';
 import { useCesiumEventListener } from '../useCesiumEventListener';
 import { useViewer } from '../useViewer';
 
@@ -127,32 +127,32 @@ export function useCameraState(options: UseCameraStateOptions = {}): UseCameraSt
     false,
   );
 
-  const setChangedSymbol = () => changedSymbol.value = Symbol('camera change');
+  const setChangedSymbol = () => {
+    changedSymbol.value = Symbol('camera change');
+  };
 
   watch(camera, () => setChangedSymbol());
   useCesiumEventListener(event, () => setChangedSymbol());
 
-  const level = computed(() =>
-    (changedSymbol.value && camera.value!.positionCartographic.height)
-      ? computeLevel(camera.value!.positionCartographic.height)
-      : undefined);
-
   return {
     camera,
-    position: computed(() => changedSymbol.value ? camera.value?.position : undefined),
-    direction: computed(() => changedSymbol.value ? camera.value?.direction : undefined),
-    up: computed(() => changedSymbol.value ? camera.value?.up : undefined),
-    right: computed(() => changedSymbol.value ? camera.value?.right : undefined),
-    positionCartographic: computed(() => changedSymbol.value ? camera.value?.positionCartographic : undefined),
-    positionWC: computed(() => changedSymbol.value ? camera.value?.positionWC : undefined),
-    directionWC: computed(() => changedSymbol.value ? camera.value?.directionWC : undefined),
-    upWC: computed(() => changedSymbol.value ? camera.value?.directionWC : undefined),
-    rightWC: computed(() => changedSymbol.value ? camera.value?.directionWC : undefined),
+    position: computed(() => changedSymbol.value ? camera.value?.position?.clone() : undefined),
+    direction: computed(() => changedSymbol.value ? camera.value?.direction?.clone() : undefined),
+    up: computed(() => changedSymbol.value ? camera.value?.up?.clone() : undefined),
+    right: computed(() => changedSymbol.value ? camera.value?.right?.clone() : undefined),
+    positionCartographic: computed(() => changedSymbol.value ? camera.value?.positionCartographic?.clone() : undefined),
+    positionWC: computed(() => changedSymbol.value ? camera.value?.positionWC?.clone() : undefined),
+    directionWC: computed(() => changedSymbol.value ? camera.value?.directionWC?.clone() : undefined),
+    upWC: computed(() => changedSymbol.value ? camera.value?.directionWC?.clone() : undefined),
+    rightWC: computed(() => changedSymbol.value ? camera.value?.directionWC?.clone() : undefined),
     viewRectangle: computed(() => changedSymbol.value ? camera.value?.computeViewRectangle() : undefined),
     heading: computed(() => changedSymbol.value ? camera.value?.heading : undefined),
     pitch: computed(() => changedSymbol.value ? camera.value?.pitch : undefined),
     roll: computed(() => changedSymbol.value ? camera.value?.roll : undefined),
-    level,
+    level: computed(() =>
+      (changedSymbol.value && camera.value?.positionCartographic?.height)
+        ? computeLevel(camera.value.positionCartographic.height)
+        : undefined),
   };
 }
 

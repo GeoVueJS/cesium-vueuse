@@ -1,8 +1,7 @@
-import { throttle } from '@cesium-vueuse/shared';
-import { ScreenSpaceEventType } from 'cesium';
-
 import type { Cartesian2, KeyboardEventModifier, ScreenSpaceEventHandler, Viewer } from 'cesium';
 import type { GraphicsHandlerCallback, GraphicsPositiondEventType } from './types';
+import { throttle } from '@cesium-vueuse/shared';
+import { ScreenSpaceEventType } from 'cesium';
 
 const POSITIOND_EVENT_TYPE_MAP: Record<ScreenSpaceEventType, GraphicsPositiondEventType | undefined> = {
   [ScreenSpaceEventType.LEFT_DOWN]: 'LEFT_DOWN',

@@ -2,7 +2,7 @@
 import Theme from 'vitepress/theme';
 import { h } from 'vue';
 import 'uno.css';
-
+import './theme.css';
 import '@unocss/reset/tailwind.css';
 
 export default {
@@ -12,6 +12,7 @@ export default {
       // https://vitepress.dev/guide/extending-default-theme#layout-slots
     });
   },
-  // enhanceApp({ app, router, siteData }) {
+  // enhanceApp(ctx: EnhanceAppContext) {
+
   // },
 };

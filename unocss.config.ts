@@ -1,5 +1,4 @@
 import { fileURLToPath } from 'node:url';
-
 import {
   defineConfig,
   presetAttributify,
@@ -7,7 +6,6 @@ import {
   presetUno,
   transformerAttributifyJsx,
 } from 'unocss';
-
 import { generateIconCollection } from './internals/svg-icon';
 
 const customIconPath = fileURLToPath(new URL('./icons', import.meta.url));

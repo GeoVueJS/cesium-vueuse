@@ -5,8 +5,8 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "baseUrl": ".",
     "paths": {
-      "@cesium-vueuse/core": ["packages/core"],
-      "@cesium-vueuse/shared": ["packages/shared"]
+      "@cesium-vueuse/core": ["./packages/core"],
+      "@cesium-vueuse/shared": ["./packages/shared"]
     },
     "types": [
       "vite/client"
@@ -18,8 +18,8 @@
     "packages/.vitepress/theme/**/*.{vue,ts,json}",
     "packages/.vitepress/components.d.ts",
     "packages/.vitepress/auto-imports.d.ts",
-    "packages/**/*.{vue,ts,json}"
-
+    "packages/**/*.vue",
+    "packages/**/*.ts"
   ],
   "exclude": [
     "**/cache/**",

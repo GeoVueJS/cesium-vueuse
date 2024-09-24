@@ -1,34 +1,29 @@
 # createViewer
 
-初始化Viewer或复用已存在的实例，当前组件及其后代组件可以使用`useViewer`访问该实例。
+Initializes a Viewer or reuses an existing instance, which can be accessed by `useViewer` in the current component and its descendant components.
 
 ## Usage
 
 :::demo src="./demo.vue" :cesium="false"
 :::
 
-:::tip 提示
-若 `useViewer` 与 `createViewer` 同时在同一组件内使用:
+:::warning Note
+If `useViewer` and `createViewer` are used in the same component:
 
-- `useViewer`需处于`createViewer`之后调用
-- `useViewer`会优先使用当前组件`createViewer`创建的实例
+- `useViewer` should be called after `createViewer`
+
+- `useViewer` will preferentially use the instance created by `createViewer` in the current component
   :::
 
 ```ts
-// overLoad1:创建新实例，组件卸载时实例会自动销毁
+// overLoad1: Creates a new instance, which is automatically destroyed when the component unmounts
 const viewer = createViewer(elRef, {
   // ...options
 });
 
-// overLoad2:复用已存在的实例，组件卸载时实例不会自动销毁
-const viewer = createViewer(viewer);
+// overLoad2: Injects an existing instance, which is not automatically destroyed when the component unmounts
+const viewer = createViewer(window.viewer);
 
-// 创建实例后，当前组件及其后代组件可以使用useViewer访问该实例
+// After creating an instance, the current component and its descendant components can access the instance using useViewer
 const viewer = useViewer();
 ```
-
-## Type Definitions
-
-:::details
-:::dts ./index.ts
-:::

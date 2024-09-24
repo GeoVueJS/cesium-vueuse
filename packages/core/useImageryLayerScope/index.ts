@@ -1,9 +1,9 @@
-import { computed, toValue } from 'vue';
 import type { ImageryLayer, ImageryLayerCollection } from 'cesium';
 import type { MaybeRefOrGetter, ShallowReactive } from 'vue';
+import type { EffcetRemovePredicate } from '../useCollectionScope';
+import { computed, toValue } from 'vue';
 import { useCollectionScope } from '../useCollectionScope';
 import { useViewer } from '../useViewer';
-import type { EffcetRemovePredicate } from '../useCollectionScope';
 
 export interface UseImageryLayerScopeOptions {
   /**

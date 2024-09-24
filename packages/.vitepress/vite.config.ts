@@ -1,5 +1,4 @@
 import { fileURLToPath, URL } from 'node:url';
-
 import UnoCSS from 'unocss/vite';
 import AutoImport from 'unplugin-auto-import/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';

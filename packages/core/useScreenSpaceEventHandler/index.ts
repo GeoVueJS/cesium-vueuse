@@ -1,10 +1,8 @@
-import { ScreenSpaceEventHandler, ScreenSpaceEventType } from 'cesium';
-import { computed, readonly, ref, toValue, watch, watchEffect } from 'vue';
-
 import type { Pausable } from '@vueuse/core';
-
 import type { KeyboardEventModifier } from 'cesium';
 import type { MaybeRefOrGetter } from 'vue';
+import { ScreenSpaceEventHandler, ScreenSpaceEventType } from 'cesium';
+import { computed, readonly, ref, toValue, watch, watchEffect } from 'vue';
 import { useViewer } from '../useViewer';
 
 export type InputAction<T extends ScreenSpaceEventType> = {

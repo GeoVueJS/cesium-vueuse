@@ -1,6 +1,6 @@
 # useEntity
 
-快捷加载`Entity`，当数据变化时自动销毁或重载entity实例
+响应式加载`Entity`，当数据变化时自动销毁或重载entity实例
 
 ## Usage
 
@@ -27,6 +27,4 @@ const entity = useEntity(entity, {
 
 ## Type Definitions
 
-:::details
 :::dts ./index.ts
-:::
