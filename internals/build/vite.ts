@@ -1,12 +1,9 @@
 import type { OutputOptions } from 'rollup';
 import * as fs from 'node:fs';
-
 import * as path from 'node:path';
 import { minify } from 'rollup-plugin-esbuild';
-
 import { build as viteBuild } from 'vite';
 import { InternalPluginDts } from '../plugins/plugin-dts';
-
 import { InternalPluginVue } from '../plugins/plugin-vue';
 
 /**

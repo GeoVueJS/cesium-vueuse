@@ -1,8 +1,6 @@
 import type { AnyFn, Arrayable, Pausable } from '@vueuse/core';
 import type { KeyboardEventModifier } from 'cesium';
-
 import type { MaybeRefOrGetter } from 'vue';
-
 import type { GraphicsEventType, GraphicsHandlerCallback } from '../useGlobleGraphicsEventHandler/types';
 import { isFunction } from '@cesium-vueuse/shared';
 import { computed, readonly, ref, toValue, watchEffect } from 'vue';

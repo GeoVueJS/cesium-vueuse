@@ -1,5 +1,4 @@
 import type { Cartesian2, Cartesian3, Scene } from 'cesium';
-
 import { Ellipsoid } from 'cesium';
 
 /**

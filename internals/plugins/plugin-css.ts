@@ -1,8 +1,6 @@
 import type { Plugin } from 'vite';
-
 import path from 'node:path';
 import MagicString from 'magic-string';
-
 import { normalizePath } from 'vite';
 
 export function InternalPluginCss(): Plugin {

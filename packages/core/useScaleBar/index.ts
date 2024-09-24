@@ -3,9 +3,7 @@ import { throttle } from '@cesium-vueuse/shared';
 import { useElementSize, watchImmediate } from '@vueuse/core';
 import { Cartesian2, EllipsoidGeodesic } from 'cesium';
 import { computed, readonly, ref, toValue } from 'vue';
-
 import { useCesiumEventListener } from '../useCesiumEventListener';
-
 import { useViewer } from '../useViewer';
 
 export interface UseScaleBarOptions {

@@ -1,5 +1,4 @@
 import type { CommonCoord, CoordArray, CoordArray_ALT, CoordObject, CoordObject_ALT } from './types';
-
 import { Cartesian3, Cartographic, Ellipsoid, Math } from 'cesium';
 
 interface ToCoordOptions<T extends 'Array' | 'Object', Alt extends boolean> {

@@ -1,5 +1,4 @@
 import { fileURLToPath } from 'node:url';
-
 import dts from 'vite-plugin-dts';
 
 /**

@@ -1,7 +1,5 @@
 import type { SvgTransformOptions } from './svg-transform';
-
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders';
-
 import { svgTransform } from './svg-transform';
 
 export { svgTransform } from './svg-transform';

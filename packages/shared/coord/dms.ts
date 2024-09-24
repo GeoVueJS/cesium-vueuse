@@ -1,5 +1,4 @@
 import type { CommonCoord, CoordArray_ALT } from './types';
-
 import { toCoord } from './toCoord';
 
 export type DMSCoord = [longitude: string, latitude: string, height?: number];

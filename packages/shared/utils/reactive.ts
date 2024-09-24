@@ -1,7 +1,5 @@
 import type { MaybeRef } from 'vue';
-
 import { toRaw, toValue } from 'vue';
-
 import { isFunction, isPromise } from './is';
 
 export type OnAsyncGetterCancel = (onCancel: () => void) => void;

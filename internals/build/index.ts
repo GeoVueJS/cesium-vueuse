@@ -1,8 +1,6 @@
 import path from 'node:path';
-
 import FastGlob from 'fast-glob';
 import { normalizePath } from 'vite';
-
 import { getPkgJSON } from './utils';
 import { build } from './vite';
 

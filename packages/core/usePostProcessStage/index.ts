@@ -1,9 +1,7 @@
 import type { MaybeRefOrAsyncGetter } from '@cesium-vueuse/shared';
 import type { Arrayable } from '@vueuse/core';
 import type { PostProcessStage, PostProcessStageCollection } from 'cesium';
-
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
-
 import { toAwaitedValue } from '@cesium-vueuse/shared';
 import { computedAsync } from '@vueuse/core';
 import { toValue, watchEffect } from 'vue';

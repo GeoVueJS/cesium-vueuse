@@ -1,5 +1,4 @@
 import type { CommonCoord } from './types';
-
 import { Cartesian3, Cartographic, Ellipsoid } from 'cesium';
 
 /**

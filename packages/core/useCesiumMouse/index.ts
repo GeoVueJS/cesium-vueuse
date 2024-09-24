@@ -2,10 +2,8 @@ import type { Cartesian2, Cartesian3 } from 'cesium';
 import type { Ref } from 'vue';
 import { canvasCoordToCartesian } from '@cesium-vueuse/shared';
 import { throttledRef } from '@vueuse/core';
-
 import { ScreenSpaceEventType } from 'cesium';
 import { computed, shallowRef } from 'vue';
-
 import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
 import { useViewer } from '../useViewer';
 

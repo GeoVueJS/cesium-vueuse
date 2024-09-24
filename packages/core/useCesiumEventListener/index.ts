@@ -1,5 +1,4 @@
 import type { FunctionArgs, Pausable } from '@vueuse/core';
-
 import type { Event } from 'cesium';
 import type { MaybeRefOrGetter } from 'vue';
 import { readonly, ref, toValue, watchEffect } from 'vue';
