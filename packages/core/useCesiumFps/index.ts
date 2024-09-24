@@ -1,7 +1,7 @@
-import { watchThrottled } from '@vueuse/core';
-
-import { computed, readonly, ref, shallowRef } from 'vue';
 import type { Ref } from 'vue';
+
+import { watchThrottled } from '@vueuse/core';
+import { computed, readonly, ref, shallowRef } from 'vue';
 import { useCesiumEventListener } from '../useCesiumEventListener';
 import { useViewer } from '../useViewer';
 

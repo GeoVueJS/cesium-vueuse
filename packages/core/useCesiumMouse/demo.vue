@@ -12,8 +12,8 @@ const { position, coordinate } = useCesiumMouse();
     flex="~ col gap-10px"
     p="10px"
   >
-    <span>position:{{ position }}</span>
-    <span>lnglat:{{ toCoord(position) }}</span>
-    <span>coordinate:{{ coordinate }}</span>
+    <span>cartesian3:{{ position }}</span>
+    <span>lng-lat-alt:{{ toCoord(position, { alt: true }) }}</span>
+    <span>canvas:{{ coordinate }}</span>
   </div>
 </template>

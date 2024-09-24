@@ -1,10 +1,10 @@
-import { computed, toValue } from 'vue';
 import type { PrimitiveCollection } from 'cesium';
 import type { MaybeRefOrGetter, ShallowReactive } from 'vue';
-import { useCollectionScope } from '../useCollectionScope';
-import { useViewer } from '../useViewer';
 import type { EffcetRemovePredicate } from '../useCollectionScope';
 import type { CesiumPrimitive } from '../usePrimitive';
+import { computed, toValue } from 'vue';
+import { useCollectionScope } from '../useCollectionScope';
+import { useViewer } from '../useViewer';
 
 export interface UsePrimitiveScopeOptions {
   /**

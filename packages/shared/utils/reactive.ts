@@ -1,6 +1,6 @@
-import { toRaw, toValue } from 'vue';
-
 import type { MaybeRef } from 'vue';
+
+import { toRaw, toValue } from 'vue';
 
 import { isFunction, isPromise } from './is';
 

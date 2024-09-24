@@ -1,7 +1,7 @@
-import { refThrottled } from '@vueuse/core';
-import { computed, shallowRef, toValue, watch } from 'vue';
 import type { Camera, Cartesian3, Cartographic, Rectangle } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
+import { refThrottled } from '@vueuse/core';
+import { computed, shallowRef, toValue, watch } from 'vue';
 import { useCesiumEventListener } from '../useCesiumEventListener';
 import { useViewer } from '../useViewer';
 

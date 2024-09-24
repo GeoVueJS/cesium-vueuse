@@ -1,6 +1,6 @@
-import { Ellipsoid } from 'cesium';
-
 import type { Cartesian2, Cartesian3, Scene } from 'cesium';
+
+import { Ellipsoid } from 'cesium';
 
 /**
  * 将画布坐标转换为笛卡尔坐标

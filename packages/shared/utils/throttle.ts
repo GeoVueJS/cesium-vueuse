@@ -3,24 +3,24 @@ import { promiseTimeout } from '@vueuse/shared';
 export type ThrottleCallback<T extends any[]> = (...rest: T) => void;
 
 /**
- * 节流函数，限制函数的执行频率
+ * Throttle function, which limits the frequency of execution of the function
  *
- * @param callback 需要节流的回调函数
- * @param ms 最小触发间隔，单位毫秒，默认为100ms
- * @param trailing 是否在最后一次调用后触发回调函数，默认为true
- * @param leading 是否在第一次调用时立即触发回调函数，默认为false
- * @returns 返回节流后的回调函数
+ * @param callback raw function
+ * @param delay Throttled delay duration (ms)
+ * @param trailing Trigger callback function after last call @default true
+ * @param leading Trigger the callback function immediately on the first call @default false
+ * @returns Throttle function
  */
 export function throttle<T extends any[]>(
   callback: ThrottleCallback<T>,
-  ms = 100,
+  delay = 100,
   trailing = true,
   leading = false,
 ): ThrottleCallback<T> {
   const restList: T[] = [];
   let tracked = false;
   const trigger = async () => {
-    await promiseTimeout(ms);
+    await promiseTimeout(delay);
     tracked = false;
     if (leading) {
       try {

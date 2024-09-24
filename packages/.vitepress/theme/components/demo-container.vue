@@ -1,8 +1,8 @@
 <script lang="ts" setup>
+import type { AsyncComponentLoader } from 'vue';
 import { refAutoReset, useClipboard } from '@vueuse/core';
 import * as Cesium from 'cesium';
 import { defineAsyncComponent, ref } from 'vue';
-import type { AsyncComponentLoader } from 'vue';
 
 const props = withDefaults(defineProps<{
   /**

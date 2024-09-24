@@ -1,10 +1,10 @@
-import { computed, toValue } from 'vue';
 import type { DataSourceCollection } from 'cesium';
 import type { CesiumDataSource } from 'packages/shared';
 import type { MaybeRefOrGetter, ShallowReactive } from 'vue';
+import type { EffcetRemovePredicate } from '../useCollectionScope';
+import { computed, toValue } from 'vue';
 import { useCollectionScope } from '../useCollectionScope';
 import { useViewer } from '../useViewer';
-import type { EffcetRemovePredicate } from '../useCollectionScope';
 
 export interface UseDataSourceScopeOptions {
   /**

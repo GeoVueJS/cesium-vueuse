@@ -1,8 +1,8 @@
-import { getCurrentInstance, inject } from 'vue';
-
 import type { Viewer } from 'cesium';
 
 import type { ShallowRef } from 'vue';
+
+import { getCurrentInstance, inject } from 'vue';
 import { CREATE_VIEWER_COLLECTION, CREATE_VIEWER_INJECTION_KEY } from '../createViewer';
 
 /**

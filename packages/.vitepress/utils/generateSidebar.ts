@@ -1,11 +1,11 @@
+import type { FilterPattern } from 'vite';
+import type { DefaultTheme } from 'vitepress';
+
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import FastGlob from 'fast-glob';
 import { createFilter, normalizePath } from 'vite';
-
-import type { FilterPattern } from 'vite';
-import type { DefaultTheme } from 'vitepress';
 
 export interface GenerateSidebarOptions {
   base: string;
