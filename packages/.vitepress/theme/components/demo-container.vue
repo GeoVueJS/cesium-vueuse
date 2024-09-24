@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import type { AsyncComponentLoader } from 'vue';
-import { refAutoReset, useClipboard } from '@vueuse/core';
+import { refAutoReset, useClipboard, useFullscreen } from '@vueuse/core';
 import * as Cesium from 'cesium';
-import { defineAsyncComponent, ref } from 'vue';
+import { defineAsyncComponent, ref, shallowRef } from 'vue';
 
 const props = withDefaults(defineProps<{
   /**
@@ -18,21 +18,23 @@ const props = withDefaults(defineProps<{
 
   /**
    * Relative root path to demo file
-   * - note:automatically generated
+   * - note: it's automatically generated
    */
   path: string;
 
   /**
    * demo's asynchronous component loading function
-   * - note:automatically generated
+   * - note: it's automatically generated
    */
   aysncDemo: AsyncComponentLoader;
   /**
    * content to demo file
+   * - note: it's automatically generated
    */
   code: string;
   /**
    * highlighted code html
+   * - note: it's automatically generated
    */
   codeHtml: string;
 }>(), {
@@ -41,12 +43,15 @@ const props = withDefaults(defineProps<{
 
 Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxM2QxOTZmOC00NGEwLTRjOTMtODUzYi03ZmM3MmFhMDhmYjEiLCJpZCI6ODUxMDcsImlhdCI6MTcyNTI3NjU4NH0.ZmrKQrRWFRCQLRSUEuPvVa6kFYvJ_3othkPumVfvQmU';
 
+const containerRef = shallowRef<HTMLDivElement>();
+const { toggle } = useFullscreen(containerRef);
+
+const reset = refAutoReset(true, 1);
+
 const { copy, copied } = useClipboard({
   source: () => decodeURIComponent(props.code),
 });
 const sourceVisible = ref(false);
-
-const reset = refAutoReset(true, 1);
 
 const demo = defineAsyncComponent(props.aysncDemo);
 
@@ -63,7 +68,7 @@ function openGithub() {
     of="hidden"
   >
     <client-only>
-      <div class="relative min-h-500px">
+      <div ref="containerRef" class="relative min-h-600px">
         <Suspense v-if="reset">
           <component :is="defineAsyncComponent(() => import('./cesium-container.vue'))" v-if="cesium">
             <component :is="demo" />
@@ -83,21 +88,29 @@ function openGithub() {
       p="x-10px"
       flex="~ justify-end items-center"
       b-t="1px [var(--vp-c-divider)]"
+      children:p="8px"
+      children:mx="8px"
     >
       <button
-        p="8px"
-        mx="8px"
+        class="i-tabler:arrows-maximize"
+        @click="toggle"
+      />
+      <button
         class="i-tabler:reload"
         @click="reset = false"
       />
-      <button p="8px" mx="8px" class="i-tabler:brand-github" @click="openGithub" />
       <button
-        p="8px"
-        mx="8px"
+        class="i-tabler:brand-github"
+        @click="openGithub"
+      />
+      <button
         :class="{ 'i-tabler:copy': !copied, 'i-tabler:check': copied }"
         @click="copy()"
       />
-      <button p="8px" mx="8px" class="i-tabler:code" @click="sourceVisible = !sourceVisible" />
+      <button
+        class="i-tabler:code"
+        @click="sourceVisible = !sourceVisible"
+      />
     </div>
 
     <div
@@ -118,6 +131,7 @@ function openGithub() {
     transition: height 3s ease;
     overflow: hidden;
     height: 0;
+
     &.preview-code-area--active {
       border-top: 1px solid var(--vp-c-divider);
       height: auto;

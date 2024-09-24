@@ -1,6 +1,16 @@
 <script setup lang="ts">
-import { useScaleBar } from '@cesium-vueuse/core';
+import { useScaleBar, useViewer } from '@cesium-vueuse/core';
+import * as Cesium from 'cesium';
+import { watchEffect } from 'vue';
 
+const viewer = useViewer();
+watchEffect(() => {
+  viewer.value?.camera.flyTo({
+    destination: Cesium.Cartesian3.fromDegrees(100, 0, 10000),
+    duration: 3,
+
+  });
+});
 const { pixelDistance, width, distance, distanceText } = useScaleBar();
 </script>
 
@@ -11,8 +21,8 @@ const { pixelDistance, width, distance, distanceText } = useScaleBar();
     p="10px"
     flex="~ col"
   >
-    <div>pixelDistance: {{ pixelDistance }}</div>
-    <div>distance: {{ distance }}</div>
+    <div>pixelDistance: {{ pixelDistance }}m</div>
+    <div>distance: {{ distance }}m</div>
     <div b-b="#666 2px" :style="{ width: `${width}px` }">
       {{ distanceText }}
     </div>

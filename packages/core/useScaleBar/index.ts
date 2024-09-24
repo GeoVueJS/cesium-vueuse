@@ -2,14 +2,14 @@ import type { MaybeRefOrGetter, Ref } from 'vue';
 import { throttle } from '@cesium-vueuse/shared';
 import { useElementSize, watchImmediate } from '@vueuse/core';
 import { Cartesian2, EllipsoidGeodesic } from 'cesium';
-import { computed, readonly, ref, toValue } from 'vue';
+import { computed, nextTick, readonly, ref, toValue } from 'vue';
 import { useCesiumEventListener } from '../useCesiumEventListener';
 import { useViewer } from '../useViewer';
 
 export interface UseScaleBarOptions {
   /**
    * The maximum width of the scale (px)
-   * @default 100
+   * @default 80
    */
   maxPixel?: MaybeRefOrGetter<number>;
 
@@ -86,29 +86,34 @@ const distances = [
  * Reactive generation of scale bars
  */
 export function useScaleBar(options: UseScaleBarOptions = {}): UseScaleBarRetrun {
-  const { maxPixel, delay = 8 } = options;
-  const maxPixelRef = computed(() => toValue(maxPixel) || 100);
+  const { maxPixel = 80, delay = 8 } = options;
+  const maxPixelRef = computed(() => toValue(maxPixel));
 
   const viewer = useViewer();
   const canvasSize = useElementSize(() => viewer.value?.canvas);
 
-  const pixelDistance = ref(0);
+  const pixelDistance = ref<number>();
 
-  const setPixelDistance = () => {
+  const setPixelDistance = async () => {
+    await nextTick();
     const scene = viewer.value?.scene;
     if (!scene) {
       return;
     }
+
     const left = scene.camera.getPickRay(new Cartesian2(Math.floor(canvasSize.width.value / 2), canvasSize.height.value - 1));
     const right = scene.camera.getPickRay(new Cartesian2(Math.floor(1 + canvasSize.width.value / 2), canvasSize.height.value - 1));
     if (!left || !right) {
       return;
     }
+
     const leftPosition = scene.globe.pick(left, scene);
     const rightPosition = scene.globe.pick(right, scene);
+
     if (!leftPosition || !rightPosition) {
       return;
     }
+
     const leftCartographic = scene.globe.ellipsoid.cartesianToCartographic(leftPosition);
     const rightCartographic = scene.globe.ellipsoid.cartesianToCartographic(rightPosition);
     const geodesic = new EllipsoidGeodesic(leftCartographic, rightCartographic);
@@ -124,12 +129,12 @@ export function useScaleBar(options: UseScaleBarOptions = {}): UseScaleBarRetrun
 
   const distance = computed(() => {
     if (pixelDistance.value) {
-      return distances.find(item => pixelDistance.value * maxPixelRef.value > item);
+      return distances.find(item => pixelDistance.value! * maxPixelRef.value > item);
     }
   });
 
   const width = computed(() => {
-    if (distance.value) {
+    if (distance.value && pixelDistance.value) {
       const value = distance.value / pixelDistance.value;
       return value;
     }
