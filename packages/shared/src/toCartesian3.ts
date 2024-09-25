@@ -2,10 +2,10 @@ import type { CommonCoord } from './types';
 import { Cartesian3, Cartographic, Ellipsoid } from 'cesium';
 
 /**
- * 将位置转换为笛卡尔坐标系中的坐标点
+ * Converts position to a coordinate point in the Cartesian coordinate system
  *
- * @param position 位置信息，可以是笛卡尔坐标系坐标点(Cartesian3)、地理坐标系坐标点(Cartographic)、数组或者包含wgs84经纬度和高度信息的对象
- * @returns 转换后的笛卡尔坐标系坐标点，若传入的参数无效则返回undefined
+ * @param position Position information, which can be a Cartesian coordinate point (Cartesian3), a geographic coordinate point (Cartographic), an array, or an object containing WGS84 latitude, longitude, and height information
+ * @returns The converted Cartesian coordinate point. If the input parameter is invalid, undefined is returned
  */
 export function toCartesian3(position?: CommonCoord): Cartesian3 | undefined {
   if (!position) {

@@ -4,11 +4,11 @@ import { toCoord } from './toCoord';
 export type DMSCoord = [longitude: string, latitude: string, height?: number];
 
 /**
- * 将角度转换为DMS（度分秒）格式字符串
+ * Convert degrees to DMS (Degrees Minutes Seconds) format string
  *
- * @param degrees 角度值
- * @param precision 精度，'秒位'保留的小数位数，默认为3
- * @returns DMS格式的字符串，格式为：度°分′秒″
+ * @param degrees The angle value
+ * @param precision The number of decimal places to retain for the seconds, defaults to 3
+ * @returns A DMS formatted string in the format: degrees° minutes′ seconds″
  */
 export function dmsEncode(degrees: number, precision = 3): string {
   const str = `${degrees}`;
@@ -33,10 +33,10 @@ export function dmsEncode(degrees: number, precision = 3): string {
 }
 
 /**
- * 将 DMS（度分秒）格式的字符串解码为十进制角度值
+ * Decode a DMS (Degrees Minutes Seconds) formatted string to a decimal angle value
  *
- * @param dmsCode DMS 格式的字符串，如 "120°30′45″N"
- * @returns 解码后的十进制角度值，若解码失败则返回 0
+ * @param dmsCode DMS formatted string, e.g. "120°30′45″N"
+ * @returns The decoded decimal angle value, or 0 if decoding fails
  */
 export function dmsDecode(dmsCode: string) {
   const [dd, msStr] = dmsCode.split('°') ?? [];
@@ -52,7 +52,7 @@ export function dmsDecode(dmsCode: string) {
   }
   else {
     let res = degrees;
-    // 南、西 为负数
+    // South, West are negative numbers
     if (['W', 'w', 'S', 's'].includes(dmsCode.at(-1)!)) {
       res = -res;
     }
@@ -61,11 +61,11 @@ export function dmsDecode(dmsCode: string) {
 }
 
 /**
- * 将经纬度坐标转换为度分秒格式
+ * Convert latitude and longitude coordinates to degrees-minutes-seconds format
  *
- * @param position 经纬度坐标
- * @param precision '秒'保留的小数位数，默认为3
- * @returns 返回度分秒格式的坐标，若转换失败则返回undefined
+ * @param position The latitude and longitude coordinates
+ * @param precision The number of decimal places to retain for 'seconds', default is 3
+ * @returns Returns the coordinates in degrees-minutes-seconds format, or undefined if the conversion fails
  */
 export function degreesToDms(position: CommonCoord, precision = 3): DMSCoord | undefined {
   const coord = toCoord(position, { alt: true });
@@ -79,10 +79,10 @@ export function degreesToDms(position: CommonCoord, precision = 3): DMSCoord | u
 }
 
 /**
- * 将度分秒格式转换为经纬度坐标
+ * Convert DMS (Degrees Minutes Seconds) format to decimal degrees for latitude and longitude coordinates
  *
- * @param dms 经纬度坐标
- * @returns 返回度分秒格式的坐标，若转换失败则返回undefined
+ * @param dms The latitude or longitude coordinate in DMS format
+ * @returns Returns the coordinate in decimal degrees format, or undefined if the conversion fails
  */
 export function dmsToDegrees(dms: DMSCoord): CoordArray_ALT | undefined {
   const [x, y, height] = dms;

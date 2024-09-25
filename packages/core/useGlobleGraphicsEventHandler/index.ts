@@ -16,10 +16,10 @@ export function useGlobleGraphicsEventHandler<T extends GraphicsEventType>(): Us
   const viewer = useViewer();
   const listeners = new Set<GraphicsHandlerCallback<T>>();
 
-  const callback = (...rest: unknown[]) => {
+  const callback = (ctx: any) => {
     listeners.forEach((fn) => {
       try {
-        fn(...rest);
+        fn(ctx);
       }
       catch (error) {
         console.error(error);
