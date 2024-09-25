@@ -6,4 +6,5 @@
 // biome-ignore lint: disable
 export {}
 declare global {
+
 }

@@ -9,20 +9,19 @@ export type MaybeRefOrAsyncGetter<T> = MaybeRef<T> | MaybeAsyncGetter<T>;
 
 export interface ToAsyncValueOptions {
   /**
-   * If true, the source will be unwrapped to its raw value.
+   * Determines whether the source should be unwrapped to its raw value.
    * @default true
    */
   raw?: boolean;
 }
 
 /**
- * 类似Vue自带的`toValue`,但能处理异步函数，所以返回的值为一个Promise
+ * Similar to Vue's built-in `toValue`, but capable of handling asynchronous functions, thus returning a Promise.
  *
- * 配合VueUse的computedAsync使用
+ * Used in conjunction with VueUse's `computedAsync`.
  *
- * @param source 源值，可以是响应式引用或异步获取器
- * @param options 转换选项
- *
+ * @param source The source value, which can be a reactive reference or an asynchronous getter.
+ * @param options Conversion options
  *
  * @example
  * ```ts

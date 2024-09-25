@@ -2,22 +2,21 @@ import type { Cartesian2, Cartesian3, Scene } from 'cesium';
 import { Ellipsoid } from 'cesium';
 
 /**
- * 将画布坐标转换为笛卡尔坐标
+ * Convert canvas coordinates to Cartesian coordinates
  *
- * @param canvasCoord 画布坐标
- * @param scene 场景
- * @param mode 模式，可选值为 'pickPosition' | 'globePick' | 'auto' | 'noHeight'，默认为 'auto'
+ * @param canvasCoord Canvas coordinates
+ * @param scene Cesium.Scene instance
+ * @param mode optional values are 'pickPosition' | 'globePick' | 'auto' | 'noHeight'  @default 'auto'
  *
+ * `pickPosition`: Use scene.pickPosition for conversion, which can be used for picking models, oblique photography, etc.
+ * However, if depth detection is not enabled (globe.depthTestAgainstTerrain=false), picking terrain or inaccurate issues may occur
  *
- * pickPosition：使用scene.pickPosition进行转换，可贴模型、倾斜摄影等进行拾取。
- * 但如果未开启深度监测(globe.depthTestAgainstTerrain=false)则贴地形拾取或出现不准确的问题
+ * `globePick`: Use camera.getPickRay for conversion, which cannot be used for picking models or oblique photography,
+ * but can be used for picking terrain. If terrain does not exist, the picked elevation is 0
  *
- * globePick：使用camera.getPickRay 进行转换，不可贴模型倾斜摄影拾取，但可以贴地形拾取，如果不存在地形，则拾取的高程为0
+ * `auto`: Automatically determine which picking content to return
  *
- * auto：自动进行判断返回何种拾取内容
- *
- * 计算速度对比  globePick \> auto \>= pickPosition
- * @returns 笛卡尔坐标，如果转换失败则返回 undefined
+ * Calculation speed comparison: globePick > auto >= pickPosition
  */
 export function canvasCoordToCartesian(
   canvasCoord: Cartesian2,
@@ -32,7 +31,7 @@ export function canvasCoordToCartesian(
     return ray && scene.globe.pick(ray, scene);
   }
   else {
-    // 深度监测
+    // depth test
     if (scene.globe.depthTestAgainstTerrain) {
       return scene.pickPosition(canvasCoord);
     }
@@ -49,11 +48,10 @@ export function canvasCoordToCartesian(
 }
 
 /**
- * 将笛卡尔坐标转换为画布坐标
+ * Convert Cartesian coordinates to canvas coordinates
  *
- * @param position 笛卡尔坐标
- * @param scene 场景对象
- * @returns 画布坐标
+ * @param position Cartesian coordinates
+ * @param scene Cesium.Scene instance
  */
 export function cartesianToCanvasCoord(position: Cartesian3, scene: Scene): Cartesian2 {
   return scene.cartesianToCanvasCoordinates(position);

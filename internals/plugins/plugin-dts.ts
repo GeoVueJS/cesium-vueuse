@@ -4,9 +4,9 @@ import dts from 'vite-plugin-dts';
 /**
  * build typescript definition file
  *
- * @param root 根目录路径
- * @param output 输出目录路径
- * @param bundle 是否打包类型定义文件
+ * @param root The path of the root directory
+ * @param output The path of the output directory
+ * @param bundle Whether to bundle the type definition files
  */
 export function InternalPluginDts(root: string, output: string, bundle?: boolean) {
   return dts({
@@ -15,10 +15,6 @@ export function InternalPluginDts(root: string, output: string, bundle?: boolean
     strictOutput: true,
     staticImport: true,
     logLevel: 'silent',
-    compilerOptions: {
-      skipLibCheck: true,
-      skipDefaultLibCheck: true,
-    },
     root,
     pathsToAliases: false,
     outDir: output,
