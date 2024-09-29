@@ -56,7 +56,7 @@ const sourceVisible = ref(false);
 const demo = defineAsyncComponent(props.aysncDemo);
 
 function openGithub() {
-  window.open(`https://github.com/vuegis/cesium-vueuse/blob/main/${props.path}`);
+  window.open(`https://github.com/GeoVueJS/cesium-vueuse/blob/main/${props.path}`);
 }
 </script>
 

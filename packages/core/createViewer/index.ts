@@ -1,7 +1,7 @@
 import type { MaybeComputedElementRef } from '@vueuse/core';
-import type { ComponentInternalInstance, InjectionKey, MaybeRefOrGetter, ShallowRef } from 'vue';
+import type { EffectScope, InjectionKey, MaybeRefOrGetter, ShallowRef } from 'vue';
 import { Viewer } from 'cesium';
-import { computed, getCurrentInstance, provide, shallowReadonly, shallowRef, toRaw, toValue, watchEffect } from 'vue';
+import { computed, getCurrentScope, markRaw, provide, shallowReadonly, shallowRef, toRaw, toValue, watchEffect } from 'vue';
 
 /**
  * @internal
@@ -11,7 +11,7 @@ export const CREATE_VIEWER_INJECTION_KEY: InjectionKey<Readonly<ShallowRef<Viewe
 /**
  * @internal
  */
-export const CREATE_VIEWER_COLLECTION = new WeakMap<ComponentInternalInstance, Readonly<ShallowRef<Viewer | undefined>>>();
+export const CREATE_VIEWER_COLLECTION = new WeakMap<EffectScope, Readonly<ShallowRef<Viewer | undefined>>>();
 
 /**
  * Pass in an existing Viewer instance,
@@ -20,7 +20,7 @@ export const CREATE_VIEWER_COLLECTION = new WeakMap<ComponentInternalInstance, R
  * When the Viewer instance referenced by this overloaded function becomes invalid, it will not trigger destruction.
  */
 export function createViewer(
-  viewer: MaybeRefOrGetter<Viewer>,
+  viewer: MaybeRefOrGetter<Viewer | undefined>,
 ): Readonly<ShallowRef<Viewer | undefined>>;
 
 /**
@@ -43,16 +43,16 @@ export function createViewer(...args: any) {
 
   provide(CREATE_VIEWER_INJECTION_KEY, readonlyViewer);
 
-  const instance = getCurrentInstance();
-  if (instance) {
-    CREATE_VIEWER_COLLECTION.set(instance, readonlyViewer);
+  const scope = getCurrentScope();
+  if (scope) {
+    CREATE_VIEWER_COLLECTION.set(scope, readonlyViewer);
   }
 
   watchEffect((onCleanup) => {
     const [arg1, arg2] = args;
     const value = toRaw(toValue(arg1));
     if (value instanceof Viewer) {
-      viewer.value = value;
+      viewer.value = markRaw(value);
     }
     else if (value) {
       const element = value;

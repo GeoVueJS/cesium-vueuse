@@ -7,7 +7,7 @@
   },
   "description": "",
   "repository": {
-    "url": "https://github.com/vuegis/cesium-vueuse"
+    "url": "https://github.com/GeoVueJS/cesium-vueuse"
   },
   "main": "index",
   "module": "index",
