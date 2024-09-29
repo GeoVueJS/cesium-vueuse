@@ -5,7 +5,7 @@
   "private": true,
   "description": "Cesium hooks like VueUse api.",
   "repository": {
-    "url": "https://github.com/vuegis/cesium-vueuse"
+    "url": "https://github.com/GeoVueJS/cesium-vueuse"
   },
   "scripts": {
     "docs:dev": "vitepress dev packages",
