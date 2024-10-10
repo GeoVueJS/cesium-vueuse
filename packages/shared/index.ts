@@ -1,4 +1,5 @@
 export * from './src/cesiumProperty';
+export * from './src/cesiumUtils';
 export * from './src/convertCoord';
 export * from './src/convertDMS';
 export * from './src/is';
