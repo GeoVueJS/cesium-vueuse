@@ -3,6 +3,7 @@ import type { Viewer } from 'cesium';
 import type { EffectScope } from 'vue';
 import { tryOnScopeDispose } from '@vueuse/core';
 import { effectScope } from 'vue';
+import { useViewer } from '../useViewer';
 
 interface ViewerMapRecord<Fn extends AnyFn> {
   subscribers: number;
@@ -17,6 +18,7 @@ export function createViewerComposable<Fn extends AnyFn>(composable: Fn): Fn {
   const collection = new Map<Viewer, ViewerMapRecord<Fn>>();
 
   let subscribers = 0;
+  let viewer: Viewer | undefined;
   let state: ReturnType<Fn> | undefined;
   let scope: EffectScope | undefined;
 
@@ -31,8 +33,11 @@ export function createViewerComposable<Fn extends AnyFn>(composable: Fn): Fn {
 
   return <Fn>((...args) => {
     if (!scope) {
+      const viewer = useViewer();
       scope = effectScope(true);
-      state = scope.run(() => composable(...args));
+      state = scope.run(() => {
+        return composable(...args);
+      });
     }
     subscribers += 1;
     tryOnScopeDispose(dispose);
