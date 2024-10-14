@@ -1,6 +1,6 @@
-# useCesiumMouse
+# useGraphicMouseHandler
 
-Responsively get the mouse position in Cesium
+TODO
 
 ## Usage
 
@@ -10,4 +10,3 @@ Responsively get the mouse position in Cesium
 ## Type Definitions
 
 :::dts ./index.ts
-:::

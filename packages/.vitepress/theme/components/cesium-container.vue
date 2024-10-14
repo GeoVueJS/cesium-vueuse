@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { createViewer } from '@cesium-vueuse/core';
-import { shallowRef } from 'vue';
+import { ScreenSpaceEventType } from 'cesium';
+import { shallowRef, watchEffect } from 'vue';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 defineOptions({ name: 'CesiumContainer' });
 
 const elRef = shallowRef<HTMLElement>();
-createViewer(elRef, {
+const viewer = createViewer(elRef, {
   animation: false,
   timeline: false,
   infoBox: false,
@@ -16,6 +17,12 @@ createViewer(elRef, {
   navigationHelpButton: false,
   sceneModePicker: false,
   baseLayerPicker: false,
+});
+watchEffect(() => {
+  if (viewer.value) {
+    viewer.value.cesiumWidget.screenSpaceEventHandler.removeInputAction(ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+    viewer.value.cesiumWidget.screenSpaceEventHandler.removeInputAction(ScreenSpaceEventType.LEFT_CLICK);
+  }
 });
 </script>
 
