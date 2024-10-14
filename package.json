@@ -20,7 +20,7 @@
     "release": "bumpp -r",
     "=====================": "",
     "prepublish": "tsx ./internals/build",
-    "publish:ci": "npm publish -r --no-git-checks --access public"
+    "publish:ci": "pnpm publish -r --no-git-checks --access public"
   },
   "dependencies": {
     "@cesium-vueuse/core": "workspace:*",
