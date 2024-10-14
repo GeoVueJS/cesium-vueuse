@@ -8,8 +8,6 @@ import { useGraphicDragEventHandler } from './useGraphicDragEventHandler';
 import { useGraphicHoverEventHandler } from './useGraphicHoverEventHandler';
 import { useGraphicPositionedEventHandler } from './useGraphicPositionedEventHandler';
 
-export type * from './types';
-
 /**
  * All mouse event type
  */
