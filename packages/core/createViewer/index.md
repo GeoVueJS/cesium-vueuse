@@ -1,4 +1,5 @@
 ---
+type: base
 related: useViewer
 ---
 
@@ -17,5 +18,5 @@ Initialize a Viewer instance, which can be accessed by the current component and
 
 ## Type Definitions
 
-:::dts ./index.ts ./index.ts
+:::dts ../index.ts
 :::

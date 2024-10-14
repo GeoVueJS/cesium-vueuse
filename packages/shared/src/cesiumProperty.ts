@@ -1,5 +1,5 @@
 import type { JulianDate, Property } from 'cesium';
-import { CallbackProperty, ConstantProperty } from 'cesium';
+import { CallbackProperty, ConstantProperty, defined } from 'cesium';
 import { isDef, isFunction } from './is';
 
 export type MaybeProperty<T = any> = T | { getValue: (time: JulianDate) => T };
@@ -45,4 +45,61 @@ export function toProperty<T>(value?: MaybePropertyOrGetter<T>, isConstant = fal
       : isFunction(value)
         ? (new CallbackProperty(value, isConstant) as any)
         : new ConstantProperty(value);
+}
+
+/**
+ * Create a Cesium property key
+ *
+ * @param scope The host object
+ * @param field The property name
+ * @param maybeProperty Optional property or getter
+ * @param readonly Whether the property is read-only
+ */
+export function createPropertyField<T>(
+  scope: any,
+  field: string,
+  maybeProperty?: MaybePropertyOrGetter<T>,
+  readonly?: boolean,
+) {
+  let removeOwnerListener: VoidFunction | undefined;
+  // 自身内部变化时也触发载体的`definitionChanged`
+  // Trigger the carrier's `definitionChanged` when its own internal state changes
+  const ownerBinding = (value: any) => {
+    removeOwnerListener?.();
+    if (defined(value?.definitionChanged)) {
+      removeOwnerListener = value?.definitionChanged?.addEventListener(() => {
+        scope.definitionChanged.raiseEvent(scope, field, value, value);
+      });
+    }
+  };
+
+  const privateField = `_${field}`;
+  const property = toProperty(maybeProperty);
+  scope[privateField] = property;
+  ownerBinding(property);
+
+  if (readonly) {
+    Object.defineProperty(scope, field, {
+      get() {
+        return scope[privateField];
+      },
+    });
+  }
+  else {
+    Object.defineProperty(scope, field, {
+      get() {
+        return scope[privateField];
+      },
+      set(value) {
+        const prev = scope[privateField];
+        if (scope[privateField] !== value) {
+          scope[privateField] = value;
+          ownerBinding(value);
+          if (defined(scope.definitionChanged)) {
+            scope.definitionChanged.raiseEvent(scope, field, value, prev);
+          }
+        }
+      },
+    });
+  }
 }

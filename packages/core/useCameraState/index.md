@@ -1,3 +1,7 @@
+---
+type: state
+---
+
 # useCameraState
 
 Responsively obtain the state of the `Camera` instance

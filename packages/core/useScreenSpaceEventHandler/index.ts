@@ -1,8 +1,10 @@
-import type { Pausable } from '@vueuse/core';
-import type { KeyboardEventModifier } from 'cesium';
+import type { KeyboardEventModifier, ScreenSpaceEventType } from 'cesium';
 import type { MaybeRefOrGetter } from 'vue';
-import { ScreenSpaceEventHandler, ScreenSpaceEventType } from 'cesium';
-import { computed, readonly, ref, toValue, watch, watchEffect } from 'vue';
+import type { PausableState } from '../createPausable';
+import { isDef } from '@cesium-vueuse/shared';
+import { ScreenSpaceEventHandler } from 'cesium';
+import { computed, toValue, watch, watchEffect } from 'vue';
+import { createPausable } from '../createPausable';
 import { useViewer } from '../useViewer';
 
 export type InputAction<T extends ScreenSpaceEventType> = {
@@ -26,9 +28,8 @@ export type InputAction<T extends ScreenSpaceEventType> = {
 export interface UseScreenSpaceEventHandlerOptions<T extends ScreenSpaceEventType> {
   /**
    * Types of mouse event
-   * @default `ScreenSpaceEventType.LEFT_CLICK`
    */
-  type?: MaybeRefOrGetter<T>;
+  type?: MaybeRefOrGetter<T | undefined>;
 
   /**
    * Callback function for listening
@@ -51,16 +52,20 @@ export interface UseScreenSpaceEventHandlerOptions<T extends ScreenSpaceEventTyp
  * when the dependent data changes or the component is unmounted,
  * the listener function will automatically reload or destroy.
  */
-export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType = ScreenSpaceEventType.LEFT_CLICK>(
+export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType>(
   options: UseScreenSpaceEventHandlerOptions<T> = {},
-): Pausable {
+): PausableState {
   const {
+    type,
     pause,
     modifier,
     inputAction,
   } = options;
+
   const viewer = useViewer();
-  const isActive = ref(!pause);
+
+  const pausable = createPausable(pause);
+  const isActive = pausable.isActive;
 
   const handler = computed(() => {
     if (viewer.value) {
@@ -73,19 +78,17 @@ export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType = Scre
   });
 
   watchEffect((onCleanup) => {
-    if (!handler.value || !isActive.value || !inputAction) {
+    const typeValue = toValue(type);
+    const modifierValue = toValue(modifier);
+    const handlerValue = toValue(handler)!;
+    if (!handlerValue || !isActive.value || !inputAction) {
       return;
     }
-    const type = toValue(options.type) ?? ScreenSpaceEventType.LEFT_CLICK;
-    const _modifier = toValue(modifier);
-    const _handler = toValue(handler)!;
-    _handler.setInputAction(inputAction, type, _modifier);
-    onCleanup(() => _handler!.removeInputAction(type, _modifier));
+    if (isDef(typeValue)) {
+      handlerValue.setInputAction(inputAction, typeValue, modifierValue);
+      onCleanup(() => handlerValue!.removeInputAction(typeValue, modifierValue));
+    }
   });
 
-  return {
-    isActive: readonly(isActive),
-    pause: () => isActive.value = false,
-    resume: () => isActive.value = true,
-  };
+  return pausable;
 }

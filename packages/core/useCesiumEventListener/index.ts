@@ -1,7 +1,9 @@
-import type { FunctionArgs, Pausable } from '@vueuse/core';
+import type { FunctionArgs } from '@vueuse/core';
 import type { Event } from 'cesium';
 import type { MaybeRefOrGetter } from 'vue';
-import { readonly, ref, toValue, watchEffect } from 'vue';
+import type { PausableState } from '../createPausable';
+import { toValue, watchEffect } from 'vue';
+import { createPausable } from '../createPausable';
 
 export interface UseCesiumEventListenerOptions {
   /**
@@ -19,23 +21,16 @@ export function useCesiumEventListener<T extends FunctionArgs<any[]>>(
   event: MaybeRefOrGetter<Event<T> | undefined>,
   listener: T,
   options?: UseCesiumEventListenerOptions,
-): Pausable {
-  const isActive = ref(!options?.pause);
+): PausableState {
+  const pausable = createPausable(options?.pause);
 
   watchEffect((onCleanup) => {
     const _event = toValue(event);
-    if (_event && isActive.value) {
+    if (_event && pausable.isActive.value) {
       const stop = _event.addEventListener(listener, _event);
       onCleanup(() => stop());
     }
   });
 
-  const pause = () => (isActive.value = false);
-  const resume = () => (isActive.value = true);
-
-  return {
-    isActive: readonly(isActive),
-    pause,
-    resume,
-  };
+  return pausable;
 }

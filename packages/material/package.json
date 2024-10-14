@@ -1,8 +1,8 @@
 {
-  "name": "@cesium-vueuse/core",
+  "name": "@cesium-vueuse/material",
   "version": "1.0.1-beta.16",
   "buildInfo": {
-    "name": "CesiumVueuseCore",
+    "name": "CesiumVueuseMaterial",
     "bundle": true
   },
   "description": "",
