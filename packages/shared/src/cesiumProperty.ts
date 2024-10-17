@@ -2,7 +2,7 @@ import type { JulianDate, Property } from 'cesium';
 import { CallbackProperty, ConstantProperty, defined } from 'cesium';
 import { isDef, isFunction } from './is';
 
-export type MaybeProperty<T = any> = T | { getValue: (time: JulianDate) => T };
+export type MaybeProperty<T = any> = T | { getValue: (time?: JulianDate) => T };
 
 export type MaybePropertyOrGetter<T = any> = MaybeProperty<T> | (() => T);
 
@@ -24,7 +24,7 @@ export function isProperty(value: any): value is Property {
  *
  * @param value - The value to convert
  */
-export function toPropertyValue<T = any>(value: MaybeProperty<T>, time?: JulianDate): T {
+export function toPropertyValue<T = unknown>(value: MaybeProperty<T>, time?: JulianDate): T {
   return isProperty(value) ? value.getValue(time as any) : value;
 }
 

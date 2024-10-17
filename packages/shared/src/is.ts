@@ -6,6 +6,10 @@ export function isDef<T = any>(val?: T): val is T {
   return typeof val !== 'undefined';
 }
 
+export function isHasValue<T = any>(val: T | null | undefined): val is T {
+  return typeof val !== 'undefined' && val !== null;
+}
+
 export function isBoolean(val: any): val is boolean {
   return typeof val === 'boolean';
 }
