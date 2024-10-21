@@ -1,7 +1,7 @@
 {
   "name": "cesium-vueuse",
   "type": "module",
-  "version": "1.0.1-beta.20",
+  "version": "1.0.1-beta.21",
   "private": true,
   "description": "Cesium hooks like VueUse api.",
   "repository": {
