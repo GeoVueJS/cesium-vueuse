@@ -1,6 +1,6 @@
 {
   "name": "@cesium-vueuse/material",
-  "version": "1.0.1-beta.19",
+  "version": "1.0.1-beta.20",
   "buildInfo": {
     "name": "CesiumVueuseMaterial",
     "bundle": true
