@@ -2,7 +2,7 @@
   "name": "@cesium-vueuse/draw",
   "version": "1.0.1-beta.19",
   "buildInfo": {
-    "name": "CesiumVueuseDraw",
+    "name": "CesiumVueuseGeometry",
     "bundle": true
   },
   "description": "",
