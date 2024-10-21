@@ -202,7 +202,37 @@ importers:
         specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
 
+  packages/geometry:
+    dependencies:
+      '@cesium-vueuse/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@vueuse/core':
+        specifier: ^11.1.0
+        version: 11.1.0(vue@3.5.12(typescript@5.6.3))
+      cesium:
+        specifier: ^1.122.0
+        version: 1.122.0
+      vue:
+        specifier: ^3.5.12
+        version: 3.5.12(typescript@5.6.3)
+
   packages/material:
+    dependencies:
+      '@cesium-vueuse/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@vueuse/core':
+        specifier: ^11.1.0
+        version: 11.1.0(vue@3.5.12(typescript@5.6.3))
+      cesium:
+        specifier: ^1.122.0
+        version: 1.122.0
+      vue:
+        specifier: ^3.5.12
+        version: 3.5.12(typescript@5.6.3)
+
+  packages/serialize:
     dependencies:
       '@cesium-vueuse/shared':
         specifier: workspace:*
