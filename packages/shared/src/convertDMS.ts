@@ -53,7 +53,7 @@ export function dmsDecode(dmsCode: string) {
   else {
     let res = degrees;
     // South, West are negative numbers
-    if (['W', 'w', 'S', 's'].includes(dmsCode.at(-1)!)) {
+    if (['W', 'w', 'S', 's'].includes(dmsCode[dmsCode.length - 1]!)) {
       res = -res;
     }
     return res;

@@ -1,6 +1,6 @@
 import type { JulianDate, Property } from 'cesium';
 import { CallbackProperty, ConstantProperty, defined } from 'cesium';
-import { isDef, isFunction } from './is';
+import { isFunction } from './is';
 
 export type MaybeProperty<T = any> = T | { getValue: (time?: JulianDate) => T };
 
@@ -37,14 +37,12 @@ export type PropertyCallback<T = any> = (time: JulianDate, result?: T) => T;
  * @param isConstant - The second parameter for converting to CallbackProperty
  * @returns Returns the converted Property object, if value is undefined or null, returns undefined
  */
-export function toProperty<T>(value?: MaybePropertyOrGetter<T>, isConstant = false): Property | undefined {
-  return !isDef(value)
-    ? undefined
-    : isProperty(value)
-      ? value
-      : isFunction(value)
-        ? (new CallbackProperty(value, isConstant) as any)
-        : new ConstantProperty(value);
+export function toProperty<T>(value?: MaybePropertyOrGetter<T>, isConstant = false): Property {
+  return isProperty(value)
+    ? value
+    : isFunction(value)
+      ? (new CallbackProperty(value, isConstant) as any)
+      : new ConstantProperty(value);
 }
 
 /**
