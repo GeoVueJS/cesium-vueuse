@@ -40,6 +40,10 @@ const externalPackageMap: Record<string, string> = {
   }, {} as Record<string, string>),
 };
 
-for (const options of packages) {
-  await build(options, externalPackageMap);
+async function main() {
+  for (const options of packages) {
+    await build(options, externalPackageMap);
+  }
 }
+
+main();

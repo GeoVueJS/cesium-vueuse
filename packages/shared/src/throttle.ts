@@ -32,7 +32,7 @@ export function throttle<T extends any[]>(
     }
     if (trailing && (!leading || restList.length > 1)) {
       try {
-        callback(...restList.at(-1)!);
+        callback(...restList[restList.length - 1]!);
       }
       catch (error) {
         console.error(error);

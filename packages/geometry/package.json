@@ -1,8 +1,8 @@
 {
-  "name": "@cesium-vueuse/material",
+  "name": "@cesium-vueuse/draw",
   "version": "1.0.1-beta.20",
   "buildInfo": {
-    "name": "CesiumVueuseMaterial",
+    "name": "CesiumVueuseGeometry",
     "bundle": true
   },
   "description": "",

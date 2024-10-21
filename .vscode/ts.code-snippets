@@ -2,7 +2,7 @@
   "tpl-class": {
     "scope": "typescript,typescriptreact,javascript,javascriptreact",
     "prefix": "tpl-class",
-    "description": "新建class",
+    "description": "new class",
 
     "body": [
 
@@ -17,7 +17,7 @@
   "tpl-function": {
     "scope": "typescript,typescriptreact,javascript,javascriptreact",
     "prefix": "tpl-function",
-    "description": "新建function",
+    "description": "new function",
     "body": [
 
       "export interface ${RELATIVE_FILEPATH/(.+?(\\\\|\\/))((-|\\w)+)((\\\\|\\/)index)*\\.\\w+/${3:/pascalcase}/g}Options{",
@@ -32,19 +32,6 @@
       "export function ${RELATIVE_FILEPATH/(.+?(\\\\|\\/))((-|\\w)+)((\\\\|\\/)index)*\\.\\w+/${3:/camelcase}/g}(options?:${RELATIVE_FILEPATH/(.+?(\\\\|\\/))((-|\\w)+)((\\\\|\\/)index)*\\.\\w+/${3:/pascalcase}/g}Options): ${RELATIVE_FILEPATH/(.+?(\\\\|\\/))((-|\\w)+)((\\\\|\\/)index)*\\.\\w+/${3:/pascalcase}/g}Retrun|undefined{",
       "   //",
       "}",
-    ],
-  },
-  "tpl-create-injection-state": {
-    "scope": "typescript,typescriptreact,javascript,javascriptreact",
-    "prefix": "tpl-create-injection-state",
-    "description": "新建vueuse store",
-    "body": [
-      "/**",
-      " * ${1:请输入注释}",
-      " */",
-      "export const [create${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}, inject${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}] = createInjectionState(() => {",
-      "  return {};",
-      "});",
     ],
   },
 }
