@@ -2,7 +2,7 @@
 import { useEntity, useViewer } from '@cesium-vueuse/core';
 import * as Cesium from 'cesium';
 import { watchEffect } from 'vue';
-import { RadarScanMaterialProperty } from './property';
+import { EllipseRadarScanMaterialProperty } from './property';
 
 const position: [number, number] = [110, 25];
 
@@ -11,7 +11,7 @@ const entity = useEntity(new Cesium.Entity({
   ellipse: {
     semiMinorAxis: 100,
     semiMajorAxis: 100,
-    material: new RadarScanMaterialProperty({}),
+    material: new EllipseRadarScanMaterialProperty({}),
     outline: true,
     outlineColor: Cesium.Color.RED,
     outlineWidth: 2,
