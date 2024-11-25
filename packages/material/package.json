@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "@cesium-vueuse/shared": "workspace:*",
-    "cesium": "^1.122.0"
+    "cesium": "^1.123.1"
   }
 }

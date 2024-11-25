@@ -1,4 +1,4 @@
-import type { FunctionArgs } from '@vueuse/core';
+import type { Arrayable, FunctionArgs } from '@vueuse/core';
 import type { Event } from 'cesium';
 import type { MaybeRefOrGetter } from 'vue';
 import type { PausableState } from '../createPausable';
@@ -18,7 +18,7 @@ export interface UseCesiumEventListenerOptions {
  * the listener function will automatically reload or destroy.
  */
 export function useCesiumEventListener<T extends FunctionArgs<any[]>>(
-  event: MaybeRefOrGetter<Event<T> | undefined>,
+  event: MaybeRefOrGetter<Arrayable<Event<T>> | undefined>,
   listener: T,
   options?: UseCesiumEventListenerOptions,
 ): PausableState {
@@ -26,11 +26,13 @@ export function useCesiumEventListener<T extends FunctionArgs<any[]>>(
 
   watchEffect((onCleanup) => {
     const _event = toValue(event);
-    if (_event && pausable.isActive.value) {
-      const stop = _event.addEventListener(listener, _event);
-      onCleanup(() => stop());
+    if (_event) {
+      const events = Array.isArray(_event) ? _event : [_event];
+      if (events.length && pausable.isActive.value) {
+        const stopFns = events.map(event => event.addEventListener(listener, _event));
+        onCleanup(() => stopFns.forEach(stop => stop()));
+      }
     }
   });
-
   return pausable;
 }

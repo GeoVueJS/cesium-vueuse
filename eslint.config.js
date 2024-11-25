@@ -21,7 +21,7 @@ export default antfu({
   },
   rules: {
     'import/no-duplicates': 'warn',
-    'import/consistent-type-specifier-style': ['warn', 'prefer-top-level'],
+    'import/consistent-type-specifier-style': 'warn',
     'import/no-default-export': 'off',
     'unused-imports/no-unused-imports': 'warn',
   },

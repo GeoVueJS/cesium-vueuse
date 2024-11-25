@@ -50,11 +50,7 @@ export function useEntity<T extends Entity>(
   data?: MaybeRefOrAsyncGetter<Arrayable<T | undefined>>,
   options: UseEntityOptions = {},
 ) {
-  const {
-    collection,
-    isActive = true,
-    evaluating,
-  } = options;
+  const { collection, isActive = true, evaluating } = options;
 
   const result = computedAsync(
     () => toAwaitedValue(data),

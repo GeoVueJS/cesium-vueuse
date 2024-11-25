@@ -117,7 +117,7 @@ export function useGraphicEventHandler<T extends GraphicEventType>(
 /**
  * Parses and returns an array of specific field values extracted from the pick object
  */
-export function resolvePick(pick: any): any[] {
+function resolvePick(pick: any): any[] {
   const { primitive, id, primitiveCollection, collection } = pick ?? {};
   const entityCollection = id?.entityCollection;
   const dataSource = entityCollection?.owner;

@@ -8,7 +8,6 @@ export function InternalPluginCss(): Plugin {
     name: 'internal-plugin-css',
     apply: 'build',
     enforce: 'post',
-
     generateBundle(options, bundle) {
       Object.entries(bundle).forEach(([_fileName, chunk]) => {
         if (chunk.type === 'asset' || !chunk.viteMetadata) {
