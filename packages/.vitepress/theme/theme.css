@@ -8,10 +8,3 @@
 .VPDoc.has-aside .content-container {
   max-width: none !important;
 }
-
-@media (min-width: 960px) {
-  .VPHero .image-container {
-    transform: none !important;
-    position: relative;
-  }
-}

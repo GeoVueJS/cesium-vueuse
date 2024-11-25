@@ -17,7 +17,7 @@ const viewer = createViewer(elRef, {
   navigationHelpButton: false,
   sceneModePicker: false,
   baseLayerPicker: false,
-  creditContainer: document.createElement('div'),
+  creditContainer: document?.createElement('div'),
   shouldAnimate: true,
   baseLayer: ImageryLayer.fromProviderAsync(IonImageryProvider.fromAssetId(3954), { nightAlpha: 0 }),
 });
@@ -48,13 +48,15 @@ useCesiumEventListener(() => viewer.value?.scene.postUpdate, () => {
 </script>
 
 <template>
-  <teleport to="body">
-    <div
-      ref="elRef"
-      position="fixed inset-0"
-      b="1px #000"
-      of="hidden"
-      z--1
-    />
-  </teleport>
+  <client-only>
+    <teleport to="#app">
+      <div
+        ref="elRef"
+        position="fixed inset-0"
+        b="1px #000"
+        of="hidden"
+        z--1
+      />
+    </teleport>
+  </client-only>
 </template>
