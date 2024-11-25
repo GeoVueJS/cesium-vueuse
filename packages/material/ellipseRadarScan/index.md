@@ -1,6 +1,6 @@
-# useGraphicEventHandler
+# waterRipple
 
-TODO
+响应式获取`Camera`实例状态
 
 ## Usage
 

@@ -1,6 +1,6 @@
 {
   "name": "@cesium-vueuse/shared",
-  "version": "1.0.1-beta.20",
+  "version": "1.0.1-beta.21",
   "buildInfo": {
     "name": "CesiumVueuseShared",
     "bundle": true
@@ -20,8 +20,8 @@
     "types": "./dist/index.d.ts"
   },
   "dependencies": {
-    "@vueuse/shared": "^11.1.0",
-    "cesium": "^1.122.0",
-    "vue": "^3.5.12"
+    "@vueuse/shared": "^11.3.0",
+    "cesium": "^1.123.1",
+    "vue": "^3.5.13"
   }
 }

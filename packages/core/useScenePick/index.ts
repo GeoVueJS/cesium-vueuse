@@ -42,9 +42,7 @@ export function useScenePick(
   options: UseScenePickOptions = {},
 ): ComputedRef<any | undefined> {
   const { width = 3, height = 3, throttled = 8, isActive = true } = options;
-
   const viewer = useViewer();
-
   const position = refThrottled(computed(() => toValue(windowPosition)), throttled, false, true);
 
   const pick = computed(() => {

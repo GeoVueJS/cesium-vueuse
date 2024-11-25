@@ -15,7 +15,7 @@ export const RadarScanMaterialDefaultUniforms: RadarScanMaterialUniforms = {
 };
 
 /**
- * 水波纹材质
+ * 雷达扫描
  */
 addMaterialCache(RadarScanMaterialType, {
   fabric: {

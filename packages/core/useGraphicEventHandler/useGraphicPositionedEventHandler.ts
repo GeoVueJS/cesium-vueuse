@@ -66,15 +66,13 @@ export function useGraphicPositionedEventHandler(options: UseGraphicPositionedEv
     return typeStr ? EVENT_TYPE_RECORD[typeStr] : undefined;
   });
 
-  const state = useScreenSpaceEventState(typeRef, {
-    isActive,
-  });
+  const state = useScreenSpaceEventState(typeRef, { isActive });
 
   const pick = useScenePick(() => state.value?.position, { isActive });
 
   watch([state, pick], ([context, pick]) => {
-    if (pick && context) {
-      listener?.({ context, pick });
+    if (pick && context && listener) {
+      listener({ context, pick });
     }
   });
 

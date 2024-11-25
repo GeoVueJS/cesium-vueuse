@@ -1,6 +1,6 @@
 {
   "name": "@cesium-vueuse/serialize",
-  "version": "1.0.1-beta.20",
+  "version": "1.0.1-beta.21",
   "buildInfo": {
     "name": "CesiumVueuseSerialize",
     "bundle": true
@@ -21,8 +21,8 @@
   },
   "dependencies": {
     "@cesium-vueuse/shared": "workspace:*",
-    "@vueuse/core": "^11.1.0",
-    "cesium": "^1.122.0",
-    "vue": "^3.5.12"
+    "@vueuse/core": "^11.3.0",
+    "cesium": "^1.123.1",
+    "vue": "^3.5.13"
   }
 }

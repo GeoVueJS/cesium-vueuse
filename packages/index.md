@@ -7,6 +7,7 @@ hero:
   name: "Cesium VueUse"
   text: "A VitePress Site"
   tagline: My great project tagline
+
   actions:
     - theme: brand
       text: Get Started
