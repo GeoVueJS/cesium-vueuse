@@ -11,7 +11,7 @@ export default {
   extends: Theme,
   Layout: () => {
     return h(Theme.Layout, null, {
-      'home-hero-image': () => h(HomeHeroImage),
+      'home-hero-before': () => h(HomeHeroImage),
       // https://vitepress.dev/guide/extending-default-theme#layout-slots
     });
   },
