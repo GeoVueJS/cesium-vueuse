@@ -2,8 +2,10 @@ import type { Cartesian3, Entity } from 'cesium';
 import type { PlottedResult } from '.';
 
 export enum PlottedStatus {
+  IDLE = 0,
   DEFINING = 1,
   ACTIVE = 2,
+  DISABLED = 3,
 }
 
 export enum PlottedPointStatus {
@@ -88,42 +90,18 @@ export class PlottedScheme {
 
   constructor(options: PlottedSchemeConstructorOptions) {
     this.type = options.type;
-    this.controlPoints = options.controlPoints;
-    this.heightPoints = options.heightPoints;
-    this.movedPoints = options.movedPoints;
-    this.altitudePoints = options.altitudePoints;
-    this.auxiliaryPoints = options.auxiliaryPoints;
     this.complete = options.complete;
     this.completeOnDoubleClick = options.completeOnDoubleClick;
     this.render = options.render;
+
+    this.controlPoint = options.controlPoint;
+    this.auxiliaryPoint = options.auxiliaryPoint;
+    this.movedPoint = options.movedPoint;
+    this.altitudePoint = options.altitudePoint;
+    this.heightPoint = options.heightPoint;
   }
 
   type: string;
-
-  /**
-   * 控制点渲染
-   */
-  controlPoints?: (position: Cartesian3[], status: PlottedPointStatus, prevEntites: []) => Entity[];
-
-  /**
-   * 辅助点渲染
-   */
-  auxiliaryPoints?: (position: Cartesian3[], status: PlottedPointStatus) => Entity[];
-
-  /**
-   * 移动点渲染
-   */
-  movedPoints?: (position: Cartesian3[], status: PlottedPointStatus) => Entity[];
-
-  /**
-   * 海拔点渲染
-   */
-  altitudePoints?: (position: Cartesian3[], status: PlottedPointStatus) => Entity[];
-
-  /**
-   * 高度点渲染
-   */
-  heightPoints?: (position: Cartesian3[], status: PlottedPointStatus) => Entity[];
 
   /**
    * 是否立即执行完成标绘操作
@@ -141,5 +119,30 @@ export class PlottedScheme {
 
   /**
    */
-  render?: () => PlottedResult;
+  render?: (positions: Cartesian3[], status: PlottedStatus, prev?: PlottedResult) => PlottedResult;
+
+  /**
+   * 控制点渲染
+   */
+  controlPoint?: PlottedHandlePoint;
+
+  /**
+   * 辅助点渲染
+   */
+  auxiliaryPoint?: PlottedHandlePoint;
+
+  /**
+   * 移动点渲染
+   */
+  movedPoint?: PlottedHandlePoint;
+
+  /**
+   * 海拔点渲染
+   */
+  altitudePoint?: PlottedHandlePoint;
+
+  /**
+   * 高度点渲染
+   */
+  heightPoint?: PlottedHandlePoint;
 }

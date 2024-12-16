@@ -1,14 +1,21 @@
 import { fileURLToPath, URL } from 'node:url';
+import {
+  getPackageInfo,
+} from 'local-pkg';
 import UnoCSS from 'unocss/vite';
 import UnpluginCesium from 'unplugin-cesium/vite';
 import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
 import VueDevTools from 'vite-plugin-vue-devtools';
 
-export default defineConfig({
+const CESIUM_VERSION = (await getPackageInfo('cesium'))!.version;
 
+export default defineConfig({
   plugins: [
-    UnpluginCesium(),
+    UnpluginCesium({
+      copyStaticFiles: false,
+      cesiumBaseUrl: `https://cdn.jsdelivr.net/npm/cesium@${CESIUM_VERSION}/Build/Cesium/`,
+    }),
     VueDevTools(),
     UnoCSS(),
     Components({

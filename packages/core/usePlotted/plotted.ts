@@ -1,13 +1,12 @@
 import type { PlottedSchemeConstructorOptions } from './plotted-scheme';
-import type { SmapledPlottedPropertyConstructorOptions } from './smapled-plotted-property';
+import type { SmapledPositionsPropertyConstructorOptions } from './smapled-positions-property';
 import { PlottedScheme } from './plotted-scheme';
-import { SmapledPlottedProperty } from './smapled-plotted-property';
+import { SmapledPositionsProperty } from './smapled-positions-property';
 
 export interface PlottedConstructorOptions {
   uuid?: string;
   scheme: string | PlottedScheme | PlottedSchemeConstructorOptions;
-  smaple?: SmapledPlottedProperty | SmapledPlottedPropertyConstructorOptions;
-  config?: any;
+  smaple?: SmapledPositionsProperty | SmapledPositionsPropertyConstructorOptions;
 }
 
 export class Plotted {
@@ -23,7 +22,7 @@ export class Plotted {
       this._scheme = options.scheme instanceof PlottedScheme ? options.scheme : new PlottedScheme(options.scheme);
     }
 
-    this._smapled = options.smapled instanceof SmapledPlottedProperty ? options.smapled : new SmapledPlottedProperty(options.smapled);
+    this._smaple = options.smaple instanceof SmapledPositionsProperty ? options.smaple : new SmapledPositionsProperty(options.smaple);
   }
 
   /**
@@ -38,9 +37,9 @@ export class Plotted {
   /**
    * @internal
    */
-  private _smapled: SmapledPlottedProperty;
+  private _smaple: SmapledPositionsProperty;
 
-  get smapled(): SmapledPlottedProperty {
-    return this._smapled;
+  get smaple(): SmapledPositionsProperty {
+    return this._smaple;
   }
 }
