@@ -1,7 +1,5 @@
 import { fileURLToPath, URL } from 'node:url';
-import {
-  getPackageInfo,
-} from 'local-pkg';
+import { getPackageInfo } from 'local-pkg';
 import UnoCSS from 'unocss/vite';
 import UnpluginCesium from 'unplugin-cesium/vite';
 import Components from 'unplugin-vue-components/vite';

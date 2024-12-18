@@ -12,6 +12,7 @@ export default defineConfig({
   description: 'A VitePress Site',
   head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
   rewrites: {
+    '(.*).en-US.md': '(.*).md',
     '(.*).zh-CN.md': 'zh/(.*).md',
   },
   markdown: {
@@ -32,7 +33,7 @@ export default defineConfig({
         ],
         sidebar: generateSidebar({
           base: '/',
-          filter: path => path.split('.').length === 2 && path.endsWith('.md') && !path.startsWith('index'),
+          filter: path => path.endsWith('.en-US.md'),
         }),
         lastUpdated: {
           text: 'Last Updated',

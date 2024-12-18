@@ -31,3 +31,4 @@ coverage
 
 
 **/.vitepress/cache
+**/.vitepress/.types

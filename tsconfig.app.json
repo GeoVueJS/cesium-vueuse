@@ -19,7 +19,8 @@
     "packages/.vitepress/components.d.ts",
     "packages/.vitepress/auto-imports.d.ts",
     "packages/**/*.vue",
-    "packages/**/*.ts"
+    "packages/**/*.ts",
+    "packages/core/createViewer/.docs/demo.vue"
   ],
   "exclude": [
     "**/cache/**",

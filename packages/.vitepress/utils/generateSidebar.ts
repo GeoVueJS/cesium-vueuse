@@ -1,19 +1,15 @@
 import type { FilterPattern } from 'vite';
 import type { DefaultTheme } from 'vitepress';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import FastGlob from 'fast-glob';
 import { createFilter, normalizePath } from 'vite';
+import { VITEPRESS_PACKAGE_PATH } from '../path';
 
 export interface GenerateSidebarOptions {
   base: string;
   include?: FilterPattern;
   exclude?: FilterPattern;
   filter?: (path: string) => boolean;
-}
-
-export interface GenerateSidebarRetrun {
-
 }
 
 interface TreeItem {
@@ -23,8 +19,6 @@ interface TreeItem {
   link: string;
   parent?: string;
 }
-//  `/packages`
-const root = fileURLToPath(new URL('../../', import.meta.url));
 
 export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.SidebarItem[] {
   let base = options.base || '/';
@@ -33,7 +27,7 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
   }
 
   const data = FastGlob.sync(['**/*.md', '*.md'], {
-    cwd: root,
+    cwd: VITEPRESS_PACKAGE_PATH,
     ignore: ['**/node_modules/**', '**/dist/**', '.vitepress'],
   });
 
@@ -53,7 +47,7 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
       .replace(/(\/?index)+$/, '');
 
     const item: TreeItem = {
-      file: path.resolve(root, filePath),
+      file: path.resolve(VITEPRESS_PACKAGE_PATH, filePath),
       text: link.split('/').pop(),
       link,
       parent: link.includes('/') ? link.replace(/\/.+$/, '') : undefined,
