@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { HeightReference } from 'cesium';
 
@@ -21,7 +21,7 @@ export class HeightReferenceSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: HeightReference): HeightReferenceJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const keys = Object.keys(HeightReference) as HeightReferenceJSON[];
       return keys.find(key => HeightReference[key] === instance);
     }

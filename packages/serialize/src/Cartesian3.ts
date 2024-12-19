@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { Cartesian3 } from 'cesium';
 
@@ -25,7 +25,7 @@ export class Cartesian3Serialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Cartesian3): Cartesian3JSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         x: instance.x,
         y: instance.y,

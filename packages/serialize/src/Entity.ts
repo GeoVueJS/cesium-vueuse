@@ -22,7 +22,8 @@ import type { QuaternionJSON } from './Quaternion';
 import type { RectangleGraphicsJSON } from './RectangleGraphics';
 import type { TimeIntervalCollectionJSON } from './TimeIntervalCollection';
 import type { WallGraphicsJSON } from './WallGraphics';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { Entity } from 'cesium';
 import { BillboardGraphicsSerialize } from './BillboardGraphics';
 import { BoxGraphicsSerialize } from './BoxGraphics';
@@ -94,7 +95,7 @@ export class EntitySerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Entity, time?: JulianDate): EntityJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         id: instance.id,
         name: instance.name,

@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { JulianDate } from 'cesium';
 
@@ -21,7 +21,7 @@ export class JulianDateSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: JulianDate): JulianDateJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return instance.toString();
     }
   }

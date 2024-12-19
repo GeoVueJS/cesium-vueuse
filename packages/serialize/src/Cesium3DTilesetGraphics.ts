@@ -1,5 +1,6 @@
 import type { JulianDate, Resource } from 'cesium';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { Cesium3DTilesetGraphics } from 'cesium';
 
@@ -26,7 +27,7 @@ export class Cesium3DTilesetGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Cesium3DTilesetGraphics, time?: JulianDate): Cesium3DTilesetGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         uri: toPropertyValue(instance.uri, time),

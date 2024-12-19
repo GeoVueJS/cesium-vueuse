@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { ClassificationType } from 'cesium';
 
@@ -21,7 +21,7 @@ export class ClassificationTypeSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ClassificationType): ClassificationTypeJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const keys = Object.keys(ClassificationType) as ClassificationTypeJSON[];
       return keys.find(key => ClassificationType[key] === instance);
     }

@@ -1,5 +1,5 @@
 import type { Cartesian3JSON } from './Cartesian3';
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { PolygonHierarchy } from 'cesium';
 
 import { Cartesian3Serialize } from './Cartesian3';
@@ -26,7 +26,7 @@ export class PolygonHierarchySerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PolygonHierarchy): PolygonHierarchyJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         positions: instance.positions.map((item: any) => Cartesian3Serialize.toJSON(item)!),
         holes: instance.holes.map((item: any) => PolygonHierarchySerialize.toJSON(item)!),

@@ -5,7 +5,8 @@ import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { HeightReferenceJSON } from './HeightReference';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { ShadowModeJSON } from './ShadowMode';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { EllipseGraphics } from 'cesium';
 import { ClassificationTypeSerialize } from './ClassificationType';
 import { ColorSerialize } from './Color';
@@ -55,7 +56,7 @@ export class EllipseGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: EllipseGraphics, time?: JulianDate): EllipseGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         semiMajorAxis: toPropertyValue(instance.semiMajorAxis, time),

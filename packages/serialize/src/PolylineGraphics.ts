@@ -5,7 +5,8 @@ import type { ClassificationTypeJSON } from './ClassificationType';
 import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { ShadowModeJSON } from './ShadowMode';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { PolylineGraphics } from 'cesium';
 import { ArcTypeSerialize } from './ArcType';
 import { Cartesian3Serialize } from './Cartesian3';
@@ -47,7 +48,7 @@ export class PolylineGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PolylineGraphics, time?: JulianDate): PolylineGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Serialize.toJSON(item)),

@@ -1,6 +1,6 @@
 import type { ConstantPositionProperty, JulianDate, PositionProperty, SampledPositionProperty } from 'cesium';
 
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { ConstantPositionPropertySerialize } from './ConstantPositionProperty';
 import { SampledPositionPropertySerialize } from './SampledPositionProperty';
 
@@ -27,7 +27,7 @@ export class PositionPropertySerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PositionProperty, time?: JulianDate): PositionPropertyJSON | undefined {
-    if (!isHasValue(instance)) {
+    if (!notNullish(instance)) {
       return;
     }
     if (ConstantPositionPropertySerialize.predicate(instance)) {

@@ -6,7 +6,8 @@ import type { CornerTypeJSON } from './CornerType';
 import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { ShadowModeJSON } from './ShadowMode';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { PolylineVolumeGraphics } from 'cesium';
 import { Cartesian2Serialize } from './Cartesian2';
 import { Cartesian3Serialize } from './Cartesian3';
@@ -49,7 +50,7 @@ export class PolylineVolumeGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PolylineVolumeGraphics, time?: JulianDate): PolylineVolumeGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Serialize.toJSON(item)),

@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { DistanceDisplayCondition } from 'cesium';
 
@@ -24,7 +24,7 @@ export class DistanceDisplayConditionSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: DistanceDisplayCondition): DistanceDisplayConditionJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         near: instance.near,
         far: instance.far,

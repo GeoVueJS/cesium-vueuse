@@ -1,5 +1,5 @@
 import type { Cartesian3JSON } from './Cartesian3';
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { Plane } from 'cesium';
 
 import { Cartesian3Serialize } from './Cartesian3';
@@ -26,7 +26,7 @@ export class PlaneSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Plane): PlaneJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         normal: Cartesian3Serialize.toJSON(instance.normal)!,
         distance: instance.distance,

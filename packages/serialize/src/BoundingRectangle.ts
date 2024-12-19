@@ -1,5 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
-
+import { notNullish } from '@vueuse/core';
 import { BoundingRectangle } from 'cesium';
 
 export interface BoundingRectangleJSON {
@@ -26,7 +25,7 @@ export class BoundingRectangleSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: BoundingRectangle): BoundingRectangleJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         x: instance.x,
         y: instance.y,

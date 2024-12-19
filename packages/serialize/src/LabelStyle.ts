@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { LabelStyle } from 'cesium';
 
@@ -21,7 +21,7 @@ export class LabelStyleSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: LabelStyle): LabelStyleJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const keys = Object.keys(LabelStyle) as LabelStyleJSON[];
       return keys.find(key => LabelStyle[key] === instance);
     }

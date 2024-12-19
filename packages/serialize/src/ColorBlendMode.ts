@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { ColorBlendMode } from 'cesium';
 
@@ -21,7 +21,7 @@ export class ColorBlendModeSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ColorBlendMode): ColorBlendModeJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const keys = Object.keys(ColorBlendMode) as ColorBlendModeJSON[];
       return keys.find(key => ColorBlendMode[key] === instance);
     }

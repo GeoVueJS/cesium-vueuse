@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { ShadowMode } from 'cesium';
 
@@ -21,7 +21,7 @@ export class ShadowModeSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ShadowMode): ShadowModeJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const keys = Object.keys(ShadowMode) as ShadowModeJSON[];
       return keys.find(key => ShadowMode[key] === instance);
     }

@@ -1,6 +1,6 @@
 import type { JulianDateJSON } from './JulianDate';
 
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { TimeInterval } from 'cesium';
 import { JulianDateSerialize } from './JulianDate';
 
@@ -29,7 +29,7 @@ export class TimeIntervalSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: TimeInterval): TimeIntervalJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         start: JulianDateSerialize.toJSON(instance.start),
         stop: JulianDateSerialize.toJSON(instance.stop),

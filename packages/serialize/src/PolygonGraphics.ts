@@ -7,7 +7,8 @@ import type { HeightReferenceJSON } from './HeightReference';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { PolygonHierarchyJSON } from './PolygonHierarchy';
 import type { ShadowModeJSON } from './ShadowMode';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { PolygonGraphics } from 'cesium';
 import { ArcTypeSerialize } from './ArcType';
 import { ClassificationTypeSerialize } from './ClassificationType';
@@ -61,7 +62,7 @@ export class PolygonGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PolygonGraphics, time?: JulianDate): PolygonGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         hierarchy: PolygonHierarchySerialize.toJSON(toPropertyValue(instance.hierarchy, time)),
