@@ -18,7 +18,7 @@ export interface UseDataSourceOptions {
 
   /**
    * default value of `isActive`
-   * @defalut true
+   * @default true
    */
   isActive?: MaybeRefOrGetter<boolean>;
 
@@ -85,7 +85,7 @@ export function useDataSource<T extends CesiumDataSource>(
       list.forEach(item => (item && _collection?.add(item)));
       onCleanup(() => {
         const destroy = toValue(destroyOnRemove);
-        list.forEach(item => item && _collection?.remove(item, destroy));
+        !_collection?.isDestroyed() && list.forEach(dataSource => dataSource && _collection?.remove(dataSource, destroy));
       });
     }
   });

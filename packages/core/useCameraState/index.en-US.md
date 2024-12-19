@@ -1,5 +1,6 @@
 ---
 type: state
+title: useCameraState
 ---
 
 # useCameraState

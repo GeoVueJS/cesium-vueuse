@@ -14,7 +14,7 @@ export interface UseCameraStateOptions {
 
   /**
    * Camera event type to watch
-   * @edfualt `changed`
+   * @default `changed`
    */
   event?: MaybeRefOrGetter<'changed' | 'moveStart' | 'moveEnd'> ;
 

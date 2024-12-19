@@ -16,7 +16,7 @@ export interface UseEntityOptions {
 
   /**
    * default value of `isActive`
-   * @defalut true
+   * @default true
    */
   isActive?: MaybeRefOrGetter<boolean>;
 

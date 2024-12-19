@@ -19,7 +19,7 @@ export interface UsePrimitiveOptions {
 
   /**
    * default value of `isActive`
-   * @defalut true
+   * @default true
    */
   isActive?: MaybeRefOrGetter<boolean>;
 
@@ -77,7 +77,7 @@ export function usePrimitive<T extends Primitive>(
 
       list.forEach(item => (item && _collection?.add(item)));
       onCleanup(() => {
-        list.forEach(item => item && _collection?.remove(item));
+        !_collection?.isDestroyed() && list.forEach(item => item && _collection?.remove(item));
       });
     }
   });

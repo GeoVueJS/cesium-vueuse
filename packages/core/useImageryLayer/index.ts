@@ -17,7 +17,7 @@ export interface UseImageryLayerOptions {
 
   /**
    * default value of `isActive`
-   * @defalut true
+   * @default true
    */
   isActive?: MaybeRefOrGetter<boolean>;
 
