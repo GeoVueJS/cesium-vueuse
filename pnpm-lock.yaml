@@ -11,6 +11,9 @@ importers:
       '@cesium-vueuse/core':
         specifier: workspace:*
         version: link:packages/core
+      '@cesium-vueuse/plotted':
+        specifier: workspace:*
+        version: link:packages/plotted
       '@cesium-vueuse/shared':
         specifier: workspace:*
         version: link:packages/shared
@@ -222,6 +225,24 @@ importers:
       cesium:
         specifier: ^1.124.0
         version: 1.124.0
+
+  packages/plotted:
+    dependencies:
+      '@cesium-vueuse/core':
+        specifier: workspace:*
+        version: link:../core
+      '@cesium-vueuse/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@vueuse/core':
+        specifier: ^12.0.0
+        version: 12.0.0(typescript@5.7.2)
+      cesium:
+        specifier: ^1.124.0
+        version: 1.124.0
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.13(typescript@5.7.2)
 
   packages/serialize:
     dependencies:
