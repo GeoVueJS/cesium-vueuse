@@ -4,7 +4,7 @@ import Theme from 'vitepress/theme';
 import { h } from 'vue';
 import HomeHeroImage from './components/home-hero-image.vue';
 import 'uno.css';
-import './theme.css';
+import './styles/theme.css';
 import '@unocss/reset/tailwind.css';
 
 export default {

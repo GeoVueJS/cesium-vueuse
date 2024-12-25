@@ -1,7 +1,9 @@
 import type { FilterPattern } from 'vite';
 import type { DefaultTheme } from 'vitepress';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import FastGlob from 'fast-glob';
+import matter from 'gray-matter';
 import { createFilter, normalizePath } from 'vite';
 import { VITEPRESS_PACKAGE_PATH } from '../path';
 
@@ -40,15 +42,18 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
 
   const flatList: TreeItem[] = [];
 
-  filePaths.forEach((filePath) => {
+  filePaths.forEach(async (filePath) => {
     const link = filePath
       .replace(/\.md$/, '')
       .replace(/(\.(\w|-)*)$/, '')
       .replace(/(\/?index)+$/, '');
-
+    const file = path.resolve(VITEPRESS_PACKAGE_PATH, filePath);
+    const m = matter(readFileSync(file).toString());
+    let text = link.split('/').pop();
+    m.data?.tip && (text += `<Badge type="tip" text="${m.data.tip}" />`);
     const item: TreeItem = {
-      file: path.resolve(VITEPRESS_PACKAGE_PATH, filePath),
-      text: link.split('/').pop(),
+      file,
+      text,
       link,
       parent: link.includes('/') ? link.replace(/\/.+$/, '') : undefined,
       isRoot: !link.includes('/'),

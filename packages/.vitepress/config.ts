@@ -1,5 +1,6 @@
 import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vitepress';
+import { badgeTransform } from './plugins/badge';
 import { markdownDemoContainer } from './plugins/demoContainer';
 import { markdownDtsContainer } from './plugins/dtsContainer';
 import { generateSidebar } from './utils/generateSidebar';
@@ -17,6 +18,7 @@ export default defineConfig({
   },
   markdown: {
     config(md) {
+      badgeTransform(md);
       md.use(markdownDemoContainer);
       md.use(markdownDtsContainer);
     },
