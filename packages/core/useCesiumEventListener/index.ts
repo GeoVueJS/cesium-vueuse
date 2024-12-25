@@ -18,7 +18,7 @@ export interface UseCesiumEventListenerOptions {
  * the listener function will automatically reload or destroy.
  */
 export function useCesiumEventListener<T extends FunctionArgs<any[]>>(
-  event: MaybeRefOrGetter<Arrayable<Event<T>> | undefined>,
+  event: MaybeRefOrGetter<Arrayable<Event<T> | undefined> | undefined>,
   listener: T,
   options?: UseCesiumEventListenerOptions,
 ): PausableState {
@@ -29,8 +29,8 @@ export function useCesiumEventListener<T extends FunctionArgs<any[]>>(
     if (_event) {
       const events = Array.isArray(_event) ? _event : [_event];
       if (events.length && pausable.isActive.value) {
-        const stopFns = events.map(event => event.addEventListener(listener, _event));
-        onCleanup(() => stopFns.forEach(stop => stop()));
+        const stopFns = events.map(event => event?.addEventListener(listener, _event));
+        onCleanup(() => stopFns.forEach(stop => stop?.()));
       }
     }
   });

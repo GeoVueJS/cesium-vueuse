@@ -1,4 +1,4 @@
-import type { MaybeProperty } from './cesiumProperty';
+import type { MaybeProperty } from './property';
 import { defined } from 'cesium';
 
 /**

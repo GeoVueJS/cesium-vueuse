@@ -1,4 +1,4 @@
-import type { Entity } from 'cesium';
+import type { Entity, JulianDate } from 'cesium';
 import type { PlottedSchemeConstructorOptions } from './PlottedScheme';
 import type { SmapledPlottedPropertyConstructorOptions } from './SmapledPlottedProperty';
 import { assertError } from '@cesium-vueuse/shared';
@@ -40,6 +40,8 @@ export class PlottedProduct {
   }
 
   id: string;
+
+  fixedTime?: JulianDate | null;
 
   /**
    * @internal

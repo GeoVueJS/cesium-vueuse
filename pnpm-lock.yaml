@@ -96,6 +96,9 @@ importers:
       fast-glob:
         specifier: ^3.3.2
         version: 3.3.2
+      gray-matter:
+        specifier: ^4.0.3
+        version: 4.0.3
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1

@@ -104,6 +104,10 @@ export class SmapledPlottedProperty<D = any> {
     return this._definitionChanged;
   };
 
+  getTimes(): JulianDate[] {
+    return this._times.map(t => t.clone());
+  }
+
   /**
    * @internal
    */

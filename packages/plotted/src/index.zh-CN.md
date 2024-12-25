@@ -1,3 +1,8 @@
+---
+title: usePlotted
+text: 标绘
+---
+
 # usePlotted
 
 ## Usage

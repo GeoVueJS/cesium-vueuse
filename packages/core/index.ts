@@ -18,6 +18,7 @@ export * from './usePrimitiveScope';
 export * from './useScaleBar';
 export * from './useSceneDrillPick';
 export * from './useScenePick';
+export * from './useScreenSpaceEventComputed';
 export * from './useScreenSpaceEventHandler';
 export * from './useScreenSpaceEventState';
 export * from './useViewer';

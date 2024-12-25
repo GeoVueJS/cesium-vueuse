@@ -19,6 +19,7 @@ export interface PlottedRenderResult {
   entities?: Entity[];
   primitives?: any[];
 }
+
 export interface PlottedRenderOptions<D = any> {
   packable: SmapledPlottedPackable<D>;
   status: PlottedStatus;
@@ -26,10 +27,7 @@ export interface PlottedRenderOptions<D = any> {
   prev: PlottedRenderResult;
 }
 
-export interface PlottedHandlePoint {
-  positions?: (positions: Cartesian3[]) => Cartesian3[];
-  render?: (position: Cartesian3, status: PlottedPointStatus, prev?: Entity) => Entity | undefined;
-}
+export type PlottedHandlePointsRender<D = any> = (packable: SmapledPlottedPackable<D>, status?: PlottedStatus, prev?: Entity[]) => Entity[];
 
 export interface PlottedSchemeConstructorOptions {
   type: string;
@@ -55,27 +53,27 @@ export interface PlottedSchemeConstructorOptions {
   /**
    * 控制点渲染
    */
-  controlPoint?: PlottedHandlePoint;
+  controlPoint?: PlottedHandlePointsRender;
 
   /**
    * 辅助点渲染
    */
-  auxiliaryPoint?: PlottedHandlePoint;
+  auxiliaryPoint?: PlottedHandlePointsRender;
 
   /**
    * 移动点渲染
    */
-  movedPoint?: PlottedHandlePoint;
+  movedPoint?: PlottedHandlePointsRender;
 
   /**
    * 海拔点渲染
    */
-  altitudePoint?: PlottedHandlePoint;
+  altitudePoint?: PlottedHandlePointsRender;
 
   /**
    * 高度点渲染
    */
-  heightPoint?: PlottedHandlePoint;
+  heightPoint?: PlottedHandlePointsRender;
 
 }
 
@@ -133,25 +131,25 @@ export class PlottedScheme {
   /**
    * 控制点渲染
    */
-  controlPoint?: PlottedHandlePoint;
+  controlPoint?: PlottedHandlePointsRender;
 
   /**
    * 辅助点渲染
    */
-  auxiliaryPoint?: PlottedHandlePoint;
+  auxiliaryPoint?: PlottedHandlePointsRender;
 
   /**
    * 移动点渲染
    */
-  movedPoint?: PlottedHandlePoint;
+  movedPoint?: PlottedHandlePointsRender;
 
   /**
    * 海拔点渲染
    */
-  altitudePoint?: PlottedHandlePoint;
+  altitudePoint?: PlottedHandlePointsRender;
 
   /**
    * 高度点渲染
    */
-  heightPoint?: PlottedHandlePoint;
+  heightPoint?: PlottedHandlePointsRender;
 }

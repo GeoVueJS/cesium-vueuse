@@ -1,10 +1,12 @@
 ---
-title: 注意事项
+text: 最佳实践^text
+tip: beta
+sort: 1
 ---
 
-# 注意事项
+# 最佳实践
 
-## 避免使用`ref`、`reactive`等深度响应API去包裹Cesium相关实例
+## 优先使用`shallowRef`、`shallowReactive`
 
 Cesium中的实例中均关联着大量的绑定数据且内部存在复杂的的`this`交互。若在Vue中使用`ref`、`reactive`等深度响应API包裹Cesium实例，
 可能会影响Cesium无法进行内部的数据交互，且深度监听对于Cesium实例的监听效率会大大降低，是无意义的。
@@ -33,6 +35,11 @@ watch(position, (position) => {
   triggerRef(entity);
 });
 ```
+
+另见
+
+- [vue.js shallowRef](https://vuejs.org/api/reactivity-advanced.html#shallowref)
+- [vue.js 减少大型不可变数据的响应性开销](https://vuejs.org/guide/best-practices/performance.html#reduce-reactivity-overhead-for-large-immutable-structures)
 
 ## 避免在setup顶层函数直接获取或消费相关响应式实例
 
@@ -93,4 +100,38 @@ const mainStore = useMainSotre();
 
 const { viewer } = useViewer();
 useEntity(() => mainStore.entity);
+```
+
+## 响应式变量的创建与解构
+
+### MaybeRefOrGetter | toValue
+
+在`vue`与`vueuse`中，采用了大量的响应式变量传参，当参数类型为`MaybeRefOrGetter`时，
+hook函数内部会通过`toValue`获取变量值以确保符合vue的响应式要求。
+
+```ts
+type MaybeRefOrGetter<T> = Ref<T> | (() => T) | T;
+
+function toValue<T>(value: MaybeRefOrGetter<T>): T;
+
+toValue(1); //       --> 1
+toValue(ref(1)); //  --> 1
+toValue(() => 1); // --> 1
+```
+
+### MaybeRefOrAsyncGetter | toAwaitValue
+
+在`CesiumVueUse`中，因考虑到与异步数据的深度融合，我们进一步加强了`MaybeRefOrGetter`的用法，
+实现了一个名为`MaybeRefOrAsyncGetter`的类型以及`toAwaitValue`方法，搭配vueuse的`computedAsync`使异步数据在vue响应式设计中更便捷使用。
+
+```ts
+export type MaybeAsyncGetter<T> = () => Promise<T> | T;
+export type MaybeRefOrAsyncGetter<T> = MaybeRef<T> | MaybeAsyncGetter<T>;
+function toAwaitValue<T>(value: MaybeRefOrAsyncGetter<T>): Promise<T>;
+
+toAwaitValue(1);
+toAwaitValue(ref(1));
+toAwaitValue(async () => fn()); // --> Promise<T>
+
+const value = componentAsync(() => toAwaitValue(any));
 ```

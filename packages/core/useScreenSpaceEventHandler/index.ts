@@ -7,35 +7,25 @@ import { computed, toValue, watch, watchEffect } from 'vue';
 import { createPausable } from '../createPausable';
 import { useViewer } from '../useViewer';
 
-export type InputAction<T extends ScreenSpaceEventType> = {
-  [ScreenSpaceEventType.LEFT_DOWN]: ScreenSpaceEventHandler.PositionedEventCallback;
-  [ScreenSpaceEventType.LEFT_UP]: ScreenSpaceEventHandler.PositionedEventCallback;
-  [ScreenSpaceEventType.LEFT_CLICK]: ScreenSpaceEventHandler.PositionedEventCallback;
-  [ScreenSpaceEventType.LEFT_DOUBLE_CLICK]: ScreenSpaceEventHandler.PositionedEventCallback;
-  [ScreenSpaceEventType.RIGHT_DOWN]: ScreenSpaceEventHandler.PositionedEventCallback;
-  [ScreenSpaceEventType.RIGHT_UP]: ScreenSpaceEventHandler.PositionedEventCallback;
-  [ScreenSpaceEventType.RIGHT_CLICK]: ScreenSpaceEventHandler.PositionedEventCallback;
-  [ScreenSpaceEventType.MIDDLE_DOWN]: ScreenSpaceEventHandler.PositionedEventCallback;
-  [ScreenSpaceEventType.MIDDLE_UP]: ScreenSpaceEventHandler.PositionedEventCallback;
-  [ScreenSpaceEventType.MIDDLE_CLICK]: ScreenSpaceEventHandler.PositionedEventCallback;
-  [ScreenSpaceEventType.MOUSE_MOVE]: ScreenSpaceEventHandler.MotionEventCallback;
-  [ScreenSpaceEventType.WHEEL]: ScreenSpaceEventHandler.WheelEventCallback;
-  [ScreenSpaceEventType.PINCH_START]: ScreenSpaceEventHandler.TwoPointEventCallback;
-  [ScreenSpaceEventType.PINCH_END]: ScreenSpaceEventHandler.TwoPointEventCallback;
-  [ScreenSpaceEventType.PINCH_MOVE]: ScreenSpaceEventHandler.TwoPointMotionEventCallback;
+export type ScreenSpaceEvent<T extends ScreenSpaceEventType> = {
+  [ScreenSpaceEventType.LEFT_DOWN]: ScreenSpaceEventHandler.PositionedEvent;
+  [ScreenSpaceEventType.LEFT_UP]: ScreenSpaceEventHandler.PositionedEvent;
+  [ScreenSpaceEventType.LEFT_CLICK]: ScreenSpaceEventHandler.PositionedEvent;
+  [ScreenSpaceEventType.LEFT_DOUBLE_CLICK]: ScreenSpaceEventHandler.PositionedEvent;
+  [ScreenSpaceEventType.RIGHT_DOWN]: ScreenSpaceEventHandler.PositionedEvent;
+  [ScreenSpaceEventType.RIGHT_UP]: ScreenSpaceEventHandler.PositionedEvent;
+  [ScreenSpaceEventType.RIGHT_CLICK]: ScreenSpaceEventHandler.PositionedEvent;
+  [ScreenSpaceEventType.MIDDLE_DOWN]: ScreenSpaceEventHandler.PositionedEvent;
+  [ScreenSpaceEventType.MIDDLE_UP]: ScreenSpaceEventHandler.PositionedEvent;
+  [ScreenSpaceEventType.MIDDLE_CLICK]: ScreenSpaceEventHandler.PositionedEvent;
+  [ScreenSpaceEventType.MOUSE_MOVE]: ScreenSpaceEventHandler.MotionEvent;
+  [ScreenSpaceEventType.WHEEL]: number;
+  [ScreenSpaceEventType.PINCH_START]: ScreenSpaceEventHandler.TwoPointEvent;
+  [ScreenSpaceEventType.PINCH_END]: ScreenSpaceEventHandler.TwoPointEvent;
+  [ScreenSpaceEventType.PINCH_MOVE]: ScreenSpaceEventHandler.TwoPointMotionEvent;
 }[T];
 
-export interface UseScreenSpaceEventHandlerOptions<T extends ScreenSpaceEventType> {
-  /**
-   * Types of mouse event
-   */
-  type?: MaybeRefOrGetter<T | undefined>;
-
-  /**
-   * Callback function for listening
-   */
-  inputAction?: InputAction<T>;
-
+export interface UseScreenSpaceEventHandlerOptions {
   /**
    * Modifier key
    */
@@ -51,16 +41,16 @@ export interface UseScreenSpaceEventHandlerOptions<T extends ScreenSpaceEventTyp
  * Easily use the `ScreenSpaceEventHandler`,
  * when the dependent data changes or the component is unmounted,
  * the listener function will automatically reload or destroy.
+ *
+ * @param type Types of mouse event
+ * @param inputAction Callback function for listening
  */
 export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType>(
-  options: UseScreenSpaceEventHandlerOptions<T> = {},
+  type?: MaybeRefOrGetter<T | undefined>,
+  inputAction?: (event: ScreenSpaceEvent<T>) => any,
+  options: UseScreenSpaceEventHandlerOptions = {},
 ): PausableState {
-  const {
-    type,
-    pause,
-    modifier,
-    inputAction,
-  } = options;
+  const { pause, modifier } = options;
 
   const viewer = useViewer();
 
@@ -85,7 +75,7 @@ export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType>(
       return;
     }
     if (isDef(typeValue)) {
-      handlerValue.setInputAction(inputAction, typeValue, modifierValue);
+      handlerValue.setInputAction(inputAction as any, typeValue, modifierValue);
       onCleanup(() => handlerValue!.removeInputAction(typeValue, modifierValue));
     }
   });
