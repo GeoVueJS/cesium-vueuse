@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usePlotted } from '@cesium-vueuse/plotted';
+import { PlottedPointAction, usePlotted } from '@cesium-vueuse/plotted';
 import * as Cesium from 'cesium';
 import { watchEffect } from 'vue';
 
@@ -9,10 +9,22 @@ watchEffect(() => {
   execute({
     scheme: {
       type: 'LineString',
-      complete: positions => positions.length >= 5,
-      completeOnDoubleClick: positions => positions.length >= 2,
+      complete: packable => packable.positions!.length >= 5,
+      completeOnDoubleClick: packable => packable.positions!.length >= 2,
+      controlPoint: {
+        format: packable => packable.positions ?? [],
+        render: ({ position, status, action }) => {
+          return {
+            position,
+            point: {
+              pixelSize: 10,
+              color: action === PlottedPointAction.HOVER ? Cesium.Color.RED : Cesium.Color.BLUE,
+            },
+          };
+        },
+      },
       render(options) {
-        const { mouse, packable, status } = options;
+        const { mouse, packable } = options;
         const entity
         = options.prev.entities?.[0]
         ?? new Cesium.Entity({
@@ -20,16 +32,11 @@ watchEffect(() => {
             width: 1,
           },
         });
-        entity.polyline!.positions = new Cesium.CallbackProperty((time) => {
+        entity.polyline!.positions = new Cesium.CallbackProperty(() => {
           const positions = [...packable.positions ?? []].concat(mouse ? [mouse] : []);
-          // console.log(positions);
-          if (positions.length >= 2) {
-            return positions;
-          }
-          else {
-            return [];
-          }
+          return positions.length >= 2 ? positions : [];
         }, false);
+
         return {
           entities: [entity],
         };

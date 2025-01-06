@@ -71,13 +71,13 @@ useGraphicEventHandler({
   type: 'DRAG',
   graphic: entity3,
   listener: (params) => {
-    const color = params.drag ? Cesium.Color.RED : undefined;
+    const color = params.draging ? Cesium.Color.RED : undefined;
     entity3.value!.point!.color = toProperty(color);
     entity3.value!.label!.fillColor = toProperty(color);
-    entity3.value!.label!.text = toProperty(params.drag ? 'DRAGGING' : 'DRAG ME');
+    entity3.value!.label!.text = toProperty(params.draging ? 'DRAGGING' : 'DRAG ME');
 
     // lock camera
-    viewer.value!.scene.screenSpaceCameraController.enableRotate = !params.drag;
+    viewer.value!.scene.screenSpaceCameraController.enableRotate = !params.draging;
 
     // update position
     const position = canvasCoordToCartesian(params.context.endPosition, viewer.value!.scene);

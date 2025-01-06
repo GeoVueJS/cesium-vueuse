@@ -47,7 +47,7 @@ export interface GraphicDragEventParams {
   /**
    * Whether the graphic is currently being dragged. Returns `true` continuously while dragging, and `false` once it ends.
    */
-  drag: boolean;
+  draging: boolean;
 }
 
 /**

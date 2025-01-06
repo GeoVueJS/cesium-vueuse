@@ -35,7 +35,7 @@ export function useGraphicDragEventHandler(options: UseGraphicDragEventHandlerOp
           endPosition: MOUSE_MOVE.value.endPosition,
         },
         pick: pick.value,
-        drag: true,
+        draging: true,
       });
     }
   };
@@ -48,7 +48,7 @@ export function useGraphicDragEventHandler(options: UseGraphicDragEventHandlerOp
           endPosition: MOUSE_MOVE.value.endPosition,
         },
         pick: pick.value,
-        drag: false,
+        draging: false,
       });
     }
   };

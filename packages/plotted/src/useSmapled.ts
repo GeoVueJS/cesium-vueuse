@@ -36,7 +36,7 @@ export function useSmapled(
       packable.positions ??= [];
       packable.positions.push(position);
       smaple.setSample(packable);
-      const completed = scheme.complete?.(packable.positions);
+      const completed = scheme.complete?.(packable);
       completed && current.value.setStatus(PlottedStatus.ACTIVE);
     },
   );
@@ -60,7 +60,7 @@ export function useSmapled(
       packable.positions ??= [];
       packable.positions.push(position);
       smaple.setSample(packable);
-      const completed = scheme.completeOnDoubleClick?.(packable.positions);
+      const completed = scheme.completeOnDoubleClick?.(packable);
       completed && current.value.setStatus(PlottedStatus.ACTIVE);
     },
   );

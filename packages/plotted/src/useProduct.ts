@@ -6,6 +6,7 @@ import { useCesiumEventListener, useDataSource, useEntityScope, usePrimitive, us
 import { canvasCoordToCartesian } from '@cesium-vueuse/shared';
 import { CustomDataSource, PrimitiveCollection, ScreenSpaceEventType } from 'cesium';
 import { watch } from 'vue';
+import { PlottedStatus } from './PlottedScheme';
 
 export interface UseProductOptions {
 }
@@ -33,7 +34,7 @@ export function useProduct(
   const render = async () => {
     const result = await current.value!.scheme.render?.({
       packable: current.value!.smaple.getValue(getCurrentTime()),
-      mouse: mouse.value,
+      mouse: current.value!.status === PlottedStatus.DEFINING ? mouse.value : undefined,
       status: current.value!.status,
       prev: {
         entities: current.value!.entities,

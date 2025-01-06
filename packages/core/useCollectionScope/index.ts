@@ -1,7 +1,7 @@
 import type { ShallowReactive } from 'vue';
 import { isPromise } from '@cesium-vueuse/shared';
 import { tryOnScopeDispose } from '@vueuse/core';
-import { shallowReadonly } from 'vue';
+import { shallowReactive, shallowReadonly } from 'vue';
 
 export type EffcetRemovePredicate<T> = (instance: T) => boolean;
 
@@ -57,7 +57,7 @@ export function useCollectionScope<
   removeFn: (i: T, ...args: RemoveArgs) => RemoveReturn,
   removeScopeArgs: RemoveArgs,
 ): UseCollectionScopeReturn<T, AddArgs, AddReturn, RemoveArgs, RemoveReturn> {
-  const scope = new Set<T>();
+  const scope = shallowReactive(new Set<T>());
 
   const add: any = (instance: T, ...args: AddArgs) => {
     const result = addFn(instance, ...args);

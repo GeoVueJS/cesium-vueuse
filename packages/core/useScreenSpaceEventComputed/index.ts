@@ -19,6 +19,6 @@ export function useScreenSpaceEventComputed<T extends ScreenSpaceEventType, R = 
   options?: UseScreenSpaceEventComputedOptions,
 ): Ref<R | undefined> {
   const event = shallowRef<ScreenSpaceEvent<T>>();
-  useScreenSpaceEventHandler(type, e => (event.value = e), options);
+  useScreenSpaceEventHandler(type, e => (event.value = { ...e as any }), options);
   return computedAsync(onCancel => evaluationCallback?.(event.value, onCancel), undefined, options);
 }

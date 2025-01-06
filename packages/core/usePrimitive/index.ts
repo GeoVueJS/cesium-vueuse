@@ -7,7 +7,8 @@ import { computedAsync } from '@vueuse/core';
 import { toValue, watchEffect } from 'vue';
 import { useViewer } from '../useViewer';
 
-export type CesiumPrimitive = Primitive | PrimitiveCollection | Cesium3DTileset;
+// TODO   all primitive type in cesium
+export type CesiumPrimitive = Primitive | PrimitiveCollection | Cesium3DTileset | any;
 
 export interface UsePrimitiveOptions {
   /**

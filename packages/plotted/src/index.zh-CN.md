@@ -12,4 +12,4 @@ text: 标绘
 
 ## Type Definitions
 
-:::dts ./index.ts
+<!-- :::dts ./index.ts -->

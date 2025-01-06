@@ -1,4 +1,5 @@
 import type { Cartesian3, Entity } from 'cesium';
+import type { VNode } from 'vue';
 import type { SmapledPlottedPackable } from './SmapledPlottedProperty';
 import { assertError } from '@cesium-vueuse/shared';
 
@@ -9,10 +10,11 @@ export enum PlottedStatus {
   DISABLED = 3,
 }
 
-export enum PlottedPointStatus {
-  DEFINING = 1,
-  ACTIVE = 2,
-  DRAGING = 3,
+export enum PlottedPointAction {
+  IDLE = 0,
+  ACTIVE = 1,
+  OPERATING = 2,
+  HOVER = 3,
 }
 
 export interface PlottedRenderResult {
@@ -27,7 +29,21 @@ export interface PlottedRenderOptions<D = any> {
   prev: PlottedRenderResult;
 }
 
-export type PlottedHandlePointsRender<D = any> = (packable: SmapledPlottedPackable<D>, status?: PlottedStatus, prev?: Entity[]) => Entity[];
+export interface PlottedHandlePointTipOptions {
+  position: Cartesian3;
+  status: PlottedStatus;
+  action: PlottedPointAction;
+}
+
+/**
+ * 标绘辅助操作点渲染配置
+ */
+export interface PlottedHandlePointOptions {
+  diabled?: boolean;
+  format?: (packable: SmapledPlottedPackable, status: PlottedStatus) => Cartesian3[];
+  render?: (options: PlottedHandlePointTipOptions) => Entity.ConstructorOptions | undefined;
+  tip?: (options: PlottedHandlePointTipOptions) => string | VNode | string | undefined;
+}
 
 export interface PlottedSchemeConstructorOptions {
   type: string;
@@ -37,47 +53,65 @@ export interface PlottedSchemeConstructorOptions {
    *
    * 每次控制点发生变变化时，执行该回调函数，如果返回`true`则标绘完成
    */
-  complete?: (positions: Cartesian3[]) => boolean;
+  complete?: (packable: SmapledPlottedPackable) => boolean;
 
   /**
    * 双击时，是否执行完成标绘操作
    *
    * 每次控制点发生变变化时，执行该回调函数，如果返回 true 则下一次双击事件执行完成
    */
-  completeOnDoubleClick?: (positions: Cartesian3[]) => boolean;
-
-  /**
-   */
-  render?: (options: PlottedRenderOptions) => PlottedRenderResult | Promise<PlottedRenderResult>;
+  completeOnDoubleClick?: (packable: SmapledPlottedPackable) => boolean;
 
   /**
    * 控制点渲染
    */
-  controlPoint?: PlottedHandlePointsRender;
+  controlPoint?: PlottedHandlePointOptions;
 
   /**
-   * 辅助点渲染
+   * 间隔渲染
    */
-  auxiliaryPoint?: PlottedHandlePointsRender;
+  intervalPoint?: PlottedHandlePointOptions;
 
   /**
    * 移动点渲染
    */
-  movedPoint?: PlottedHandlePointsRender;
+  movedPoint?: PlottedHandlePointOptions;
 
   /**
    * 海拔点渲染
    */
-  altitudePoint?: PlottedHandlePointsRender;
+  altitudePoint?: PlottedHandlePointOptions;
 
   /**
-   * 高度点渲染
+   * 海拔点渲染
    */
-  heightPoint?: PlottedHandlePointsRender;
+  heightPoint?: PlottedHandlePointOptions;
 
+  /**
+   * 删除点渲染
+   */
+  deletePoint?: PlottedHandlePointOptions;
+
+  /**
+   */
+  render?: (options: PlottedRenderOptions) => PlottedRenderResult | Promise<PlottedRenderResult>;
 }
 
 export class PlottedScheme {
+  constructor(options: PlottedSchemeConstructorOptions) {
+    this.type = options.type;
+    this.complete = options.complete;
+    this.completeOnDoubleClick = options.completeOnDoubleClick;
+    this.render = options.render;
+
+    this.controlPoint = options.controlPoint;
+    this.intervalPoint = options.intervalPoint;
+    this.movedPoint = options.movedPoint;
+    this.altitudePoint = options.altitudePoint;
+    this.heightPoint = options.heightPoint;
+    this.deletePoint = options.deletePoint;
+  }
+
   /**
    * @internal
    */
@@ -96,19 +130,6 @@ export class PlottedScheme {
     PlottedScheme._record.set(scheme.type, scheme);
   }
 
-  constructor(options: PlottedSchemeConstructorOptions) {
-    this.type = options.type;
-    this.complete = options.complete;
-    this.completeOnDoubleClick = options.completeOnDoubleClick;
-    this.render = options.render;
-
-    this.controlPoint = options.controlPoint;
-    this.auxiliaryPoint = options.auxiliaryPoint;
-    this.movedPoint = options.movedPoint;
-    this.altitudePoint = options.altitudePoint;
-    this.heightPoint = options.heightPoint;
-  }
-
   type: string;
 
   /**
@@ -116,13 +137,13 @@ export class PlottedScheme {
    *
    * 每次控制点发生变变化时，执行该回调函数，如果返回`true`则标绘完成
    */
-  complete?: (positions: Cartesian3[]) => boolean;
+  complete?: (packable: SmapledPlottedPackable) => boolean;
 
   /**
    * 双击时，是否执行完成标绘操作
    *
    */
-  completeOnDoubleClick?: (positions: Cartesian3[]) => boolean;
+  completeOnDoubleClick?: (packable: SmapledPlottedPackable) => boolean;
 
   /**
    */
@@ -131,25 +152,30 @@ export class PlottedScheme {
   /**
    * 控制点渲染
    */
-  controlPoint?: PlottedHandlePointsRender;
+  controlPoint?: PlottedHandlePointOptions;
 
   /**
-   * 辅助点渲染
+   * 间隔渲染
    */
-  auxiliaryPoint?: PlottedHandlePointsRender;
+  intervalPoint?: PlottedHandlePointOptions;
 
   /**
    * 移动点渲染
    */
-  movedPoint?: PlottedHandlePointsRender;
+  movedPoint?: PlottedHandlePointOptions;
 
   /**
    * 海拔点渲染
    */
-  altitudePoint?: PlottedHandlePointsRender;
+  altitudePoint?: PlottedHandlePointOptions;
 
   /**
-   * 高度点渲染
+   * 海拔点渲染
    */
-  heightPoint?: PlottedHandlePointsRender;
+  heightPoint?: PlottedHandlePointOptions;
+
+  /**
+   * 删除点渲染
+   */
+  deletePoint?: PlottedHandlePointOptions;
 }

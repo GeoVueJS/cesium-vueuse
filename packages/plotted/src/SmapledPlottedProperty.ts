@@ -20,6 +20,15 @@ export type SmapledPlottedInterpolationAlgorithm<D = any> = (
   proportion: number
 ) => SmapledPlottedPackable;
 
+/**
+ * 默认插值算法
+ *
+ * @param time 时间
+ * @param prev 前一个数据点
+ * @param next 后一个数据点
+ * @param proportion 比例
+ * @returns 插值结果
+ */
 const defaultInterpolationAlgorithm: SmapledPlottedInterpolationAlgorithm = (time, prev, next, proportion) => {
   if (proportion === 0) {
     return {
@@ -104,11 +113,20 @@ export class SmapledPlottedProperty<D = any> {
     return this._definitionChanged;
   };
 
+  /**
+   * 获取时间数组
+   *
+   * @returns 返回包含所有时间的 JulianDate 数组
+   */
   getTimes(): JulianDate[] {
     return this._times.map(t => t.clone());
   }
 
   /**
+   * 根据给定的儒略日期获取时间索引范围及比例
+   *
+   * @param time 给定的儒略日期
+   * @returns 返回包含前一个索引、后一个索引及时间比例的对象，若不符合条件则返回undefined
    * @internal
    */
   private getIndexScope(time: JulianDate): { prevIndex: number; nextIndex: number; proportion: number } | undefined {
@@ -154,6 +172,14 @@ export class SmapledPlottedProperty<D = any> {
     };
   }
 
+  /**
+   * 根据给定的儒略日期（JulianDate）获取插值后的样本点数据。
+   *
+   * @param time 指定的儒略日期（JulianDate）。
+   * @param result 可选参数，用于存储结果的容器。如果未提供，则创建一个新的容器。
+   * @returns 插值后的样本点数据，存储在提供的或新创建的result容器中。
+   * @template D 数据类型。
+   */
   getValue(time: JulianDate, result?: SmapledPlottedPackable): SmapledPlottedPackable<D> {
     result ??= { time };
     Object.assign(result, {
@@ -190,6 +216,11 @@ export class SmapledPlottedProperty<D = any> {
     return result;
   }
 
+  /**
+   * 设置样本数据
+   *
+   * @param value 样本数据对象，包含时间、位置和导数信息
+   */
   setSample(value: SmapledPlottedPackable<D>): void {
     const time = value.time.clone();
     const positions = value.positions?.map(item => item.clone()) ?? [];
@@ -220,10 +251,21 @@ export class SmapledPlottedProperty<D = any> {
     this.definitionChanged.raiseEvent(this);
   }
 
+  /**
+   * 设置样本数据
+   *
+   * @param values 样本数据数组，每个元素都是类型为SmapledPlottedPackable<D>的对象
+   */
   setSamples(values: SmapledPlottedPackable<D>[]): void {
     values.forEach(value => this.setSample(value));
   }
 
+  /**
+   * 从样本中移除指定时间点的数据
+   *
+   * @param time 需要移除的时间点，使用儒略日期表示
+   * @returns 如果成功移除，则返回 true；否则返回 false
+   */
   removeSample(time: JulianDate): boolean {
     const index = this._times.findIndex(t => t.equals(time));
     if (index !== -1) {
@@ -238,6 +280,11 @@ export class SmapledPlottedProperty<D = any> {
     return false;
   }
 
+  /**
+   * 从样本中移除指定时间间隔内的样本。
+   *
+   * @param interval 要移除样本的时间间隔
+   */
   removeSamples(interval: TimeInterval): void {
     for (let i = 0; i < this._times.length; i++) {
       const time = this._times[i];

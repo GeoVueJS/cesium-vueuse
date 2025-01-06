@@ -1,6 +1,7 @@
 export * from './createElementOverlay';
 export * from './createViewer';
 export * from './useCameraState';
+export * from './useCesiumEventComputed';
 export * from './useCesiumEventListener';
 export * from './useCesiumFps';
 export * from './useCollectionScope';

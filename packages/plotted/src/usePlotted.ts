@@ -1,12 +1,13 @@
 import type { ShallowRef } from 'vue';
 import type { PlottedProductConstructorOptions } from './PlottedProduct';
+import { useCesiumEventComputed } from '@cesium-vueuse/core';
 import { useViewer } from '@cesium-vueuse/core/useViewer';
 import { isString } from '@cesium-vueuse/shared';
 import { JulianDate } from 'cesium';
 import { shallowReactive, shallowRef } from 'vue';
 import { PlottedProduct } from './PlottedProduct';
 import { useProduct } from './useProduct';
-import { useScaffold } from './useScaffold';
+import { useScaffoldControl } from './useScaffoldControl';
 import { useSmapled } from './useSmapled';
 
 export * from './PlottedProduct';
@@ -50,9 +51,16 @@ export function usePlotted(options?: UsePlottedOptions): UsePlottedRetrun {
 
   const current = shallowRef<PlottedProduct>();
 
+  const packable = useCesiumEventComputed(() => [
+    current.value?.statusChanged,
+    current.value?.smaple.definitionChanged,
+  ], () => {
+    return current.value?.smaple.getValue(getCurrentTime());
+  });
+
   useSmapled(current, getCurrentTime);
-  useScaffold(current, getCurrentTime);
   useProduct(current, getCurrentTime);
+  useScaffoldControl(current, packable);
 
   const execute: UsePlottedExecute = async (product) => {
     const result = isString(product)

@@ -54,14 +54,16 @@ export function useScreenSpaceEventState<T extends ScreenSpaceEventType>(
 
   [undefined, ...Object.values(KeyboardEventModifier)]
     .forEach((modifier) => {
-      const pausable = useScreenSpaceEventHandler({
+      const pausable = useScreenSpaceEventHandler(
         type,
-        modifier: modifier as unknown as KeyboardEventModifier | undefined,
-        pause: !toValue(isActive),
-        inputAction: (event: any) => {
+        (event: any) => {
           state.value = shallowClone(event);
         },
-      });
+        {
+          modifier: modifier as unknown as KeyboardEventModifier | undefined,
+          pause: !toValue(isActive),
+        },
+      );
       watch(toRef(isActive), isActive => pausable.isActive.value = !!isActive);
     });
 

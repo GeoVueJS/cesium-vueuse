@@ -7,4 +7,4 @@
 
 ## Type Definitions
 
-:::dts ./usePlotted.ts
+<!-- :::dts ./usePlotted.ts -->

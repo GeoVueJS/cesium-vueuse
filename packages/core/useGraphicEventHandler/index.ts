@@ -1,7 +1,6 @@
-import type { MaybeRef, MaybeRefOrGetter } from 'vue';
+import type { MaybeRefOrGetter } from 'vue';
 import type { PausableState } from '../createPausable';
 import type { GraphicDragEventParams, GraphicHoverEventParams, GraphicPositionedEventParams } from './types';
-import { isFunction } from '@cesium-vueuse/shared';
 import { computed, toValue, watchEffect } from 'vue';
 import { createPausable } from '../createPausable';
 import { useGraphicDragEventHandler } from './useGraphicDragEventHandler';
@@ -49,7 +48,7 @@ export interface UseGraphicEventHandlerOptions<T extends GraphicEventType> {
   /**
    * Filter graphical objects that can trigger events. If it is empty, all graphical objects will trigger events
    */
-  graphic?: MaybeRef<any> | ((params: GraphicEventParams<T>) => boolean);
+  graphic?: MaybeRefOrGetter<any | any[]>;
 
   /**
    * callback function
@@ -73,24 +72,22 @@ export function useGraphicEventHandler<T extends GraphicEventType>(
   const isActive = pausable.isActive;
 
   const graphicRef = computed(() => {
-    const graphicValue = toValue(graphic);
-    const graphicValues = Array.isArray(graphicValue) ? graphicValue : [graphicValue];
-    return graphicValues.filter(e => !!e);
+    const value = toValue(graphic);
+    return value ? Array.isArray(value) ? value : [value] : undefined;
   });
 
+  /**
+   * Determine Whether a Graphic Meets the Criteria
+   */
   const graphicPredicate = (params: GraphicEventParams<T>) => {
-    if (!graphic) {
+    if (!graphicRef.value) {
       return true;
     }
-    if (isFunction(graphic)) {
-      return !!graphic(params);
+    if (!graphicRef.value.length) {
+      return false;
     }
-
-    if (graphicRef.value.length) {
-      const graphics = resolvePick(params.pick);
-      return graphics.some(graphic => graphicRef.value.includes(graphic)) && listener?.(params);
-    }
-    return false;
+    const graphics = resolvePick(params.pick);
+    return graphics.some(graphic => graphicRef.value!.includes(graphic)) && listener?.(params);
   };
 
   const finalListener = (params: any) => {
