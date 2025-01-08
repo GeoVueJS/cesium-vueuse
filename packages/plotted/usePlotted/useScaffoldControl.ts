@@ -4,8 +4,9 @@ import type { SmapledPlottedPackable } from './SmapledPlottedProperty';
 import { useDataSource, useEntityScope, useGraphicEventHandler, useViewer } from '@cesium-vueuse/core';
 import { canvasCoordToCartesian } from '@cesium-vueuse/shared';
 import { CustomDataSource, Entity } from 'cesium';
-import { computed, reactive, watch, watchEffect } from 'vue';
-import { PlottedPointAction } from './PlottedScheme';
+import { computed, reactive, watch } from 'vue';
+import { PlottedAction } from './PlottedScaffold';
+import { PlottedStatus } from './PlottedScheme';
 
 export function useScaffoldControl(
   current: ShallowRef<PlottedProduct | undefined>,
@@ -17,21 +18,30 @@ export function useScaffoldControl(
 
   const entities = computed(() => [...entityScope.scope]);
 
-  watchEffect(() => {
-    console.log(entities.value);
+  const highlightIds = reactive<Record<PlottedAction | any, string | undefined>>({
+    [PlottedAction.ACTIVE]: undefined,
+    [PlottedAction.HOVER]: undefined,
+    [PlottedAction.OPERATING]: undefined,
   });
 
-  const highlightIds = reactive({
-    activeId: undefined as string | undefined,
-    hoverId: undefined as string | undefined,
-    operatingId: undefined as string | undefined,
-  });
+  /**
+   * 根据点的ID获取对应的操作状态
+   */
+  const getPointAction = (id: string) => {
+    return highlightIds[PlottedAction.OPERATING] === id
+      ? PlottedAction.OPERATING
+      : highlightIds[PlottedAction.ACTIVE] === id
+        ? PlottedAction.ACTIVE
+        : highlightIds[PlottedAction.HOVER] === id
+          ? PlottedAction.HOVER
+          : PlottedAction.IDLE;
+  };
 
   useGraphicEventHandler({
     type: 'HOVER',
     graphic: entities,
     listener: (data) => {
-      highlightIds.hoverId = data?.hover ? data.pick?.id?.id : undefined;
+      highlightIds[PlottedAction.HOVER] = data?.hover ? data.pick?.id?.id : undefined;
     },
   });
 
@@ -40,7 +50,7 @@ export function useScaffoldControl(
     graphic: entities,
     listener: (data) => {
       const entity = data.pick?.id;
-      highlightIds.activeId = entities.value.includes(entity) ? entity?.id : undefined;
+      highlightIds[PlottedAction.ACTIVE] = entities.value.includes(entity) ? entity?.id : undefined;
     },
   });
 
@@ -50,10 +60,11 @@ export function useScaffoldControl(
     listener: (data) => {
       // lock camera
       viewer.value!.scene.screenSpaceCameraController.enableRotate = !data.draging;
-
-      const entity = data?.draging ? data.pick?.id : undefined;
-      highlightIds.activeId = entity?.id;
-      highlightIds.operatingId = entity?.id;
+      const id = data?.draging ? data.pick?.id?.id : undefined;
+      highlightIds[PlottedAction.OPERATING] = id;
+      if (id) {
+        highlightIds[PlottedAction.ACTIVE] = id;
+      }
     },
   });
 
@@ -69,11 +80,8 @@ export function useScaffoldControl(
       if (!position) {
         return;
       }
-
       const entity = data.pick!.id;
-
       const index = entities.value.findIndex(e => e.id === entity.id);
-
       const positions = [...packable.value.positions ?? []];
       positions[index] = position;
       current.value!.smaple.setSample({
@@ -86,31 +94,28 @@ export function useScaffoldControl(
 
   const options = computed(() => current.value?.scheme.controlPoint);
 
-  const positions = computed(
-    () => {
-      if (!current.value || !packable.value) {
-        return [];
-      }
-      return options.value?.format?.(packable.value, current.value.status) ?? [];
-    },
-  );
+  const positions = computed(() => {
+    if (!current.value || !packable.value || current.value.status !== PlottedStatus.ACTIVE) {
+      return [];
+    }
+    const positions = packable.value.positions ?? [];
+    return options.value?.format?.(positions) ?? [];
+  });
 
-  watch([positions, highlightIds], () => {
-    const newList = positions.value?.map((position, index) => {
+  watch([positions, () => highlightIds], ([positions]) => {
+    const newList = positions?.map((position, index) => {
       const entity = entities.value[index] ?? new Entity();
-
       const merge = new Entity(options.value!.render?.({
+        packable: packable.value!,
+        count: positions.length,
+        index,
         position,
         status: current.value!.status,
-        action: PlottedPointAction.IDLE,
+        action: getPointAction(entity.id),
       }));
 
-      merge.propertyNames.forEach((propertyName: any) => {
-        if (propertyName !== 'id') {
-          // @ts-expect-error merge[propertyName] is any
-          entity[propertyName] = merge[propertyName];
-        }
-      });
+      // @ts-expect-error ignore
+      merge.propertyNames.filter(key => key !== 'id').forEach(key => (entity[key] = merge[key]));
       entityScope.add(entity);
       return entity;
     });

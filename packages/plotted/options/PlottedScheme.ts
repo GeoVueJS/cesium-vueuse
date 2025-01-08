@@ -1,5 +1,5 @@
 import type { Cartesian3, Entity } from 'cesium';
-import type { VNode } from 'vue';
+import type { PlottedScaffold } from './PlottedScaffold';
 import type { SmapledPlottedPackable } from './SmapledPlottedProperty';
 import { assertError } from '@cesium-vueuse/shared';
 
@@ -8,13 +8,6 @@ export enum PlottedStatus {
   DEFINING = 1,
   ACTIVE = 2,
   DISABLED = 3,
-}
-
-export enum PlottedPointAction {
-  IDLE = 0,
-  ACTIVE = 1,
-  OPERATING = 2,
-  HOVER = 3,
 }
 
 export interface PlottedRenderResult {
@@ -27,22 +20,6 @@ export interface PlottedRenderOptions<D = any> {
   status: PlottedStatus;
   mouse?: Cartesian3;
   prev: PlottedRenderResult;
-}
-
-export interface PlottedHandlePointTipOptions {
-  position: Cartesian3;
-  status: PlottedStatus;
-  action: PlottedPointAction;
-}
-
-/**
- * 标绘辅助操作点渲染配置
- */
-export interface PlottedHandlePointOptions {
-  diabled?: boolean;
-  format?: (packable: SmapledPlottedPackable, status: PlottedStatus) => Cartesian3[];
-  render?: (options: PlottedHandlePointTipOptions) => Entity.ConstructorOptions | undefined;
-  tip?: (options: PlottedHandlePointTipOptions) => string | VNode | string | undefined;
 }
 
 export interface PlottedSchemeConstructorOptions {
@@ -63,38 +40,39 @@ export interface PlottedSchemeConstructorOptions {
   completeOnDoubleClick?: (packable: SmapledPlottedPackable) => boolean;
 
   /**
+   */
+  render?: (options: PlottedRenderOptions) => PlottedRenderResult | Promise<PlottedRenderResult>;
+
+  /**
    * 控制点渲染
    */
-  controlPoint?: PlottedHandlePointOptions;
+  controlPoint?: PlottedScaffold;
 
   /**
    * 间隔渲染
    */
-  intervalPoint?: PlottedHandlePointOptions;
+  intervalPoint?: PlottedScaffold;
 
   /**
    * 移动点渲染
    */
-  movedPoint?: PlottedHandlePointOptions;
+  movedPoint?: PlottedScaffold;
 
   /**
-   * 海拔点渲染
+   * 海拔（高程）点渲染
    */
-  altitudePoint?: PlottedHandlePointOptions;
+  altitudePoint?: PlottedScaffold;
 
   /**
-   * 海拔点渲染
+   * 高度点渲染
    */
-  heightPoint?: PlottedHandlePointOptions;
+  heightPoint?: PlottedScaffold;
 
   /**
    * 删除点渲染
    */
-  deletePoint?: PlottedHandlePointOptions;
+  deletePoint?: PlottedScaffold;
 
-  /**
-   */
-  render?: (options: PlottedRenderOptions) => PlottedRenderResult | Promise<PlottedRenderResult>;
 }
 
 export class PlottedScheme {
@@ -110,24 +88,6 @@ export class PlottedScheme {
     this.altitudePoint = options.altitudePoint;
     this.heightPoint = options.heightPoint;
     this.deletePoint = options.deletePoint;
-  }
-
-  /**
-   * @internal
-   */
-  private static _record = new Map<string, PlottedScheme>();
-
-  static getRecordTypes(): string[] {
-    return [...this._record.keys()];
-  }
-
-  static getRecord(type: string): PlottedScheme | undefined {
-    return PlottedScheme._record.get(type);
-  }
-
-  static setRecord(scheme: PlottedScheme): void {
-    assertError(!scheme.type, '`scheme.type` is required');
-    PlottedScheme._record.set(scheme.type, scheme);
   }
 
   type: string;
@@ -152,30 +112,48 @@ export class PlottedScheme {
   /**
    * 控制点渲染
    */
-  controlPoint?: PlottedHandlePointOptions;
+  controlPoint?: PlottedScaffold;
 
   /**
    * 间隔渲染
    */
-  intervalPoint?: PlottedHandlePointOptions;
+  intervalPoint?: PlottedScaffold;
 
   /**
    * 移动点渲染
    */
-  movedPoint?: PlottedHandlePointOptions;
+  movedPoint?: PlottedScaffold;
 
   /**
    * 海拔点渲染
    */
-  altitudePoint?: PlottedHandlePointOptions;
+  altitudePoint?: PlottedScaffold;
 
   /**
    * 海拔点渲染
    */
-  heightPoint?: PlottedHandlePointOptions;
+  heightPoint?: PlottedScaffold;
 
   /**
    * 删除点渲染
    */
-  deletePoint?: PlottedHandlePointOptions;
+  deletePoint?: PlottedScaffold;
+
+  /**
+   * @internal
+   */
+  private static _record = new Map<string, PlottedScheme>();
+
+  static getRecordTypes(): string[] {
+    return [...this._record.keys()];
+  }
+
+  static getRecord(type: string): PlottedScheme | undefined {
+    return PlottedScheme._record.get(type);
+  }
+
+  static setRecord(scheme: PlottedScheme): void {
+    assertError(!scheme.type, '`scheme.type` is required');
+    PlottedScheme._record.set(scheme.type, scheme);
+  }
 }

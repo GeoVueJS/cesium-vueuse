@@ -24,6 +24,7 @@ export default defineConfig({
   ],
   server: {
     port: 9574,
+    host: '0.0.0.0',
   },
   publicDir: '.vitepress/public',
 });

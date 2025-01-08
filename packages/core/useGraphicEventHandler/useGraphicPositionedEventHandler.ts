@@ -1,10 +1,11 @@
+import type { ScreenSpaceEventHandler } from 'cesium';
 import type { PausableState } from '../createPausable';
 import type { GraphicPositionedEventListener } from './types';
 import { ScreenSpaceEventType } from 'cesium';
-import { computed, toValue, watch } from 'vue';
+import { computed, shallowRef, toValue, watch } from 'vue';
 import { createPausable } from '../createPausable';
 import { useScenePick } from '../useScenePick';
-import { useScreenSpaceEventState } from '../useScreenSpaceEventState';
+import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
 
 export type GraphicPositiondEventType =
   'LEFT_DOWN' |
@@ -66,11 +67,17 @@ export function useGraphicPositionedEventHandler(options: UseGraphicPositionedEv
     return typeStr ? EVENT_TYPE_RECORD[typeStr] : undefined;
   });
 
-  const state = useScreenSpaceEventState(typeRef, { isActive });
+  const context = shallowRef<ScreenSpaceEventHandler.PositionedEvent>();
 
-  const pick = useScenePick(() => state.value?.position, { isActive });
+  useScreenSpaceEventHandler(typeRef, (event) => {
+    context.value = {
+      position: event.position.clone(),
+    };
+  });
 
-  watch([state, pick], ([context, pick]) => {
+  const pick = useScenePick(() => context.value?.position, { isActive });
+
+  watch([context, pick], ([context, pick]) => {
     if (pick && context && listener) {
       listener({ context, pick });
     }

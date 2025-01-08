@@ -17,19 +17,22 @@ export interface UseCesiumEventListenerOptions {
  * when the dependent data changes or the component is unmounted,
  * the listener function will automatically reload or destroy.
  */
-export function useCesiumEventListener<T extends FunctionArgs<any[]>>(
-  event: MaybeRefOrGetter<Arrayable<Event<T> | undefined> | undefined>,
-  listener: T,
+export function useCesiumEventListener<FN extends FunctionArgs<any[]>>(
+  event: Arrayable<Event<FN> | undefined> | Arrayable<MaybeRefOrGetter<Event<FN> | undefined>>,
+  listener: FN,
   options?: UseCesiumEventListenerOptions,
 ): PausableState {
   const pausable = createPausable(options?.pause);
 
   watchEffect((onCleanup) => {
     const _event = toValue(event);
-    if (_event) {
-      const events = Array.isArray(_event) ? _event : [_event];
+    const events = Array.isArray(_event) ? _event : [_event];
+    if (events) {
       if (events.length && pausable.isActive.value) {
-        const stopFns = events.map(event => event?.addEventListener(listener, _event));
+        const stopFns = events.map((event) => {
+          const e = toValue(event);
+          return e?.addEventListener(listener, e);
+        });
         onCleanup(() => stopFns.forEach(stop => stop?.()));
       }
     }

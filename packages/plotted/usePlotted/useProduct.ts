@@ -1,12 +1,12 @@
 import type { UseEntityScopeRetrun, UsePrimitiveScopeRetrun } from '@cesium-vueuse/core';
-import type { JulianDate } from 'cesium';
+import type { Cartesian3, JulianDate } from 'cesium';
 import type { ShallowRef } from 'vue';
-import type { PlottedProduct } from './PlottedProduct';
-import { useCesiumEventListener, useDataSource, useEntityScope, usePrimitive, usePrimitiveScope, useScreenSpaceEventComputed, useViewer } from '@cesium-vueuse/core';
-import { canvasCoordToCartesian } from '@cesium-vueuse/shared';
+import type { PlottedProduct } from '../options/PlottedProduct';
+import { useCesiumEventListener, useDataSource, useEntityScope, usePrimitive, usePrimitiveScope, useScreenSpaceEventHandler, useViewer } from '@cesium-vueuse/core';
+import { canvasCoordToCartesian, throttle } from '@cesium-vueuse/shared';
 import { CustomDataSource, PrimitiveCollection, ScreenSpaceEventType } from 'cesium';
-import { watch } from 'vue';
-import { PlottedStatus } from './PlottedScheme';
+import { shallowRef, watch } from 'vue';
+import { PlottedStatus } from '../options/PlottedScheme';
 
 export interface UseProductOptions {
 }
@@ -27,14 +27,19 @@ export function useProduct(
   const primitiveScope = usePrimitiveScope({ collection: () => primitiveCollection.value! });
   const entityScope = useEntityScope({ collection: () => dataSource.value!.entities });
 
-  const mouse = useScreenSpaceEventComputed(ScreenSpaceEventType.MOUSE_MOVE, (ctx) => {
-    return ctx ? canvasCoordToCartesian(ctx?.endPosition, viewer.value!.scene) : undefined;
-  });
+  const mouseCartesian = shallowRef<Cartesian3>();
+
+  useScreenSpaceEventHandler(
+    ScreenSpaceEventType.MOUSE_MOVE,
+    throttle((context) => {
+      mouseCartesian.value = canvasCoordToCartesian(context?.endPosition, viewer.value!.scene);
+    }, 10),
+  );
 
   const render = async () => {
     const result = await current.value!.scheme.render?.({
       packable: current.value!.smaple.getValue(getCurrentTime()),
-      mouse: current.value!.status === PlottedStatus.DEFINING ? mouse.value : undefined,
+      mouse: current.value!.status === PlottedStatus.DEFINING ? mouseCartesian.value : undefined,
       status: current.value!.status,
       prev: {
         entities: current.value!.entities,
@@ -60,15 +65,12 @@ export function useProduct(
     primitives.forEach(primitive => primitiveScope.add(primitive));
   };
 
-  useCesiumEventListener(
-    () => [
-      current.value?.statusChanged,
-      current.value?.smaple.definitionChanged,
-    ],
-    () => render(),
-  );
+  useCesiumEventListener([
+    () => current.value?.statusChanged,
+    () => current.value?.smaple.definitionChanged,
+  ], () => render());
 
-  watch(mouse, () => render());
+  watch(mouseCartesian, () => render());
 
   return {
     primitiveScope,

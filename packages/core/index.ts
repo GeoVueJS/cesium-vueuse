@@ -1,7 +1,6 @@
 export * from './createElementOverlay';
 export * from './createViewer';
 export * from './useCameraState';
-export * from './useCesiumEventComputed';
 export * from './useCesiumEventListener';
 export * from './useCesiumFps';
 export * from './useCollectionScope';
@@ -19,7 +18,5 @@ export * from './usePrimitiveScope';
 export * from './useScaleBar';
 export * from './useSceneDrillPick';
 export * from './useScenePick';
-export * from './useScreenSpaceEventComputed';
 export * from './useScreenSpaceEventHandler';
-export * from './useScreenSpaceEventState';
 export * from './useViewer';

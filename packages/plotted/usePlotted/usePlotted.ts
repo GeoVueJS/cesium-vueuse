@@ -1,18 +1,15 @@
 import type { ShallowRef } from 'vue';
-import type { PlottedProductConstructorOptions } from './PlottedProduct';
-import { useCesiumEventComputed } from '@cesium-vueuse/core';
+import type { PlottedProduct, PlottedProductConstructorOptions } from '../options/PlottedProduct';
+import type { SmapledPlottedPackable } from '../options/SmapledPlottedProperty';
+import { useCesiumEventListener } from '@cesium-vueuse/core';
 import { useViewer } from '@cesium-vueuse/core/useViewer';
 import { isString } from '@cesium-vueuse/shared';
 import { JulianDate } from 'cesium';
 import { shallowReactive, shallowRef } from 'vue';
-import { PlottedProduct } from './PlottedProduct';
 import { useProduct } from './useProduct';
 import { useScaffoldControl } from './useScaffoldControl';
+import { useScaffoldInterval } from './useScaffoldInterval';
 import { useSmapled } from './useSmapled';
-
-export * from './PlottedProduct';
-export * from './PlottedScheme';
-export * from './SmapledPlottedProperty';
 
 export interface UsePlottedOptions {
   time?: ShallowRef<JulianDate | undefined>;
@@ -50,18 +47,19 @@ export function usePlotted(options?: UsePlottedOptions): UsePlottedRetrun {
   const data = shallowReactive(new Set<PlottedProduct>());
 
   const current = shallowRef<PlottedProduct>();
+  const packable = shallowRef<SmapledPlottedPackable>();
 
-  const packable = useCesiumEventComputed(() => [
-    current.value?.statusChanged,
-    current.value?.smaple.definitionChanged,
+  useCesiumEventListener([
+    () => current.value?.statusChanged,
+    () => current.value?.smaple.definitionChanged,
   ], () => {
-    return current.value?.smaple.getValue(getCurrentTime());
+    packable.value = current.value?.smaple.getValue(getCurrentTime());
   });
 
   useSmapled(current, getCurrentTime);
   useProduct(current, getCurrentTime);
   useScaffoldControl(current, packable);
-
+  useScaffoldInterval(current, packable);
   const execute: UsePlottedExecute = async (product) => {
     const result = isString(product)
       ? new PlottedProduct({ scheme: product })

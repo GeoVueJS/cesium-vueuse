@@ -1,11 +1,12 @@
+import type { ScreenSpaceEventHandler } from 'cesium';
 import type { PausableState } from '../createPausable';
 import type { GraphicHoverEventListener } from './types';
 import { usePrevious } from '@vueuse/core';
 import { ScreenSpaceEventType } from 'cesium';
-import { toRaw, watch } from 'vue';
+import { shallowRef, toRaw, watch } from 'vue';
 import { createPausable } from '../createPausable';
 import { useScenePick } from '../useScenePick';
-import { useScreenSpaceEventState } from '../useScreenSpaceEventState';
+import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
 
 export interface UseGraphicHoverEventHandlerOptions {
   listener?: GraphicHoverEventListener;
@@ -17,7 +18,15 @@ export function useGraphicHoverEventHandler(options: UseGraphicHoverEventHandler
   const pausable = createPausable(pause);
   const isActive = pausable.isActive;
 
-  const context = useScreenSpaceEventState(ScreenSpaceEventType.MOUSE_MOVE, { isActive });
+  const context = shallowRef<ScreenSpaceEventHandler.MotionEvent>();
+
+  useScreenSpaceEventHandler(ScreenSpaceEventType.MOUSE_MOVE, (event) => {
+    context.value = {
+      startPosition: event.startPosition.clone(),
+      endPosition: event.endPosition.clone(),
+    };
+  });
+
   const pick = useScenePick(() => context.value?.endPosition, { isActive });
   const prevPick = usePrevious(pick);
 

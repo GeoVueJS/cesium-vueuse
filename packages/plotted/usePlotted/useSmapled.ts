@@ -1,16 +1,10 @@
 import type { JulianDate } from 'cesium';
 import type { ShallowRef } from 'vue';
-import type { PlottedProduct } from './PlottedProduct';
+import type { PlottedProduct } from '../options/PlottedProduct';
 import { useScreenSpaceEventHandler, useViewer } from '@cesium-vueuse/core';
 import { canvasCoordToCartesian } from '@cesium-vueuse/shared';
 import { ScreenSpaceEventType } from 'cesium';
-import { PlottedStatus } from './PlottedScheme';
-
-export interface UseSmapledOptions {
-}
-
-export interface UseSmapledRetrun {
-}
+import { PlottedStatus } from '../options/PlottedScheme';
 
 export function useSmapled(
   current: ShallowRef<PlottedProduct | undefined>,
