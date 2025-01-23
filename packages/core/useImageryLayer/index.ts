@@ -1,10 +1,10 @@
-import type { MaybeRefOrAsyncGetter } from '@cesium-vueuse/shared';
 import type { Arrayable } from '@vueuse/core';
 import type { ImageryLayer, ImageryLayerCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
-import { toAwaitedValue } from '@cesium-vueuse/shared';
+import type { MaybeRefOrAsyncGetter } from '../toAwaitValue';
 import { computedAsync } from '@vueuse/core';
 import { toValue, watchEffect } from 'vue';
+import { toAwaitValue } from '../toAwaitValue';
 import { useViewer } from '../useViewer';
 
 export interface UseImageryLayerOptions {
@@ -66,7 +66,7 @@ export function useImageryLayer<T extends ImageryLayer>(
   } = options;
 
   const result = computedAsync(
-    () => toAwaitedValue(data),
+    () => toAwaitValue(data),
     [],
     {
       evaluating,

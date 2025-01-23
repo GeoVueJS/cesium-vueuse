@@ -11,8 +11,8 @@ const CESIUM_VERSION = (await getPackageInfo('cesium'))!.version;
 export default defineConfig({
   plugins: [
     UnpluginCesium({
-      copyStaticFiles: false,
-      cesiumBaseUrl: `https://cdn.jsdelivr.net/npm/cesium@${CESIUM_VERSION}/Build/Cesium/`,
+      // copyStaticFiles: false,
+      // cesiumBaseUrl: `https://cdn.jsdelivr.net/npm/cesium@${CESIUM_VERSION}/Build/Cesium/`,
     }),
     VueDevTools(),
     UnoCSS(),

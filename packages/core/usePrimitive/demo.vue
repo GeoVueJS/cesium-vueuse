@@ -12,10 +12,12 @@ const labelCollection = usePrimitive(() => {
 });
 
 watchEffect((onCleanup) => {
-  const label = labelCollection.value?.add(new Cesium.Billboard({
-    position: Cesium.Cartesian3.fromDegrees(-80, 20),
-    image: 'https://assets.msn.cn/weathermapdata/1/static/weather/Icons/taskbar_v10/Condition_Card/MostlySunnyDay.svg',
-  }, labelCollection.value));
+  const label = labelCollection.value?.add(
+    new Cesium.Billboard({
+      position: Cesium.Cartesian3.fromDegrees(-80, 20),
+      image: 'https://assets.msn.cn/weathermapdata/1/static/weather/Icons/taskbar_v10/Condition_Card/MostlySunnyDay.svg',
+    }, labelCollection.value),
+  );
   onCleanup(() => {
     try {
       label && !labelCollection.value?.isDestroyed() && labelCollection.value?.remove(label);

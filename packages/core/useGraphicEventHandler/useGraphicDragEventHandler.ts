@@ -1,62 +1,104 @@
 import type { Cartesian2 } from 'cesium';
-import type { PausableState } from '../createPausable';
+import type { MaybeRefOrGetter, WatchStopHandle } from 'vue';
 import type { GraphicDragEventListener } from './types';
+import { tryOnScopeDispose } from '@vueuse/core';
 import { ScreenSpaceEventType } from 'cesium';
-import { shallowRef, watch } from 'vue';
-import { createPausable } from '../createPausable';
-import { useScenePick } from '../useScenePick';
+import { shallowRef, toRef, watch } from 'vue';
 import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
+import { useViewer } from '../useViewer';
 
 export interface UseGraphicDragEventHandlerOptions {
-  listener?: GraphicDragEventListener;
-  pause?: boolean;
+
+  /**
+   * Whether to active the event listener.
+   * @default true
+   */
+  isActive?: MaybeRefOrGetter<boolean>;
 }
 
-export function useGraphicDragEventHandler(options: UseGraphicDragEventHandlerOptions): PausableState {
-  const { listener, pause = false } = options;
-
-  const pausable = createPausable(pause);
-  const isActive = pausable.isActive;
-
-  const ended = shallowRef(false);
-
+/**
+ * Use graphic drag events with ease, and remove listener automatically on unmounted.
+ * @param listener
+ * @param options
+ */
+export function useGraphicDragEventHandler(
+  listener: GraphicDragEventListener,
+  options: UseGraphicDragEventHandlerOptions = {},
+): WatchStopHandle {
+  const isActive = toRef(options.isActive ?? true);
+  const viewer = useViewer();
+  const draging = shallowRef(false);
   const startPosition = shallowRef<Cartesian2>();
   const endPosition = shallowRef<Cartesian2>();
 
-  useScreenSpaceEventHandler(ScreenSpaceEventType.LEFT_DOWN, (context) => {
-    startPosition.value = context.position.clone();
-    ended.value = false;
+  watch(isActive, (isActive) => {
+    !isActive && (draging.value = false);
   });
 
-  useScreenSpaceEventHandler(ScreenSpaceEventType.MOUSE_MOVE, (context) => {
-    endPosition.value = context.endPosition.clone();
-  });
+  const pick = shallowRef<any>();
 
-  useScreenSpaceEventHandler(ScreenSpaceEventType.LEFT_UP, () => {
-    ended.value = true;
-  });
-
-  const pick = useScenePick(() => startPosition.value, { isActive });
-
-  const dragCallback = (draging: boolean) => {
+  const execute = () => {
     if (startPosition.value && endPosition.value && pick.value) {
-      listener?.({
+      let enableRotate = true;
+      const lockCamera = () => {
+        enableRotate = false;
+      };
+      listener({
         context: {
-          startPosition: startPosition.value,
-          endPosition: endPosition.value,
+          startPosition: startPosition.value.clone(),
+          endPosition: endPosition.value.clone(),
         },
         pick: pick.value,
-        draging,
+        draging: draging.value,
+        lockCamera,
       });
+      if (!draging.value) {
+        enableRotate = true;
+      }
+      viewer.value!.scene.screenSpaceCameraController.enableRotate = enableRotate;
     }
   };
 
-  watch([startPosition, endPosition], () => {
-    !ended.value && dragCallback(true);
-  });
-  watch(ended, () => {
-    ended.value && dragCallback(false);
-  });
+  const cleanup1 = useScreenSpaceEventHandler(
+    ScreenSpaceEventType.LEFT_DOWN,
+    (context) => {
+      startPosition.value = context.position.clone();
+      pick.value = viewer.value?.scene.pick(startPosition.value);
+      draging.value = true;
+    },
+    { isActive },
+  );
 
-  return pausable;
+  const cleanup2 = useScreenSpaceEventHandler(
+    ScreenSpaceEventType.MOUSE_MOVE,
+    (context) => {
+      if (draging.value && pick.value) {
+        startPosition.value = context.startPosition.clone();
+        endPosition.value = context.endPosition.clone();
+        execute();
+      }
+    },
+    { isActive },
+  );
+
+  const cleanup3 = useScreenSpaceEventHandler(
+    ScreenSpaceEventType.LEFT_UP,
+    (context) => {
+      endPosition.value = context.position.clone();
+      draging.value = false;
+      execute();
+      pick.value = undefined;
+    },
+    { isActive },
+  );
+
+  const stop = () => {
+    cleanup1();
+    cleanup2();
+    cleanup3();
+  };
+
+  tryOnScopeDispose(stop);
+
+  return stop;
 }

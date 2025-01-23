@@ -1,9 +1,8 @@
 import type { ScreenSpaceEventHandler } from 'cesium';
-import type { PausableState } from '../createPausable';
+import type { MaybeRefOrGetter, WatchStopHandle } from 'vue';
 import type { GraphicPositionedEventListener } from './types';
 import { ScreenSpaceEventType } from 'cesium';
-import { computed, shallowRef, toValue, watch } from 'vue';
-import { createPausable } from '../createPausable';
+import { shallowRef, toRef, watch } from 'vue';
 import { useScenePick } from '../useScenePick';
 import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
 
@@ -51,25 +50,24 @@ const EVENT_TYPE_RECORD: Record<GraphicPositiondEventType, PositiondScreenSpaceE
 };
 
 export interface UseGraphicPositionedEventHandlerOptions {
-  type?: GraphicPositiondEventType;
-  listener?: GraphicPositionedEventListener;
-  pause?: boolean;
+
+  /**
+   * Whether to active the event listener.
+   * @default true
+   */
+  isActive?: MaybeRefOrGetter<boolean>;
 }
 
-export function useGraphicPositionedEventHandler(options: UseGraphicPositionedEventHandlerOptions): PausableState {
-  const { type, listener, pause } = options;
-
-  const pausable = createPausable(pause);
-  const isActive = pausable.isActive;
-
-  const typeRef = computed(() => {
-    const typeStr = toValue(type);
-    return typeStr ? EVENT_TYPE_RECORD[typeStr] : undefined;
-  });
-
+export function useGraphicPositionedEventHandler(
+  type: GraphicPositiondEventType,
+  listener: GraphicPositionedEventListener,
+  options: UseGraphicPositionedEventHandlerOptions,
+): WatchStopHandle {
+  const isActive = toRef(options.isActive ?? true);
+  const screenEvent = EVENT_TYPE_RECORD[type];
   const context = shallowRef<ScreenSpaceEventHandler.PositionedEvent>();
 
-  useScreenSpaceEventHandler(typeRef, (event) => {
+  const cleanup1 = useScreenSpaceEventHandler(screenEvent, (event) => {
     context.value = {
       position: event.position.clone(),
     };
@@ -77,11 +75,15 @@ export function useGraphicPositionedEventHandler(options: UseGraphicPositionedEv
 
   const pick = useScenePick(() => context.value?.position, { isActive });
 
-  watch([context, pick], ([context, pick]) => {
-    if (pick && context && listener) {
-      listener({ context, pick });
-    }
-  });
+  const cleanup2 = watch(
+    [context, pick],
+    ([context, pick]) => {
+      pick && context && listener({ context, pick });
+    },
+  );
 
-  return pausable;
+  return () => {
+    cleanup1();
+    cleanup2();
+  };
 }

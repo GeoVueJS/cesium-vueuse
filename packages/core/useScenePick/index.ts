@@ -1,16 +1,15 @@
 import type { Cartesian2 } from 'cesium';
-import type { ComputedRef, MaybeRefOrGetter } from 'vue';
+import type { MaybeRefOrGetter, ShallowRef } from 'vue';
 import { refThrottled } from '@vueuse/core';
-import { computed, toValue } from 'vue';
+import { computed, shallowRef, toRef, toValue, watchEffect } from 'vue';
 import { useViewer } from '../useViewer';
 
 export interface UseScenePickOptions {
   /**
-   * Whether to activate the pick function.
+   * Whether to active the event listener.
    * @default true
    */
-  isActive?: MaybeRefOrGetter<boolean | undefined>;
-
+  isActive?: MaybeRefOrGetter<boolean>;
   /**
    * Throttled sampling (ms)
    * @default 8
@@ -40,20 +39,24 @@ export interface UseScenePickOptions {
 export function useScenePick(
   windowPosition: MaybeRefOrGetter<Cartesian2 | undefined>,
   options: UseScenePickOptions = {},
-): ComputedRef<any | undefined> {
-  const { width = 3, height = 3, throttled = 8, isActive = true } = options;
+): Readonly<ShallowRef<any | undefined>> {
+  const { width = 3, height = 3, throttled = 8 } = options;
+
+  const isActive = toRef(options.isActive ?? true);
+
   const viewer = useViewer();
+
   const position = refThrottled(computed(() => toValue(windowPosition)?.clone()), throttled, false, true);
 
-  const pick = computed(() => {
-    if (position.value && toValue(isActive)) {
-      return viewer.value?.scene.pick(
+  const pick = shallowRef<any | undefined>();
+  watchEffect(() => {
+    if (viewer.value && position.value && isActive.value) {
+      pick.value = viewer.value?.scene.pick(
         position.value,
         toValue(width),
         toValue(height),
       );
     }
   });
-
   return pick;
 }

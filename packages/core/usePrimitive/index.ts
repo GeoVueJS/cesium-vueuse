@@ -1,10 +1,10 @@
-import type { MaybeRefOrAsyncGetter } from '@cesium-vueuse/shared';
 import type { Arrayable } from '@vueuse/core';
 import type { Cesium3DTileset, Primitive, PrimitiveCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
-import { toAwaitedValue } from '@cesium-vueuse/shared';
+import type { MaybeRefOrAsyncGetter } from '../toAwaitValue';
 import { computedAsync } from '@vueuse/core';
 import { toValue, watchEffect } from 'vue';
+import { toAwaitValue } from '../toAwaitValue';
 import { useViewer } from '../useViewer';
 
 // TODO   all primitive type in cesium
@@ -61,7 +61,7 @@ export function usePrimitive<T extends Primitive>(
   } = options;
 
   const result = computedAsync(
-    () => toAwaitedValue(data),
+    () => toAwaitValue(data),
     undefined,
     {
       evaluating,

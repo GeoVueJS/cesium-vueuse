@@ -1,10 +1,9 @@
 import type { KeyboardEventModifier, ScreenSpaceEventType } from 'cesium';
-import type { MaybeRefOrGetter } from 'vue';
-import type { PausableState } from '../createPausable';
+import type { MaybeRefOrGetter, WatchStopHandle } from 'vue';
 import { isDef } from '@cesium-vueuse/shared';
+import { tryOnScopeDispose } from '@vueuse/core';
 import { ScreenSpaceEventHandler } from 'cesium';
-import { computed, toValue, watch, watchEffect } from 'vue';
-import { createPausable } from '../createPausable';
+import { computed, toRef, toValue, watch, watchEffect } from 'vue';
 import { useViewer } from '../useViewer';
 
 export type ScreenSpaceEvent<T extends ScreenSpaceEventType> = {
@@ -32,9 +31,10 @@ export interface UseScreenSpaceEventHandlerOptions {
   modifier?: MaybeRefOrGetter<KeyboardEventModifier | undefined>;
 
   /**
-   * Default value of pause
+   * Whether to active the event listener.
+   * @default true
    */
-  pause?: boolean;
+  isActive?: MaybeRefOrGetter<boolean>;
 }
 
 /**
@@ -49,25 +49,22 @@ export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType>(
   type?: MaybeRefOrGetter<T | undefined>,
   inputAction?: (event: ScreenSpaceEvent<T>) => any,
   options: UseScreenSpaceEventHandlerOptions = {},
-): PausableState {
-  const { pause, modifier } = options;
-
+): WatchStopHandle {
+  const { modifier } = options;
   const viewer = useViewer();
-
-  const pausable = createPausable(pause);
-  const isActive = pausable.isActive;
+  const isActive = toRef(options.isActive ?? true);
 
   const handler = computed(() => {
-    if (viewer.value) {
-      return new ScreenSpaceEventHandler(viewer.value.canvas);
+    if (viewer.value?.cesiumWidget?.canvas) {
+      return new ScreenSpaceEventHandler(viewer.value.cesiumWidget.canvas);
     }
   });
 
-  watch(handler, (_value, oldValue) => {
-    oldValue?.destroy();
+  const cleanup1 = watch(handler, (_value, previous) => {
+    viewer.value?.cesiumWidget && previous?.destroy();
   });
 
-  watchEffect((onCleanup) => {
+  const cleanup2 = watchEffect((onCleanup) => {
     const typeValue = toValue(type);
     const modifierValue = toValue(modifier);
     const handlerValue = toValue(handler)!;
@@ -80,5 +77,12 @@ export function useScreenSpaceEventHandler<T extends ScreenSpaceEventType>(
     }
   });
 
-  return pausable;
+  const stop = () => {
+    cleanup1();
+    cleanup2();
+  };
+
+  tryOnScopeDispose(stop);
+
+  return stop;
 }

@@ -1,8 +1,11 @@
-import type { MaybeRefOrGetter } from 'vue';
-import type { PausableState } from '../createPausable';
+import type { Arrayable } from '@vueuse/core';
+import type { CSSProperties, MaybeRefOrGetter, WatchStopHandle } from 'vue';
 import type { GraphicDragEventParams, GraphicHoverEventParams, GraphicPositionedEventParams } from './types';
-import { computed, toValue, watchEffect } from 'vue';
-import { createPausable } from '../createPausable';
+import type { GraphicPositiondEventType } from './useGraphicPositionedEventHandler';
+import { isFunction, pickHitGraphic } from '@cesium-vueuse/shared';
+import { tryOnScopeDispose } from '@vueuse/core';
+import { ref, toRef, toValue, watchEffect } from 'vue';
+import { useViewer } from '../useViewer';
 import { useGraphicDragEventHandler } from './useGraphicDragEventHandler';
 import { useGraphicHoverEventHandler } from './useGraphicHoverEventHandler';
 import { useGraphicPositionedEventHandler } from './useGraphicPositionedEventHandler';
@@ -43,22 +46,28 @@ export interface UseGraphicEventHandlerOptions<T extends GraphicEventType> {
   /**
    * Gesture Event Type
    */
-  type?: MaybeRefOrGetter<T | undefined>;
+  type: T;
 
   /**
    * Filter graphical objects that can trigger events. If it is empty, all graphical objects will trigger events
    */
-  graphic?: MaybeRefOrGetter<any | any[]>;
+  graphic?: MaybeRefOrGetter<Arrayable<any>>;
 
   /**
    * callback function
    */
-  listener?: (params: GraphicEventParams<T>) => void;
+  listener: (params: GraphicEventParams<T>) => void;
 
   /**
-   * Default value of pause
+   * Mouse cursor style when hover or drag over the graphic.
    */
-  pause?: boolean;
+  cursor?: CSSProperties['cursor'] | ((type: 'hover' | 'drag') => CSSProperties['cursor'] | undefined);
+
+  /**
+   * Whether to active the event listener.
+   * @default true
+   */
+  isActive?: MaybeRefOrGetter<boolean>;
 }
 
 /**
@@ -66,65 +75,76 @@ export interface UseGraphicEventHandlerOptions<T extends GraphicEventType> {
  */
 export function useGraphicEventHandler<T extends GraphicEventType>(
   options: UseGraphicEventHandlerOptions<T>,
-): PausableState {
-  const { type, graphic, listener, pause = false } = options;
-  const pausable = createPausable(pause);
-  const isActive = pausable.isActive;
-
-  const graphicRef = computed(() => {
-    const value = toValue(graphic);
-    return value ? Array.isArray(value) ? value : [value] : undefined;
-  });
+): WatchStopHandle {
+  const { type, graphic, listener, cursor } = options;
+  const isActive = toRef(options.isActive ?? true);
 
   /**
    * Determine Whether a Graphic Meets the Criteria
    */
-  const graphicPredicate = (params: GraphicEventParams<T>) => {
-    if (!graphicRef.value) {
-      return true;
+  const predicate = (params: any): boolean => {
+    let allowed = true;
+    if (graphic) {
+      const maybeArray = toValue(graphic);
+      const graphics = maybeArray && Array.isArray(maybeArray) ? maybeArray : [maybeArray];
+      allowed = pickHitGraphic(params.pick, graphics);
     }
-    if (!graphicRef.value.length) {
-      return false;
-    }
-    const graphics = resolvePick(params.pick);
-    return graphics.some(graphic => graphicRef.value!.includes(graphic)) && listener?.(params);
+    return allowed;
   };
 
   const finalListener = (params: any) => {
-    graphicPredicate(params) && listener?.(params);
+    predicate(params) && listener?.(params);
   };
 
-  const drag = computed(() => toValue(type) === 'DRAG' && isActive.value);
-  const hover = computed(() => toValue(type) === 'HOVER' && isActive.value);
-  const positioned = computed(() => toValue(type) !== 'DRAG' && toValue(type) !== 'HOVER' && isActive.value);
+  const stopPositionedWatch = useGraphicPositionedEventHandler(
+    type as GraphicPositiondEventType,
+    finalListener,
+    {
+      isActive: () => type !== 'DRAG' && type !== 'HOVER' && isActive.value,
+    },
+  );
 
-  const dragHandler = useGraphicDragEventHandler({ pause: !drag.value, listener: finalListener });
-  const hoverHandler = useGraphicHoverEventHandler({ pause: !hover.value, listener: finalListener });
-  const positionedHandler = useGraphicPositionedEventHandler({ type: type as any, pause: !positioned.value, listener: finalListener });
+  const dragging = ref(false);
+  const hovering = ref(false);
+
+  const stopDragWatch = useGraphicDragEventHandler((params) => {
+    if (predicate(params)) {
+      type === 'DRAG' && listener(params as any);
+      dragging.value = params.draging;
+    }
+  }, { isActive });
+
+  const stopHoverWatch = useGraphicHoverEventHandler((params) => {
+    if (predicate(params)) {
+      type === 'HOVER' && listener(params as any);
+      hovering.value = params.hover;
+    }
+  }, { isActive });
+
+  const viewer = useViewer();
 
   watchEffect(() => {
-    dragHandler.isActive.value = drag.value;
-    hoverHandler.isActive.value = hover.value;
-    positionedHandler.isActive.value = positioned.value;
+    const canvas = viewer.value?.cesiumWidget.canvas;
+    if (canvas) {
+      if (dragging.value) {
+        canvas.parentElement!.style.cursor = isFunction(cursor) ? cursor?.('drag') ?? '' : cursor ?? '';
+      }
+      else if (hovering.value) {
+        canvas.parentElement!.style.cursor = isFunction(cursor) ? cursor?.('hover') ?? '' : cursor ?? '';
+      }
+      else {
+        canvas.parentElement!.style.cursor = '';
+      }
+    }
   });
 
-  return pausable;
-}
+  const stop = () => {
+    stopDragWatch();
+    stopHoverWatch();
+    stopPositionedWatch();
+  };
 
-/**
- * Parses and returns an array of specific field values extracted from the pick object
- */
-function resolvePick(pick: any): any[] {
-  const { primitive, id, primitiveCollection, collection } = pick ?? {};
-  const entityCollection = id?.entityCollection;
-  const dataSource = entityCollection?.owner;
-  const ids = Array.isArray(id) ? id : [id]; // // When aggregating entities, ensure id is an array
-  return [
-    ...ids,
-    primitive,
-    primitiveCollection,
-    collection,
-    entityCollection,
-    dataSource,
-  ].filter(e => !!e);
+  tryOnScopeDispose(stop);
+
+  return stop;
 }

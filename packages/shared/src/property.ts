@@ -1,4 +1,4 @@
-import type { JulianDate, Property } from 'cesium';
+import type { Event, JulianDate, Property } from 'cesium';
 import { CallbackProperty, ConstantProperty, defined } from 'cesium';
 import { isFunction } from './is';
 
@@ -89,15 +89,105 @@ export function createPropertyField<T>(
         return scope[privateField];
       },
       set(value) {
-        const prev = scope[privateField];
+        const previous = scope[privateField];
         if (scope[privateField] !== value) {
           scope[privateField] = value;
           ownerBinding(value);
           if (defined(scope.definitionChanged)) {
-            scope.definitionChanged.raiseEvent(scope, field, value, prev);
+            scope.definitionChanged.raiseEvent(scope, field, value, previous);
           }
         }
       },
     });
   }
+}
+
+export interface CreateCesiumAttributeOptions {
+  readonly?: boolean;
+  toProperty?: boolean;
+  /**
+   * The event name that triggers the change
+   * @default 'definitionChanged'
+   */
+  changedEventKey?: string;
+
+  shallowClone?: boolean;
+}
+
+export function createCesiumAttribute<Scope extends object>(
+  scope: Scope,
+  key: keyof Scope,
+  value: any,
+  options: CreateCesiumAttributeOptions = {},
+) {
+  const allowToProperty = !!options.toProperty;
+  const shallowClone = !!options.shallowClone;
+  const changedEventKey = options.changedEventKey || 'definitionChanged';
+  const changedEvent = Reflect.get(scope, changedEventKey) as Event;
+  const privateKey = `_${String(key)}`;
+  const attribute = allowToProperty ? toProperty(value) : value;
+  Reflect.set(scope, privateKey, attribute);
+
+  const obj: any = {
+    get() {
+      const value = Reflect.get(scope, privateKey);
+      if (shallowClone) {
+        return Array.isArray(value) ? [...value] : { ...value };
+      }
+      else {
+        return value;
+      }
+    },
+  };
+
+  let previousListener: VoidFunction | undefined;
+
+  const serial = (property: Property, previous?: any) => {
+    previousListener?.();
+    previousListener = property?.definitionChanged?.addEventListener(() => {
+      changedEvent?.raiseEvent.bind(changedEvent)(scope, key, property, previous);
+    });
+  };
+
+  if (!options.readonly) {
+    // 初始化是父子级绑定监听
+    if (allowToProperty && isProperty(value)) {
+      serial(value);
+    }
+
+    obj.set = (value: any) => {
+      if (allowToProperty && !isProperty(value)) {
+        throw new Error(`The value of ${String(key)} must be a Cesium.Property object`);
+      }
+      const previous = Reflect.get(scope, privateKey);
+
+      if (previous !== value) {
+        Reflect.set(scope, privateKey, value);
+        changedEvent?.raiseEvent.bind(changedEvent)(scope, key, value, previous);
+        if (allowToProperty) {
+          // 重新绑定监听
+          serial(value);
+        }
+      }
+    };
+  }
+
+  Object.defineProperty(scope, key, obj);
+}
+
+export interface CreateCesiumPropertyOptions {
+  readonly?: boolean;
+  /**
+   * The event name that triggers the change
+   * @default 'definitionChanged'
+   */
+  changedEventKey?: string;
+}
+export function createCesiumProperty<Scope extends object>(
+  scope: Scope,
+  key: keyof Scope,
+  value: any,
+  options: CreateCesiumPropertyOptions = {},
+) {
+  return createCesiumAttribute(scope, key, value, { ...options, toProperty: true });
 }

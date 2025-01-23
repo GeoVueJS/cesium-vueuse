@@ -73,7 +73,7 @@ export class CesiumMaterial<U> extends Material {
 export interface CesiumMaterialProperty<V> extends MaterialProperty {
   get isConstant(): boolean;
 
-  get definitionChanged(): Event<(scope: this, field: string, value: any, prev: any) => void>;
+  get definitionChanged(): Event<(scope: this, field: string, value: any, previous: any) => void>;
 
   getType: (time: JulianDate) => string;
 

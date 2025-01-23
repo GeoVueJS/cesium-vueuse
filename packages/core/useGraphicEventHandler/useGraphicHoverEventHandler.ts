@@ -1,50 +1,66 @@
 import type { ScreenSpaceEventHandler } from 'cesium';
-import type { PausableState } from '../createPausable';
+import type { MaybeRefOrGetter, WatchStopHandle } from 'vue';
 import type { GraphicHoverEventListener } from './types';
-import { usePrevious } from '@vueuse/core';
+import { tryOnScopeDispose, usePrevious } from '@vueuse/core';
 import { ScreenSpaceEventType } from 'cesium';
-import { shallowRef, toRaw, watch } from 'vue';
-import { createPausable } from '../createPausable';
+import { shallowRef, toRaw, toRef, watch } from 'vue';
 import { useScenePick } from '../useScenePick';
 import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
 
 export interface UseGraphicHoverEventHandlerOptions {
-  listener?: GraphicHoverEventListener;
-  pause?: boolean;
+
+  /**
+   * Whether to active the event listener.
+   * @default true
+   */
+  isActive?: MaybeRefOrGetter<boolean>;
 }
 
-export function useGraphicHoverEventHandler(options: UseGraphicHoverEventHandlerOptions): PausableState {
-  const { listener, pause } = options;
-  const pausable = createPausable(pause);
-  const isActive = pausable.isActive;
-
+export function useGraphicHoverEventHandler(
+  listener: GraphicHoverEventListener,
+  options: UseGraphicHoverEventHandlerOptions,
+): WatchStopHandle {
+  const isActive = toRef(options.isActive ?? true);
   const context = shallowRef<ScreenSpaceEventHandler.MotionEvent>();
 
-  useScreenSpaceEventHandler(ScreenSpaceEventType.MOUSE_MOVE, (event) => {
+  const cleanup = useScreenSpaceEventHandler(ScreenSpaceEventType.MOUSE_MOVE, (event) => {
     context.value = {
       startPosition: event.startPosition.clone(),
       endPosition: event.endPosition.clone(),
     };
+  }, {
+    isActive,
   });
 
   const pick = useScenePick(() => context.value?.endPosition, { isActive });
   const prevPick = usePrevious(pick);
 
-  watch([context, pick], ([context, pick]) => {
-    pick && context && listener?.({
-      context,
-      pick,
-      hover: true,
-    });
-  });
+  const stopWatch1 = watch(
+    [context, pick],
+    ([context, pick]) => {
+      pick && context && listener?.({
+        context,
+        pick,
+        hover: true,
+      });
+    },
+  );
 
-  watch(prevPick, (prevPick) => {
-    prevPick && context.value && listener?.({
+  const stopWatch2 = watch(prevPick, (prevPick) => {
+    prevPick && context.value && listener({
       context: context.value,
       pick: toRaw(prevPick),
       hover: false,
     });
   });
 
-  return pausable;
+  const stop = () => {
+    cleanup();
+    stopWatch1();
+    stopWatch2();
+  };
+
+  tryOnScopeDispose(stop);
+
+  return stop;
 }

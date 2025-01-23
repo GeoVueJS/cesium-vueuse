@@ -123,7 +123,7 @@ export class WaterRippleMaterialProperty implements CesiumMaterialProperty<Water
    */
   private _definitionChanged = new Event();
 
-  get definitionChanged(): Event<(scope: this, field: string, value: any, prev: any) => void> {
+  get definitionChanged(): Event<(scope: this, field: string, value: any, previous: any) => void> {
     return this._definitionChanged;
   }
 

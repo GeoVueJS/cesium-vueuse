@@ -1,0 +1,27 @@
+{
+  "name": "@cesium-vueuse/special",
+  "version": "1.0.1-beta.21",
+  "buildInfo": {
+    "name": "CesiumVueuseSpecial",
+    "bundle": true
+  },
+  "description": "",
+  "repository": {
+    "url": "https://github.com/GeoVueJS/cesium-vueuse"
+  },
+  "main": "index",
+  "module": "index",
+  "files": [
+    "dist/*"
+  ],
+  "publishConfig": {
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts"
+  },
+  "dependencies": {
+    "@vueuse/shared": "^12.5.0",
+    "cesium": "^1.125.0",
+    "vue": "^3.5.13"
+  }
+}

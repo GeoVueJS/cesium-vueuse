@@ -1,5 +1,6 @@
 import type { MaybeComputedElementRef } from '@vueuse/core';
 import type { EffectScope, InjectionKey, MaybeRefOrGetter, ShallowRef } from 'vue';
+import { useMutationObserver } from '@vueuse/core';
 import { Viewer } from 'cesium';
 import { computed, getCurrentScope, markRaw, provide, shallowReadonly, shallowRef, toRaw, toValue, watchEffect } from 'vue';
 
@@ -47,6 +48,17 @@ export function createViewer(...args: any) {
   if (scope) {
     CREATE_VIEWER_COLLECTION.set(scope, readonlyViewer);
   }
+
+  const canvas = computed(() => viewer.value?.canvas);
+
+  useMutationObserver(document.body, () => {
+    if (canvas.value && !document.body.contains(canvas.value)) {
+      viewer.value = undefined;
+    }
+  }, {
+    childList: true,
+    subtree: true,
+  });
 
   watchEffect((onCleanup) => {
     const [arg1, arg2] = args;

@@ -1,5 +1,6 @@
 import type { MaybeProperty } from './property';
 import { defined } from 'cesium';
+import { isFunction } from './is';
 
 /**
  * Determines if two Cesium objects are equal.
@@ -12,7 +13,7 @@ import { defined } from 'cesium';
  * @returns Returns true if the two Cesium objects are equal, otherwise false
  */
 export function cesiumEquals(left: any, right: any): boolean {
-  return left === right || (defined(left) && left.equals(right)) || (defined(right) && right.equals(left));
+  return left === right || (isFunction(left?.equals) && left.equals(right)) || (isFunction(right?.equals) && right.equals(left));
 }
 
 /**
