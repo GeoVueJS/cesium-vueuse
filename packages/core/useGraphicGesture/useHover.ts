@@ -1,11 +1,8 @@
-import type { Nullable } from '@cesium-vueuse/shared';
-import type { Arrayable } from '@vueuse/core';
-import type { ScreenSpaceEventHandler } from 'cesium';
-import type { CSSProperties, MaybeRef, MaybeRefOrGetter, WatchStopHandle } from 'vue';
-import { pickHitGraphic } from '@cesium-vueuse/shared';
-import { tryOnScopeDispose, usePrevious } from '@vueuse/core';
+import type { Cartesian2, ScreenSpaceEventHandler } from 'cesium';
+import type { WatchStopHandle } from 'vue';
+import { tryOnScopeDispose } from '@vueuse/core';
 import { ScreenSpaceEventType } from 'cesium';
-import { computed, ref, shallowRef, toRaw, toRef, toValue, watch } from 'vue';
+import { shallowRef, watch } from 'vue';
 import { useScenePick } from '../useScenePick';
 import { useScreenSpaceEventHandler } from '../useScreenSpaceEventHandler';
 
@@ -30,104 +27,58 @@ export interface GraphicHoverParams {
 
 }
 
-export interface UseHoverOptions {
-  /**
-   * Event listener.
-   */
-  listener: (params: GraphicHoverParams) => void;
-
-  /**
-   * Graphic to be listened, the event will be triggered on all graphics when if null.
-   */
-  graphic?: MaybeRefOrGetter<Arrayable<any>>;
-
-  /**
-   * Predicate function to determine whether the event is allowed.
-   */
-  predicate?: (pick: any) => boolean;
-
-  /**
-   *  Cursor style when hovering.
-   */
-  cursor?: MaybeRef<Nullable<CSSProperties['cursor']>> | ((pick: any) => Nullable<CSSProperties['cursor']>);
-
-  /**
-   * Whether to active the event listener.
-   * @default true
-   */
-  isActive?: MaybeRefOrGetter<boolean>;
-}
-
 /**
  * Use graphic hover events with ease, and remove listener automatically on unmounted.
- * @param options
  */
 export function useHover(
-  options: UseHoverOptions,
+  allow: (pick: any) => boolean,
+  listener: (params: GraphicHoverParams) => void,
 ): WatchStopHandle {
-  const { listener, predicate, graphic, cursor } = options;
-  const isActive = toRef(options.isActive ?? true);
+  const motionEvent = shallowRef<ScreenSpaceEventHandler.MotionEvent>();
+  const pick = useScenePick(() => motionEvent.value?.endPosition);
 
-  const graphicList = computed(() => {
-    const value = toValue(graphic);
-    return value ? Array.isArray(value) ? value : [value] : undefined;
-  });
-
-  const hovering = ref(false);
-
-  watch(isActive, (isActive) => {
-    !isActive && (hovering.value = false);
-  });
-
-  const isEventAllowed = (pick: any) => {
-    let allow = predicate?.(pick) ?? true;
-    if (graphicList.value && !pickHitGraphic(pick, graphicList)) {
-      allow = false;
+  const execute = (pick: unknown, startPosition: Cartesian2, endPosition: Cartesian2, hovering: boolean) => {
+    if (!allow(pick)) {
+      return;
     }
-    return allow;
-  };
 
-  const context = shallowRef<ScreenSpaceEventHandler.MotionEvent>();
+    listener({
+      context: {
+        startPosition: startPosition.clone(),
+        endPosition: endPosition.clone(),
+      },
+      pick,
+      hovering,
+    });
+  };
 
   const stopMouseMoveWatch = useScreenSpaceEventHandler(
     ScreenSpaceEventType.MOUSE_MOVE,
-    (event) => {
-      context.value = {
-        startPosition: event.startPosition.clone(),
-        endPosition: event.endPosition.clone(),
-      };
-    },
-    {
-      isActive,
+    ({ startPosition, endPosition }) => {
+      if (!startPosition.equals(motionEvent.value?.startPosition) || !endPosition.equals(motionEvent.value?.endPosition)) {
+        motionEvent.value = { startPosition: startPosition.clone(), endPosition: endPosition.clone() };
+      }
     },
   );
 
-  const pick = useScenePick(() => context.value?.endPosition, { isActive });
-
-  const allowedPick = computed(() => isEventAllowed(toValue(pick.value)) ? pick.value : undefined);
-
-  const prevAllowedPick = usePrevious(pick);
-
-  const stopHoveringWatch = watch([context, allowedPick], ([context, pick]) => {
-    pick && context && isEventAllowed(pick) && listener?.({
-      context,
-      pick,
-      hovering: true,
-    });
+  // hovering
+  watch([pick, motionEvent], ([pick, motionEvent]) => {
+    if (pick && motionEvent) {
+      const { startPosition, endPosition } = motionEvent;
+      execute(pick, startPosition, endPosition, true);
+    }
   });
 
-  const stopEndHoverWatch = watch(prevAllowedPick, (prevPick) => {
-    prevPick && context.value && listener({
-      context: context.value,
-      pick: toRaw(prevPick),
-      hovering: false,
-    });
+  // hover end
+  watch(pick, (pick, prevPick) => {
+    if (prevPick && motionEvent.value) {
+      const { startPosition, endPosition } = motionEvent.value;
+      execute(prevPick, startPosition, endPosition, false);
+    }
   });
 
   const stop = () => {
     stopMouseMoveWatch();
-    stopHoveringWatch();
-    stopEndHoverWatch();
   };
 
   tryOnScopeDispose(stop);

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useEntity, useGraphicEventHandler, useViewer } from '@cesium-vueuse/core';
+import { useEntity, useGraphicGesture, useViewer } from '@cesium-vueuse/core';
 import { canvasCoordToCartesian, toProperty } from '@cesium-vueuse/shared';
 import * as Cesium from 'cesium';
 import { watchEffect } from 'vue';
@@ -23,8 +23,7 @@ const entity1 = useEntity(new Cesium.Entity({
   },
 }));
 
-useGraphicEventHandler({
-  type: 'LEFT_CLICK',
+useGraphicGesture('LEFT_CLICK', {
   graphic: entity1,
   listener: (_params) => {
     const color = new Cesium.ConstantProperty(Cesium.Color.RED);
@@ -32,6 +31,7 @@ useGraphicEventHandler({
     entity1.value!.label!.fillColor = color;
     entity1.value!.label!.text = new Cesium.ConstantProperty('CLICKED');
   },
+
 });
 
 // =========[HOVER]============
@@ -45,15 +45,15 @@ const entity2 = useEntity(new Cesium.Entity({
   },
 }));
 
-useGraphicEventHandler({
-  type: 'HOVER',
+useGraphicGesture('HOVER', {
   graphic: entity2,
   listener: (params) => {
-    const color = params.hover ? Cesium.Color.RED : undefined;
+    const color = params.hovering ? Cesium.Color.RED : undefined;
     entity2.value!.point!.color = toProperty(color);
     entity2.value!.label!.fillColor = toProperty(color);
-    entity2.value!.label!.text = toProperty(params.hover ? 'HOVERING' : 'HOVER ME');
+    entity2.value!.label!.text = toProperty(params.hovering ? 'HOVERING' : 'HOVER ME');
   },
+
 });
 
 // =========[DRAG]============
@@ -67,20 +67,17 @@ const entity3 = useEntity(new Cesium.Entity({
   },
 }));
 
-useGraphicEventHandler({
-  type: 'DRAG',
+useGraphicGesture('DRAG', {
   graphic: entity3,
-  cursor(type) {
-    return type === 'hover' ? 'grab' : type === 'drag' ? 'grabbing' : undefined;
-  },
+  cursor: 'grab',
+  dragCursor: 'grabbing',
   listener: (params) => {
-    const color = params.draging ? Cesium.Color.RED : undefined;
+    const color = params.dragging ? Cesium.Color.RED : undefined;
     entity3.value!.point!.color = toProperty(color);
     entity3.value!.label!.fillColor = toProperty(color);
-    entity3.value!.label!.text = toProperty(params.draging ? 'DRAGGING' : 'DRAG ME');
-
+    entity3.value!.label!.text = toProperty(params.dragging ? 'DRAGGING' : 'DRAG ME');
     // lock camera
-    params.draging && params.lockCamera();
+    params.dragging && params.lockCamera();
 
     // update position
     const position = canvasCoordToCartesian(params.context.endPosition, viewer.value!.scene);

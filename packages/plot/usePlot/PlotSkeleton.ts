@@ -1,5 +1,6 @@
+import type { Nullable } from '@cesium-vueuse/shared';
 import type { Cartesian3, Entity, ScreenSpaceEventHandler, Viewer } from 'cesium';
-import type { CSSProperties, VNode } from 'vue';
+import type { CSSProperties, MaybeRef, VNode } from 'vue';
 import type { SmapledPlotPackable, SmapledPlotProperty } from './SmapledPlotProperty';
 
 export interface SkeletonDisabledOptions {
@@ -85,7 +86,7 @@ export interface OnSkeletonDragOptions {
   /**
    * 当前的拖拽状态
    */
-  draging: boolean;
+  dragging: boolean;
 
   /**
    * 执行是否锁定相机视角
@@ -192,9 +193,14 @@ export interface PlotSkeleton {
   render?: (options: SkeletonRenderOptions) => Entity.ConstructorOptions | undefined;
 
   /**
-   * Mouse cursor style when hover or drag over the graphic.
+   *  Cursor style when hovering.
    */
-  cursor?: CSSProperties['cursor'] | ((type: 'hover' | 'drag') => CSSProperties['cursor'] | undefined);
+  cursor?: MaybeRef<Nullable<CSSProperties['cursor']>> | ((pick: any) => Nullable<CSSProperties['cursor']>);
+
+  /**
+   *  Cursor style when dragging.
+   */
+  dragCursor?: MaybeRef<Nullable<CSSProperties['cursor']>> | ((pick: any) => Nullable<CSSProperties['cursor']>);
 
   /**
    * 鼠标悬停在框架点时显示的提示信息

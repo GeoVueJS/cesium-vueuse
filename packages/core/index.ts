@@ -9,7 +9,7 @@ export * from './useDataSource';
 export * from './useDataSourceScope';
 export * from './useEntity';
 export * from './useEntityScope';
-export * from './useGraphicEventHandler';
+export * from './useGraphicGesture';
 export * from './useImageryLayer';
 export * from './useImageryLayerScope';
 export * from './usePostProcessStage';

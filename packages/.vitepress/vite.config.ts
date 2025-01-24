@@ -11,8 +11,8 @@ const CESIUM_VERSION = (await getPackageInfo('cesium'))!.version;
 export default defineConfig({
   plugins: [
     UnpluginCesium({
-      // copyStaticFiles: false,
-      // cesiumBaseUrl: `https://cdn.jsdelivr.net/npm/cesium@${CESIUM_VERSION}/Build/Cesium/`,
+      copyStaticFiles: false,
+      cesiumBaseUrl: `https://cdn.jsdelivr.net/npm/cesium@${CESIUM_VERSION}/Build/Cesium/`,
     }),
     VueDevTools(),
     UnoCSS(),
@@ -22,9 +22,6 @@ export default defineConfig({
       dts: fileURLToPath(new URL('./components.d.ts', import.meta.url)),
     }),
   ],
-  server: {
-    port: 9574,
-    host: '0.0.0.0',
-  },
+  server: { port: 9574 },
   publicDir: '.vitepress/public',
 });

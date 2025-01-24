@@ -1,6 +1,6 @@
 import type { MaybeComputedElementRef } from '@vueuse/core';
 import type { EffectScope, InjectionKey, MaybeRefOrGetter, ShallowRef } from 'vue';
-import { useMutationObserver } from '@vueuse/core';
+import { tryOnScopeDispose, useMutationObserver } from '@vueuse/core';
 import { Viewer } from 'cesium';
 import { computed, getCurrentScope, markRaw, provide, shallowReadonly, shallowRef, toRaw, toValue, watchEffect } from 'vue';
 
@@ -51,6 +51,7 @@ export function createViewer(...args: any) {
 
   const canvas = computed(() => viewer.value?.canvas);
 
+  // Watch for the canvas being removed from the DOM
   useMutationObserver(document.body, () => {
     if (canvas.value && !document.body.contains(canvas.value)) {
       viewer.value = undefined;
@@ -75,6 +76,10 @@ export function createViewer(...args: any) {
     else {
       viewer.value = undefined;
     }
+  });
+
+  tryOnScopeDispose(() => {
+    viewer.value = undefined;
   });
 
   return computed(() => {

@@ -1,67 +1,37 @@
+import type { Nullable } from '@cesium-vueuse/shared';
 import type { Arrayable } from '@vueuse/core';
-import type { CSSProperties, MaybeRefOrGetter, WatchStopHandle } from 'vue';
-import type { GraphicDragEventParams, GraphicHoverEventParams, GraphicPositionedEventParams } from './types';
-import type { GraphicPositiondEventType } from './useTap';
+import type { CSSProperties, MaybeRef, MaybeRefOrGetter, WatchStopHandle } from 'vue';
+import type { GraphicDragParams } from './useDrag';
+import type { GraphicHoverParams } from './useHover';
+import type { GraphicTapParams } from './useTap';
 import { isFunction, pickHitGraphic } from '@cesium-vueuse/shared';
-import { tryOnScopeDispose } from '@vueuse/core';
-import { ref, toRef, toValue, watchEffect } from 'vue';
+import { computed, ref, toValue } from 'vue';
 import { useViewer } from '../useViewer';
 import { useDrag } from './useDrag';
-import { useGraphicHoverEventHandler } from './useHover';
-import { useGraphicPositionedEventHandler } from './useTap';
+import { useHover } from './useHover';
+import { useTap } from './useTap';
 
-/**
- * All mouse event type
- */
-export type GraphicEventType =
-  'LEFT_DOWN' |
-  'LEFT_UP' |
-  'LEFT_CLICK' |
-  'LEFT_DOUBLE_CLICK' |
-  'RIGHT_DOWN' |
-  'RIGHT_UP' |
-  'RIGHT_CLICK' |
-  'MIDDLE_DOWN' |
-  'MIDDLE_UP' |
-  'MIDDLE_CLICK' |
-  'HOVER' |
-  'DRAG';
-
-export type GraphicEventParams<T extends GraphicEventType> = {
-  LEFT_DOWN: GraphicPositionedEventParams;
-  LEFT_UP: GraphicPositionedEventParams;
-  LEFT_CLICK: GraphicPositionedEventParams;
-  LEFT_DOUBLE_CLICK: GraphicPositionedEventParams;
-  RIGHT_DOWN: GraphicPositionedEventParams;
-  RIGHT_UP: GraphicPositionedEventParams;
-  RIGHT_CLICK: GraphicPositionedEventParams;
-  MIDDLE_DOWN: GraphicPositionedEventParams;
-  MIDDLE_UP: GraphicPositionedEventParams;
-  MIDDLE_CLICK: GraphicPositionedEventParams;
-  HOVER: GraphicHoverEventParams;
-  DRAG: GraphicDragEventParams;
-}[T];
-
-export interface UseGraphicEventHandlerOptions<T extends GraphicEventType> {
-  /**
-   * Gesture Event Type
-   */
-  type: T;
+export interface UseGraphicGestureOptions {
 
   /**
-   * Filter graphical objects that can trigger events. If it is empty, all graphical objects will trigger events
+   * Graphic to be listened, the event will be triggered on all graphics when if null.
    */
   graphic?: MaybeRefOrGetter<Arrayable<any>>;
 
   /**
-   * callback function
+   * Predicate function to determine whether the event is allowed.
    */
-  listener: (params: GraphicEventParams<T>) => void;
+  predicate?: (pick: any) => boolean;
 
   /**
-   * Mouse cursor style when hover or drag over the graphic.
+   *  Cursor style when hovering.
    */
-  cursor?: CSSProperties['cursor'] | ((type: 'hover' | 'drag') => CSSProperties['cursor'] | undefined);
+  cursor?: MaybeRef<Nullable<CSSProperties['cursor']>> | ((pick: any) => Nullable<CSSProperties['cursor']>);
+
+  /**
+   *  Cursor style when dragging.
+   */
+  dragCursor?: MaybeRef<Nullable<CSSProperties['cursor']>> | ((pick: any) => Nullable<CSSProperties['cursor']>);
 
   /**
    * Whether to active the event listener.
@@ -70,81 +40,183 @@ export interface UseGraphicEventHandlerOptions<T extends GraphicEventType> {
   isActive?: MaybeRefOrGetter<boolean>;
 }
 
+export type TapType = 'LEFT_DOWN' | 'LEFT_UP' | 'LEFT_CLICK' | 'LEFT_DOUBLE_CLICK' | 'RIGHT_DOWN' | 'RIGHT_UP' | 'RIGHT_CLICK' | 'MIDDLE_DOWN' | 'MIDDLE_UP' | 'MIDDLE_CLICK';
+
 /**
- * Gestures events for Cesium graphics
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ * overLoaded1 TAP
  */
-export function useGraphicEventHandler<T extends GraphicEventType>(
-  options: UseGraphicEventHandlerOptions<T>,
-): WatchStopHandle {
-  const { type, graphic, listener, cursor } = options;
-  const isActive = toRef(options.isActive ?? true);
+export function useGraphicGesture(
+  type: TapType,
+  options: UseGraphicGestureOptions & { listener: (params: GraphicTapParams) => void }
+): WatchStopHandle;
 
-  /**
-   * Determine Whether a Graphic Meets the Criteria
-   */
-  const predicate = (params: any): boolean => {
-    let allowed = true;
-    if (graphic) {
-      const maybeArray = toValue(graphic);
-      const graphics = maybeArray && Array.isArray(maybeArray) ? maybeArray : [maybeArray];
-      allowed = pickHitGraphic(params.pick, graphics);
-    }
-    return allowed;
-  };
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ * overLoaded2 HOVER
+ */
+export function useGraphicGesture(
+  type: 'HOVER',
+  options: UseGraphicGestureOptions & { listener: (params: GraphicHoverParams) => void }
+): WatchStopHandle;
 
-  const finalListener = (params: any) => {
-    predicate(params) && listener?.(params);
-  };
+/**
+ *
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ * overLoaded3 DRAG
+ */
+export function useGraphicGesture(
+  type: 'DRAG',
+  options: UseGraphicGestureOptions & { listener: (params: GraphicDragParams) => void }
+): WatchStopHandle;
 
-  const stopPositionedWatch = useGraphicPositionedEventHandler(
-    type as GraphicPositiondEventType,
-    finalListener,
-    {
-      isActive: () => type !== 'DRAG' && type !== 'HOVER' && isActive.value,
-    },
-  );
+export function useGraphicGesture(type: TapType | 'HOVER' | 'DRAG', options: UseGraphicGestureOptions & { listener: (params: any) => void }): WatchStopHandle {
+  const { graphic, predicate, cursor, dragCursor, isActive = true, listener } = options;
 
-  const dragging = ref(false);
-  const hovering = ref(false);
-
-  const stopDragWatch = useDrag((params) => {
-    if (predicate(params)) {
-      type === 'DRAG' && listener(params as any);
-      dragging.value = params.draging;
-    }
-  }, { isActive });
-
-  const stopHoverWatch = useGraphicHoverEventHandler((params) => {
-    if (predicate(params)) {
-      type === 'HOVER' && listener(params as any);
-      hovering.value = params.hover;
-    }
-  }, { isActive });
-
-  const viewer = useViewer();
-
-  watchEffect(() => {
-    const canvas = viewer.value?.cesiumWidget.canvas;
-    if (canvas) {
-      if (dragging.value) {
-        canvas.parentElement!.style.cursor = isFunction(cursor) ? cursor?.('drag') ?? '' : cursor ?? '';
-      }
-      else if (hovering.value) {
-        canvas.parentElement!.style.cursor = isFunction(cursor) ? cursor?.('hover') ?? '' : cursor ?? '';
-      }
-      else {
-        canvas.parentElement!.style.cursor = '';
-      }
-    }
+  const graphicList = computed(() => {
+    const value = toValue(graphic);
+    return value ? Array.isArray(value) ? value : [value] : undefined;
   });
 
-  const stop = () => {
-    stopDragWatch();
-    stopHoverWatch();
-    stopPositionedWatch();
+  const isEventAllowed = (pick: any) => {
+    if (!toValue(isActive)) {
+      return false;
+    }
+    let allow = predicate?.(pick) ?? true;
+    if (graphicList.value && !pickHitGraphic(pick, graphicList.value)) {
+      allow = false;
+    }
+    return allow;
   };
 
-  tryOnScopeDispose(stop);
+  const viewer = useViewer();
+  const dragging = ref(false);
 
+  const setHoverCursor = (params: GraphicHoverParams) => {
+    if (!dragging.value) {
+      const value = isFunction(cursor) ? cursor(params.pick) : toValue(cursor);
+      if (!value) {
+        return;
+      }
+      const style = viewer.value!.canvas.parentElement!.style;
+      params.hovering ? style.setProperty('cursor', value!) : style.removeProperty('cursor');
+    }
+  };
+
+  const setDragCursor = (params: GraphicDragParams) => {
+    const value = isFunction(dragCursor) ? dragCursor(params.pick) : toValue(dragCursor);
+    if (!value) {
+      return;
+    }
+    const style = viewer.value!.canvas.parentElement!.style;
+    dragging.value = params.dragging;
+    dragging.value ? style.setProperty('cursor', value) : style.removeProperty('cursor');
+    style.removeProperty('cursor');
+  };
+
+  const stopHoverWatch = useHover(isEventAllowed, (params) => {
+    setHoverCursor(params);
+    type === 'HOVER' && listener(params);
+  });
+
+  const stopDragWatch = useDrag(isEventAllowed, (params) => {
+    setDragCursor(params);
+    type === 'DRAG' && listener(params);
+  });
+
+  let stopTapWatch: WatchStopHandle;
+
+  if (type !== 'DRAG' && type !== 'HOVER') {
+    stopTapWatch = useTap(type, isEventAllowed, listener);
+  }
+
+  const stop = () => {
+    stopHoverWatch();
+    stopDragWatch();
+    stopTapWatch?.();
+  };
   return stop;
 }
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `LEFT_CLICK`
+ */
+export const useGraphicLeftClick = (options: UseGraphicGestureOptions & { listener: (params: GraphicTapParams) => void }) => useGraphicGesture('LEFT_CLICK', options);
+
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `LEFT_DOUBLE_CLICK`
+ */
+export const useGraphicLeftDoubleClick = (options: UseGraphicGestureOptions & { listener: (params: GraphicTapParams) => void }) => useGraphicGesture('LEFT_DOUBLE_CLICK', options);
+
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `LEFT_DOWN`
+ */
+export const useGraphicLeftDown = (options: UseGraphicGestureOptions & { listener: (params: GraphicTapParams) => void }) => useGraphicGesture('LEFT_DOWN', options);
+
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `LEFT_UP`
+ */
+export const useGraphicLeftUp = (options: UseGraphicGestureOptions & { listener: (params: GraphicTapParams) => void }) => useGraphicGesture('LEFT_UP', options);
+
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `RIGHT_CLICK`
+ */
+export const useGraphicRightClick = (options: UseGraphicGestureOptions & { listener: (params: GraphicTapParams) => void }) => useGraphicGesture('RIGHT_CLICK', options);
+
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `RIGHT_DOWN`
+ */
+export const useGraphicRightDown = (options: UseGraphicGestureOptions & { listener: (params: GraphicTapParams) => void }) => useGraphicGesture('RIGHT_DOWN', options);
+
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `RIGHT_UP`
+ */
+export const useGraphicRightUp = (options: UseGraphicGestureOptions & { listener: (params: GraphicTapParams) => void }) => useGraphicGesture('RIGHT_UP', options);
+
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `MIDDLE_CLICK`
+ */
+export const useGraphicMiddleClick = (options: UseGraphicGestureOptions & { listener: (params: GraphicTapParams) => void }) => useGraphicGesture('MIDDLE_CLICK', options);
+
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `MIDDLE_DOWN`
+ */
+export const useGraphicMiddleDown = (options: UseGraphicGestureOptions & { listener: (params: GraphicTapParams) => void }) => useGraphicGesture('MIDDLE_DOWN', options);
+
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `MIDDLE_UP`
+ */
+export const useGraphicMiddleUp = (options: UseGraphicGestureOptions & { listener: (params: GraphicTapParams) => void }) => useGraphicGesture('MIDDLE_UP', options);
+
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `HOVER`
+ */
+export const useGraphicHover = (options: UseGraphicGestureOptions & { listener: (params: GraphicHoverParams) => void }) => useGraphicGesture('HOVER', options);
+
+/**
+ * Bind graphical gesture events quickly, and the listener function will automatically destroy.
+ *
+ * Alias of useGraphicGesture `DRAG`
+ */
+export const useGraphicDrag = (options: UseGraphicGestureOptions & { listener: (params: GraphicDragParams) => void }) => useGraphicGesture('DRAG', options);

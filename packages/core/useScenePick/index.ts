@@ -1,4 +1,4 @@
-import type { Cartesian2 } from 'cesium';
+import type { Cartesian2, Viewer } from 'cesium';
 import type { MaybeRefOrGetter, ShallowRef } from 'vue';
 import { refThrottled } from '@vueuse/core';
 import { computed, shallowRef, toRef, toValue, watchEffect } from 'vue';
@@ -30,6 +30,8 @@ export interface UseScenePickOptions {
 
 }
 
+const pickCache = new WeakMap<Viewer, [Cartesian2, any]>();
+
 /**
  * Uses the `scene.pick` function in Cesium's Scene object to perform screen point picking,
  * return a computed property containing the pick result, or undefined if no object is picked.
@@ -51,12 +53,21 @@ export function useScenePick(
   const pick = shallowRef<any | undefined>();
   watchEffect(() => {
     if (viewer.value && position.value && isActive.value) {
-      pick.value = viewer.value?.scene.pick(
-        position.value,
-        toValue(width),
-        toValue(height),
-      );
+      const cache = pickCache.get(viewer.value);
+      if (cache && cache[0].equals(position.value)) {
+        pick.value = cache[1];
+      }
+      else {
+        pickCache.set(viewer.value, [position.value.clone(), pick.value]);
+        pick.value = viewer.value?.scene.pick(
+          position.value,
+          toValue(width),
+          toValue(height),
+        );
+      }
     }
+  }, {
+    flush: 'post',
   });
   return pick;
 }

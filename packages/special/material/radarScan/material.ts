@@ -1,5 +1,5 @@
+import { addMaterialCache } from '@cesium-vueuse/shared';
 import { Color } from 'cesium';
-import { addMaterialCache } from '../utils';
 import { RadarScanMaterialSource } from './source';
 
 export const RadarScanMaterialType = 'RadarScan';

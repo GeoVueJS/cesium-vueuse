@@ -30,7 +30,7 @@ export interface PlotSchemeConstructorOptions {
    * 双击时，是否执行完成标绘操作
    * 每次控制点发生变变化时，执行该回调函数，如果返回 true 则下一次双击事件执行完成
    */
-  completeOnDoubleClick?: (packable: SmapledPlotPackable) => boolean;
+  forceComplete?: (packable: SmapledPlotPackable) => boolean;
 
   /**
    * 框架点渲染配置
@@ -47,7 +47,7 @@ export class PlotScheme {
   constructor(options: PlotSchemeConstructorOptions) {
     this.type = options.type;
     this.complete = options.complete;
-    this.forceComplete = options.completeOnDoubleClick;
+    this.forceComplete = options.forceComplete;
     this.render = options.render;
     this.skeletons = options.skeletons ?? [];
   }

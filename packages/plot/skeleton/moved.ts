@@ -12,8 +12,8 @@ const svg = `data:image/svg+xml;utf8,${encodeURIComponent(
  */
 export function moved(): PlotSkeleton {
   return {
-    diabled: ({ active, defining }) => !active,
-    cursor: type => type === 'drag' ? 'crosshair' : 'grab',
+    diabled: ({ active, defining }) => !active || defining,
+    cursor: 'crosshair',
     format(packable) {
       const _positions = packable.positions ?? [];
       if (_positions.length < 2) {
@@ -22,8 +22,8 @@ export function moved(): PlotSkeleton {
       const center = Rectangle.center(Rectangle.fromCartesianArray(_positions));
       return [toCartesian3(center)!];
     },
-    onDrag({ viewer, smaple, packable, context, lockCamera, draging }) {
-      lockCamera(draging);
+    onDrag({ viewer, smaple, packable, context, lockCamera, dragging }) {
+      dragging && lockCamera();
       const startPosition = canvasCoordToCartesian(context.startPosition, viewer.scene);
       const endPosition = canvasCoordToCartesian(context.endPosition, viewer.scene);
 

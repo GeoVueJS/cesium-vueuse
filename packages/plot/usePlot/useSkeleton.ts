@@ -2,11 +2,11 @@ import type { JulianDate } from 'cesium';
 import type { ComputedRef, ShallowRef } from 'vue';
 import type { Plot } from './Plot';
 import type { PlotSkeleton } from './PlotSkeleton';
-import { useCesiumEventListener, useDataSource, useEntityScope, useGraphicEventHandler, useViewer } from '@cesium-vueuse/core';
+import { useCesiumEventListener, useDataSource, useEntityScope, useGraphicDrag, useGraphicHover, useGraphicLeftClick, useViewer } from '@cesium-vueuse/core';
 import { isFunction, throttle } from '@cesium-vueuse/shared';
 import { watchArray } from '@vueuse/core';
 import { CustomDataSource, Entity } from 'cesium';
-import { shallowRef } from 'vue';
+import { shallowRef, toValue } from 'vue';
 import { PlotAction } from './PlotSkeleton';
 
 export function useSkeleton(
@@ -113,12 +113,25 @@ export function useSkeleton(
       entityScope.add(entity);
     });
   }, 10);
-  useGraphicEventHandler({
-    type: 'DRAG',
+
+  // cursor 仅在不存在定义态的标绘时才生效
+  useGraphicDrag({
+    cursor: (pick) => {
+      if (!current.value?.defining && entityScope.scope.has(pick.id)) {
+        const skeleton = pick.id?.properties?.skeleton?.getValue() as PlotSkeleton;
+        return isFunction(skeleton?.cursor) ? skeleton.cursor(pick) : toValue(skeleton?.cursor);
+      }
+    },
+    dragCursor: (pick) => {
+      if (!current.value?.defining && entityScope.scope.has(pick.id)) {
+        const skeleton = pick.id?.properties?.skeleton?.getValue() as PlotSkeleton;
+        return isFunction(skeleton?.dragCursor) ? skeleton.dragCursor(pick) : toValue(skeleton?.dragCursor);
+      }
+    },
     listener: (params) => {
       if (params.pick.id instanceof Entity && entityScope.scope.has(params.pick.id)) {
         const entity = params.pick.id as Entity;
-        operatingEntity.value = params.draging ? entity : undefined;
+        operatingEntity.value = params.dragging ? entity : undefined;
         activeEntity.value = entity;
 
         const plot = entity.properties?.plot?.getValue() as Plot;
@@ -133,7 +146,7 @@ export function useSkeleton(
           active: current.value === plot,
           index,
           context: params.context,
-          draging: params.draging,
+          dragging: params.dragging,
           lockCamera: params.lockCamera,
         });
       }
@@ -143,10 +156,9 @@ export function useSkeleton(
     },
   });
 
-  useGraphicEventHandler({
-    type: 'HOVER',
-    listener: ({ hover, pick }) => {
-      if (hover && pick.id instanceof Entity && entityScope.scope.has(pick.id)) {
+  useGraphicHover({
+    listener: ({ hovering, pick }) => {
+      if (hovering && pick.id instanceof Entity && entityScope.scope.has(pick.id)) {
         const entity = pick.id as Entity;
         hoverEntity.value = entity;
       }
@@ -156,8 +168,7 @@ export function useSkeleton(
     },
   });
 
-  useGraphicEventHandler({
-    type: 'LEFT_CLICK',
+  useGraphicLeftClick({
     listener: ({ context, pick }) => {
       if (pick.id instanceof Entity && entityScope.scope.has(pick.id)) {
         const entity = pick.id as Entity;

@@ -9,8 +9,9 @@ import { PlotAction } from '../usePlot/PlotSkeleton';
 export function interval(): PlotSkeleton {
   let dragIndex = -1;
   return {
-    diabled: ({ active, defining }) => !active,
-    cursor: type => type === 'drag' ? 'crosshair' : 'grab',
+    diabled: ({ active, defining }) => !active || defining,
+    cursor: 'grab',
+    dragCursor: 'crosshair',
     format(packable) {
       const _positions = packable.positions ?? [];
       if (_positions.length < 2) {
@@ -21,8 +22,8 @@ export function interval(): PlotSkeleton {
         return Cartesian3.midpoint(position, next, new Cartesian3());
       });
     },
-    onDrag({ viewer, smaple, packable, context, index, lockCamera, draging }) {
-      lockCamera(draging);
+    onDrag({ viewer, smaple, packable, context, index, lockCamera, dragging }) {
+      lockCamera();
       const position = canvasCoordToCartesian(context.endPosition, viewer.scene);
       if (!position) {
         return;
@@ -35,7 +36,7 @@ export function interval(): PlotSkeleton {
       else {
         positions[dragIndex + 1] = position;
       }
-      if (!draging) {
+      if (!dragging) {
         dragIndex = -1;
       }
       smaple.setSample({

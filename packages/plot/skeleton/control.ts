@@ -8,10 +8,14 @@ import { PlotAction } from '../usePlot/PlotSkeleton';
  */
 export function control(): PlotSkeleton {
   return {
-    diabled: ({ active, defining }) => !active,
-    cursor: type => type === 'drag' ? 'crosshair' : 'grab',
-    onDrag({ viewer, smaple, packable, context, index, draging, lockCamera }) {
-      lockCamera();
+    diabled: ({ active }) => !active,
+    cursor: 'grab',
+    dragCursor: 'crosshair',
+    onDrag({ viewer, smaple, packable, context, index, dragging, defining, lockCamera }) {
+      if (defining) {
+        return;
+      }
+      dragging && lockCamera();
       const position = canvasCoordToCartesian(context.endPosition, viewer.scene);
       if (position) {
         const positions = [...packable.positions ?? []];

@@ -1,5 +1,5 @@
+import { addMaterialCache } from '@cesium-vueuse/shared';
 import { Color } from 'cesium';
-import { addMaterialCache } from '../utils';
 import { EllipseRadarScanMaterialSource } from './source';
 
 export const EllipseRadarScanMaterialType = 'EllipseRadarScan';
