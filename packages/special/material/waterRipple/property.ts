@@ -1,6 +1,5 @@
-import type { MaybeProperty } from '@cesium-vueuse/shared';
+import type { CesiumMaterialProperty, MaybeProperty } from '@cesium-vueuse/shared';
 import type { Color, JulianDate } from 'cesium';
-import type { CesiumMaterialProperty } from '../types';
 import type { WaterRippleMaterialUniforms } from './material';
 
 import { cesiumEquals, createPropertyField, isCesiumConstant, toPropertyValue } from '@cesium-vueuse/shared';
