@@ -8,3 +8,24 @@
 .VPDoc.has-aside .content-container {
   max-width: none !important;
 }
+
+.demo-container {
+  button {
+    padding: 3px 15px;
+    background-color: var(--vp-c-brand);
+    border: none;
+    outline: none;
+    color: #fff;
+    margin-right: 0.5em;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    vertical-align: middle;
+    &:hover {
+      background-color: var(--vp-c-brand-2);
+    }
+    &:nth-last-child() {
+      margin-right: 0.5em;
+    }
+  }
+}
