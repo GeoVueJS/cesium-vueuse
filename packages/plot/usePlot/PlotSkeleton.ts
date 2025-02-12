@@ -1,7 +1,7 @@
 import type { Nullable } from '@cesium-vueuse/shared';
 import type { Cartesian3, Entity, ScreenSpaceEventHandler, Viewer } from 'cesium';
 import type { CSSProperties, MaybeRef, VNode } from 'vue';
-import type { SmapledPlotPackable, SmapledPlotProperty } from './SmapledPlotProperty';
+import type { SampledPlotPackable, SampledPlotProperty } from './SampledPlotProperty';
 
 export interface SkeletonDisabledOptions {
 
@@ -22,12 +22,12 @@ export interface OnSkeletonClickOptions {
   /**
    * 当前标绘属性数据
    */
-  smaple: SmapledPlotProperty;
+  sample: SampledPlotProperty;
 
   /**
    * 标绘采集到的数据，通过该数据可以获取到当前标绘的所有点位信息
    */
-  packable: SmapledPlotPackable<any>;
+  packable: SampledPlotPackable<any>;
 
   /**
    * 当前标绘是否是否正在激活，即正在编辑状态
@@ -56,22 +56,17 @@ export interface OnSkeletonDragOptions {
   /***
    * 当前标绘属性数据
    */
-  smaple: SmapledPlotProperty;
+  sample: SampledPlotProperty;
 
   /**
    * 标绘采集到的数据，通过该数据可以获取到当前标绘的所有点位信息
    */
-  packable: SmapledPlotPackable<any>;
+  packable: SampledPlotPackable<any>;
 
   /**
    * 当前标绘是否是否正在激活，即正在编辑状态
    */
   active: boolean;
-
-  /**
-   * 当前标绘是否还在定义态，即还未完成采集
-   */
-  defining: boolean;
 
   /**
    * 当前被拖拽的控制点索引
@@ -100,17 +95,12 @@ export interface OnKeyPressedOptions {
   /**
    * 当前标绘属性数据
    */
-  smaple: SmapledPlotProperty;
+  sample: SampledPlotProperty;
 
   /**
    * 标绘采集到的数据，通过该数据可以获取到当前标绘的所有点位信息
    */
-  packable: SmapledPlotPackable<any>;
-
-  /**
-   * 当前标绘是否还在定义态，即还未完成采集
-   */
-  defining: boolean;
+  packable: SampledPlotPackable<any>;
 
   /**
    * 当前被点击的控制点索引
@@ -118,9 +108,9 @@ export interface OnKeyPressedOptions {
   index: number;
 
   /**
-   * 被按压的按键数组，例如：['Shift', 'Control', 'Up' , Down]
+   * 被按压的按键事件回调
    */
-  keys: string[];
+  keyEvent: KeyboardEvent;
 }
 
 /**
@@ -128,20 +118,18 @@ export interface OnKeyPressedOptions {
  * - IDLE 空闲状态
  * - HOVER 悬停状态
  * - ACTIVE 激活状态
- * - OPERATING 操作状态
  */
 export enum PlotAction {
   IDLE = 0,
   HOVER = 1,
   ACTIVE = 2,
-  OPERATING = 3,
 }
 
 export interface SkeletonRenderOptions {
   /**
    * 标绘采集到的数据，通过该数据可以获取到当前标绘的所有点位信息
    */
-  packable: SmapledPlotPackable;
+  packable: SampledPlotPackable;
 
   /**
    * 所有框架点位集合
@@ -185,7 +173,7 @@ export interface PlotSkeleton {
    * 实际情况中，并非所有采集都都要渲染对应框架点，通过`format`函数可以过滤掉不需要渲染的点位，另外还可以自定义点位的偏移、增加框架点
    * @param packable  标绘采集到的数据
    */
-  format?: (packable: SmapledPlotPackable<any>) => Cartesian3[];
+  format?: (packable: SampledPlotPackable<any>) => Cartesian3[];
 
   /**
    * 点位渲染函数，返回Entity的构造参数，如果不返回任何值则不渲染该点位

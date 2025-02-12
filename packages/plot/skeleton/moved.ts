@@ -1,6 +1,7 @@
 import type { PlotSkeleton } from '../usePlot/PlotSkeleton';
 import { canvasCoordToCartesian, toCartesian3 } from '@cesium-vueuse/shared';
-import { Cartesian3, HorizontalOrigin, Rectangle, VerticalOrigin } from 'cesium';
+import { Cartesian3, Color, HorizontalOrigin, Rectangle, VerticalOrigin } from 'cesium';
+import { PlotAction } from '../usePlot/PlotSkeleton';
 
 // see https://icones.js.org/collection/tabler?s=move&icon=tabler:arrows-move
 const svg = `data:image/svg+xml;utf8,${encodeURIComponent(
@@ -13,7 +14,8 @@ const svg = `data:image/svg+xml;utf8,${encodeURIComponent(
 export function moved(): PlotSkeleton {
   return {
     diabled: ({ active, defining }) => !active || defining,
-    cursor: 'crosshair',
+    cursor: 'pointer',
+    dragCursor: 'crosshair',
     format(packable) {
       const _positions = packable.positions ?? [];
       if (_positions.length < 2) {
@@ -22,7 +24,7 @@ export function moved(): PlotSkeleton {
       const center = Rectangle.center(Rectangle.fromCartesianArray(_positions));
       return [toCartesian3(center)!];
     },
-    onDrag({ viewer, smaple, packable, context, lockCamera, dragging }) {
+    onDrag({ viewer, sample, packable, context, lockCamera, dragging }) {
       dragging && lockCamera();
       const startPosition = canvasCoordToCartesian(context.startPosition, viewer.scene);
       const endPosition = canvasCoordToCartesian(context.endPosition, viewer.scene);
@@ -33,22 +35,25 @@ export function moved(): PlotSkeleton {
       const offset = Cartesian3.subtract(endPosition, startPosition, new Cartesian3());
       const positions = [...packable.positions ?? []];
 
-      smaple.setSample({
+      sample.setSample({
         time: packable.time,
         derivative: packable.derivative,
         positions: positions.map(position => Cartesian3.add(position, offset, new Cartesian3())),
       });
     },
-    onKeyPressed(options) {
-      console.log(options);
-    },
-    render: ({ position }) => {
+    render: ({ position, action }) => {
+      const colors = {
+        [PlotAction.IDLE]: Color.WHITE.withAlpha(0.6),
+        [PlotAction.HOVER]: Color.WHITE,
+        [PlotAction.ACTIVE]: Color.AQUA.withAlpha(1.0),
+      };
       return {
         position,
         billboard: {
           image: svg,
           width: 20,
           height: 20,
+          color: colors[action],
           pixelOffset: new Cartesian3(0, -20),
           horizontalOrigin: HorizontalOrigin.CENTER,
           verticalOrigin: VerticalOrigin.BOTTOM,

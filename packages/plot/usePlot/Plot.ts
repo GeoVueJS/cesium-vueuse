@@ -1,17 +1,18 @@
 import type { Entity, JulianDate } from 'cesium';
 import type { PlotSchemeConstructorOptions } from './PlotScheme';
-import type { SmapledPlotPropertyConstructorOptions } from './SmapledPlotProperty';
+import type { PlotSkeletonEntity } from './PlotSkeletonEntity';
+import type { SampledPlotPropertyConstructorOptions } from './SampledPlotProperty';
 import { assertError, createCesiumAttribute, createCesiumProperty } from '@cesium-vueuse/shared';
 import { notNullish } from '@vueuse/core';
 import { createGuid, Event } from 'cesium';
 import { PlotScheme } from './PlotScheme';
-import { SmapledPlotProperty } from './SmapledPlotProperty';
+import { SampledPlotProperty } from './SampledPlotProperty';
 
 export interface PlotConstructorOptions {
   id?: string;
   disabled?: boolean;
   scheme: string | PlotScheme | PlotSchemeConstructorOptions;
-  smaple?: SmapledPlotProperty | SmapledPlotPropertyConstructorOptions;
+  sample?: SampledPlotProperty | SampledPlotPropertyConstructorOptions;
 }
 
 export class Plot {
@@ -22,11 +23,12 @@ export class Plot {
     createCesiumAttribute(this, 'disabled', !!options.disabled);
     createCesiumAttribute(this, 'defining', true);
     createCesiumAttribute(this, 'scheme', PlotScheme.resolve(options.scheme), { readonly: true });
-    const smaple = options.smaple instanceof SmapledPlotProperty ? options.smaple : new SmapledPlotProperty(options.smaple);
-    createCesiumProperty(this, 'smaple', smaple);
+    const sample = options.sample instanceof SampledPlotProperty ? options.sample : new SampledPlotProperty(options.sample);
+    createCesiumProperty(this, 'sample', sample);
     createCesiumAttribute(this, 'entities', []);
     createCesiumAttribute(this, 'primitives', []);
     createCesiumAttribute(this, 'groundPrimitives', []);
+    createCesiumAttribute(this, 'skeletonEntities', []);
   }
 
   /**
@@ -46,7 +48,7 @@ export class Plot {
 
   declare readonly scheme: PlotScheme;
 
-  declare smaple: SmapledPlotProperty;
+  declare sample: SampledPlotProperty;
 
   /**
    * @internal
@@ -62,25 +64,38 @@ export class Plot {
    */
   declare entities: Entity[];
 
+  getEntities(): Entity[] {
+    return [...this.entities];
+  }
+
   /**
    * @internal
    */
   declare primitives: any[];
+
+  getPrimitives(): any[] {
+    return [...this.primitives];
+  }
 
   /**
    * @internal
    */
   declare groundPrimitives: any[];
 
-  getEntities(): Entity[] {
-    return [...this.entities];
-  }
-
-  getPrimitives(): any[] {
-    return [...this.primitives];
-  }
-
   getGroundPrimitives(): any[] {
     return [...this.groundPrimitives];
+  }
+
+  /**
+   * @internal
+   */
+  declare skeletonEntities: PlotSkeletonEntity[];
+
+  /**
+   * 获取该标绘的骨架点entity数组
+   *
+   */
+  getSkeletonEntities(): PlotSkeletonEntity[] {
+    return [...this.skeletonEntities];
   }
 }

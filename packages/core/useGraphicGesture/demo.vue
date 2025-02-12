@@ -69,7 +69,7 @@ const entity3 = useEntity(new Cesium.Entity({
 
 useGraphicGesture('DRAG', {
   graphic: entity3,
-  cursor: 'grab',
+  cursor: 'pointer',
   dragCursor: 'grabbing',
   listener: (params) => {
     const color = params.dragging ? Cesium.Color.RED : undefined;

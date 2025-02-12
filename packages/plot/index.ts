@@ -1,4 +1,5 @@
+export * from './scheme';
 export * from './usePlot/Plot';
 export * from './usePlot/PlotScheme';
-export * from './usePlot/SmapledPlotProperty';
+export * from './usePlot/SampledPlotProperty';
 export * from './usePlot/usePlot';

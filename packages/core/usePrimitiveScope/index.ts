@@ -1,7 +1,6 @@
 import type { PrimitiveCollection } from 'cesium';
 import type { MaybeRefOrGetter, ShallowReactive } from 'vue';
 import type { EffcetRemovePredicate } from '../useCollectionScope';
-import type { CesiumPrimitive } from '../usePrimitive';
 import { computed, toValue } from 'vue';
 import { useCollectionScope } from '../useCollectionScope';
 import { useViewer } from '../useViewer';
@@ -19,22 +18,22 @@ export interface UsePrimitiveScopeRetrun {
    * A `Set` for storing SideEffect instance,
    * which is encapsulated using `ShallowReactive` to provide Vue's reactive functionality
    */
-  scope: Readonly<ShallowReactive<Set<CesiumPrimitive>>>;
+  scope: Readonly<ShallowReactive<Set<any>>>;
 
   /**
    * Add SideEffect instance
    */
-  add: <T extends CesiumPrimitive>(primitive: T) => T;
+  add: <T>(primitive: T) => T;
 
   /**
    * Remove specified SideEffect instance
    */
-  remove: (primitive: CesiumPrimitive, destroy?: boolean) => boolean;
+  remove: (primitive: any, destroy?: boolean) => boolean;
 
   /**
    * Remove all SideEffect instance that meets the specified criteria
    */
-  removeWhere: (predicate: EffcetRemovePredicate<CesiumPrimitive>, destroy?: boolean) => void;
+  removeWhere: (predicate: EffcetRemovePredicate<any>, destroy?: boolean) => void;
 
   /**
    * Remove all SideEffect instance within current scope
@@ -54,18 +53,18 @@ export function usePrimitiveScope(options: UsePrimitiveScopeOptions = {}): UsePr
     return toValue(_collection) ?? viewer.value?.scene.primitives;
   });
 
-  const addFn = <T extends CesiumPrimitive>(primitive: T): T => {
+  const addFn = <T>(primitive: T): T => {
     if (!collection.value) {
       throw new Error('collection is not defined');
     }
     return collection.value.add(primitive) as T;
   };
 
-  const removeFn = (primitive: CesiumPrimitive) => {
+  const removeFn = (primitive: any) => {
     return !!collection.value?.remove(primitive);
   };
 
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope(addFn, removeFn, []);
+  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<false>(addFn, removeFn, []);
   return {
     scope,
     add,

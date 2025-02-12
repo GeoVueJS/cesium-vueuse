@@ -1,7 +1,10 @@
+import type { Nullable } from '@cesium-vueuse/shared';
+import type { MaybeRef } from '@vueuse/core';
 import type { Cartesian3, Entity } from 'cesium';
+import type { CSSProperties } from 'vue';
 import type { PlotSkeleton } from './PlotSkeleton';
-import type { SmapledPlotPackable } from './SmapledPlotProperty';
-import { assertError } from '@cesium-vueuse/shared';
+import type { SampledPlotPackable } from './SampledPlotProperty';
+import { assertError, isFunction } from '@cesium-vueuse/shared';
 import { assert } from '@vueuse/core';
 
 export interface PlotRenderResult {
@@ -11,7 +14,7 @@ export interface PlotRenderResult {
 }
 
 export interface PlotRenderOptions<D = any> {
-  packable: SmapledPlotPackable<D>;
+  packable: SampledPlotPackable<D>;
   defining: boolean;
   mouse?: Cartesian3;
   previous: PlotRenderResult;
@@ -24,18 +27,24 @@ export interface PlotSchemeConstructorOptions {
    * 是否立即执行完成标绘操作
    * 每次控制点发生变变化时，执行该回调函数，如果返回`true`则标绘完成
    */
-  complete?: (packable: SmapledPlotPackable) => boolean;
+  complete?: (packable: SampledPlotPackable) => boolean;
 
   /**
    * 双击时，是否执行完成标绘操作
    * 每次控制点发生变变化时，执行该回调函数，如果返回 true 则下一次双击事件执行完成
    */
-  forceComplete?: (packable: SmapledPlotPackable) => boolean;
+  forceComplete?: (packable: SampledPlotPackable) => boolean;
+
+  /**
+   * 处于定义态时的鼠标样式
+   * @default 'crosshair'
+   */
+  definingCursor?: MaybeRef<Nullable<CSSProperties['cursor']>> | ((packable: SampledPlotPackable) => Nullable<CSSProperties['cursor']>);
 
   /**
    * 框架点渲染配置
    */
-  skeletons?: (() => PlotSkeleton) [];
+  skeletons?: ((() => PlotSkeleton) | PlotSkeleton) [];
 
   /**
    */
@@ -48,8 +57,9 @@ export class PlotScheme {
     this.type = options.type;
     this.complete = options.complete;
     this.forceComplete = options.forceComplete;
+    this.definingCursor = options.definingCursor ?? 'crosshair';
+    this.skeletons = options.skeletons?.map(item => isFunction(item) ? item() : item) ?? [];
     this.render = options.render;
-    this.skeletons = options.skeletons ?? [];
   }
 
   type: string;
@@ -59,17 +69,23 @@ export class PlotScheme {
    *
    * 每次控制点发生变变化时，执行该回调函数，如果返回`true`则标绘完成
    */
-  complete?: (packable: SmapledPlotPackable) => boolean;
+  complete?: (packable: SampledPlotPackable) => boolean;
 
   /**
    * 双击时，是否执行完成标绘操作
    */
-  forceComplete?: (packable: SmapledPlotPackable) => boolean;
+  forceComplete?: (packable: SampledPlotPackable) => boolean;
+
+  /**
+   * 处于定义态时的鼠标样式
+   * @default 'crosshair'
+   */
+  definingCursor?: MaybeRef<Nullable<CSSProperties['cursor']>> | ((packable: SampledPlotPackable) => Nullable<CSSProperties['cursor']>);
 
   /**
    * 框架点渲染配置
    */
-  skeletons?: (() => PlotSkeleton) [];
+  skeletons: PlotSkeleton [];
 
   /**
    */
@@ -100,11 +116,13 @@ export class PlotScheme {
     if (typeof maybeScheme === 'string') {
       const _scheme = PlotScheme.getRecord(maybeScheme);
       assert(!!_scheme, `scheme ${maybeScheme} not found`);
-      maybeScheme = _scheme!;
+      return _scheme!;
     }
     else if (!(maybeScheme instanceof PlotScheme)) {
-      maybeScheme = new PlotScheme(maybeScheme);
+      return new PlotScheme(maybeScheme);
     }
-    return maybeScheme;
+    else {
+      return maybeScheme;
+    }
   }
 }

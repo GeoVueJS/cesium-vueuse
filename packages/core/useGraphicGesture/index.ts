@@ -5,7 +5,7 @@ import type { GraphicDragParams } from './useDrag';
 import type { GraphicHoverParams } from './useHover';
 import type { GraphicTapParams } from './useTap';
 import { isFunction, pickHitGraphic } from '@cesium-vueuse/shared';
-import { computed, ref, toValue } from 'vue';
+import { computed, ref, shallowRef, toValue, watch } from 'vue';
 import { useViewer } from '../useViewer';
 import { useDrag } from './useDrag';
 import { useHover } from './useHover';
@@ -78,6 +78,7 @@ export function useGraphicGesture(type: TapType | 'HOVER' | 'DRAG', options: Use
     return value ? Array.isArray(value) ? value : [value] : undefined;
   });
 
+  // Predicate function to determine whether the event is allowed.
   const isEventAllowed = (pick: any) => {
     if (!toValue(isActive)) {
       return false;
@@ -90,42 +91,48 @@ export function useGraphicGesture(type: TapType | 'HOVER' | 'DRAG', options: Use
   };
 
   const viewer = useViewer();
+
+  const hovering = ref(false);
   const dragging = ref(false);
+  const pick = shallowRef<any>();
 
-  const setHoverCursor = (params: GraphicHoverParams) => {
-    if (!dragging.value) {
-      const value = isFunction(cursor) ? cursor(params.pick) : toValue(cursor);
-      if (!value) {
-        return;
+  // Update cursor style
+  watch([hovering, dragging, pick], ([hovering, dragging, pick]) => {
+    if (pick) {
+      const hoverCss = isFunction(cursor) ? cursor(pick) : toValue(cursor);
+      const dragCss = isFunction(dragCursor) ? dragCursor(pick) : toValue(dragCursor);
+      const style = viewer.value!.container.parentElement!.style;
+      if (dragging && dragCss) {
+        style.setProperty('cursor', dragCss);
       }
-      const style = viewer.value!.canvas.parentElement!.style;
-      params.hovering ? style.setProperty('cursor', value!) : style.removeProperty('cursor');
+      else if (hovering && hoverCss) {
+        style.setProperty('cursor', hoverCss);
+      }
+      else if (hoverCss || dragCss) {
+        style.removeProperty('cursor');
+      }
     }
-  };
+  });
 
-  const setDragCursor = (params: GraphicDragParams) => {
-    const value = isFunction(dragCursor) ? dragCursor(params.pick) : toValue(dragCursor);
-    if (!value) {
-      return;
-    }
-    const style = viewer.value!.canvas.parentElement!.style;
-    dragging.value = params.dragging;
-    dragging.value ? style.setProperty('cursor', value) : style.removeProperty('cursor');
-    style.removeProperty('cursor');
-  };
-
+  // HOVER
   const stopHoverWatch = useHover(isEventAllowed, (params) => {
-    setHoverCursor(params);
+    hovering.value = params.hovering;
+    if (!dragging.value) {
+      pick.value = params.pick;
+    }
     type === 'HOVER' && listener(params);
   });
 
+  // DRAG
   const stopDragWatch = useDrag(isEventAllowed, (params) => {
-    setDragCursor(params);
+    dragging.value = params.dragging;
+    pick.value = params.pick;
     type === 'DRAG' && listener(params);
   });
 
   let stopTapWatch: WatchStopHandle;
 
+  // TAP
   if (type !== 'DRAG' && type !== 'HOVER') {
     stopTapWatch = useTap(type, isEventAllowed, listener);
   }

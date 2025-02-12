@@ -3,11 +3,12 @@ import type { ComputedRef, ShallowRef } from 'vue';
 import type { Plot } from './Plot';
 import type { PlotSkeleton } from './PlotSkeleton';
 import { useCesiumEventListener, useDataSource, useEntityScope, useGraphicDrag, useGraphicHover, useGraphicLeftClick, useViewer } from '@cesium-vueuse/core';
-import { isFunction, throttle } from '@cesium-vueuse/shared';
-import { watchArray } from '@vueuse/core';
-import { CustomDataSource, Entity } from 'cesium';
-import { shallowRef, toValue } from 'vue';
+import { arrayDifference, isFunction, throttle } from '@cesium-vueuse/shared';
+import { onKeyStroke, watchArray } from '@vueuse/core';
+import { CustomDataSource } from 'cesium';
+import { shallowRef, toValue, watch } from 'vue';
 import { PlotAction } from './PlotSkeleton';
+import { PlotSkeletonEntity } from './PlotSkeletonEntity';
 
 export function useSkeleton(
   plots: ComputedRef<Plot[]>,
@@ -19,46 +20,35 @@ export function useSkeleton(
   const dataSource = useDataSource(new CustomDataSource());
   const entityScope = useEntityScope({ collection: () => dataSource.value!.entities });
 
-  const skeletonMap = new Map<Plot, PlotSkeleton[]>();
+  const hoverEntity = shallowRef<PlotSkeletonEntity>();
+  const activeEntity = shallowRef<PlotSkeletonEntity>();
 
-  watchArray(plots, (_value, _oldValue, added, removed = []) => {
-    added.forEach((plot) => {
-      const skeletons = plot.scheme.skeletons?.map(fn => fn()) ?? [];
-      skeletonMap.set(plot, skeletons);
-    });
-    removed.forEach(plot => skeletonMap.delete(plot));
-  });
-
-  const hoverEntity = shallowRef<Entity>();
-  const activeEntity = shallowRef<Entity>();
-  const operatingEntity = shallowRef<Entity>();
-
-  const getPointAction = (entity?: Entity) => {
+  // 获取当前点位的状态
+  const getPointAction = (entity?: PlotSkeletonEntity) => {
     if (!entity) {
       return PlotAction.IDLE;
     }
-    return hoverEntity.value?.id === entity.id
-      ? PlotAction.OPERATING
-      : activeEntity.value?.id === entity.id
-        ? PlotAction.ACTIVE
-        : operatingEntity.value?.id === entity.id
-          ? PlotAction.HOVER
-          : PlotAction.IDLE;
+    return activeEntity.value?.id === entity.id
+      ? PlotAction.ACTIVE
+      : hoverEntity.value?.id === entity.id
+        ? PlotAction.HOVER
+        : PlotAction.IDLE;
   };
 
-  const entityMap = new Map<Plot, Entity[]>();
+  const update = throttle((plot: Plot, destroyed?: boolean) => {
+    const oldEntities = plot.getSkeletonEntities();
+    const entities: PlotSkeletonEntity[] = [];
 
-  const updated = throttle((plot: Plot, destroyed?: boolean) => {
-    const previous = entityMap.get(plot) ?? [];
-
-    const entities: Entity[] = [];
-
-    if (!destroyed && !plot.disabled) {
-      const packable = plot.smaple.getValue(getCurrentTime());
+    if (destroyed || plot.disabled) {
+      plot.skeletonEntities = [];
+    }
+    else {
+      const packable = plot.sample.getValue(getCurrentTime());
       const defining = plot.defining;
       const active = current.value === plot;
+      const skeletons = plot.scheme.skeletons;
 
-      skeletonMap.get(plot)?.forEach((skeleton) => {
+      skeletons.forEach((skeleton) => {
         const diabled = isFunction(skeleton.diabled) ? skeleton.diabled({ active, defining }) : skeleton.diabled;
         if (diabled) {
           return;
@@ -66,7 +56,7 @@ export function useSkeleton(
         const positions = skeleton.format?.(packable!) ?? packable?.positions ?? [];
 
         positions.forEach((position, index) => {
-          const entity = previous.find(item => item.properties?.index?.getValue() === index && item.properties?.skeleton?.getValue() === skeleton);
+          let entity = oldEntities.find(item => item.index === index && item.skeleton === skeleton);
           const options = skeleton.render?.({
             defining,
             active,
@@ -76,15 +66,8 @@ export function useSkeleton(
             position,
             action: getPointAction(entity),
           });
-          const merge = new Entity({
-            ...options,
-            properties: {
-              plot,
-              skeleton,
-              index,
-            },
-          });
 
+          const merge = new PlotSkeletonEntity(options ?? {});
           if (entity) {
             merge.propertyNames.forEach((key) => {
               if (key !== 'id') {
@@ -93,56 +76,50 @@ export function useSkeleton(
               }
             });
           }
-          entities.push(entity ?? merge);
+          else {
+            entity = merge;
+          }
+          entity.plot = plot;
+          entity.skeleton = skeleton;
+          entity.index = index;
+          entities.push(entity);
         });
       });
-
-      entityMap.set(plot, entities);
     }
-    else {
-      entityMap.delete(plot);
-    }
-
-    previous.forEach((entity) => {
-      if (!entities.includes(entity)) {
-        entityScope.remove(entity);
-      };
-    });
-
-    entities.forEach((entity) => {
-      entityScope.add(entity);
-    });
-  }, 10);
+    plot.skeletonEntities = entities;
+  }, 1);
 
   // cursor 仅在不存在定义态的标绘时才生效
   useGraphicDrag({
     cursor: (pick) => {
       if (!current.value?.defining && entityScope.scope.has(pick.id)) {
-        const skeleton = pick.id?.properties?.skeleton?.getValue() as PlotSkeleton;
+        const skeleton = pick.id.skeleton as PlotSkeleton;
         return isFunction(skeleton?.cursor) ? skeleton.cursor(pick) : toValue(skeleton?.cursor);
       }
     },
     dragCursor: (pick) => {
       if (!current.value?.defining && entityScope.scope.has(pick.id)) {
-        const skeleton = pick.id?.properties?.skeleton?.getValue() as PlotSkeleton;
+        const skeleton = pick.id.skeleton as PlotSkeleton;
         return isFunction(skeleton?.dragCursor) ? skeleton.dragCursor(pick) : toValue(skeleton?.dragCursor);
       }
     },
     listener: (params) => {
-      if (params.pick.id instanceof Entity && entityScope.scope.has(params.pick.id)) {
-        const entity = params.pick.id as Entity;
-        operatingEntity.value = params.dragging ? entity : undefined;
-        activeEntity.value = entity;
+      if (params.pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(params.pick.id)) {
+        const entity = params.pick.id as PlotSkeletonEntity;
 
-        const plot = entity.properties?.plot?.getValue() as Plot;
-        const skeleton = entity.properties?.skeleton?.getValue() as PlotSkeleton;
-        const index = entity.properties?.index?.getValue() as number;
-        const packable = plot.smaple.getValue(getCurrentTime());
+        const plot = entity.plot as Plot;
+        // 仅在非定义态时才可拖拽
+        if (plot.defining) {
+          return;
+        }
+        activeEntity.value = entity;
+        const skeleton = entity.skeleton as PlotSkeleton;
+        const index = entity.index as number;
+        const packable = plot.sample.getValue(getCurrentTime());
         skeleton.onDrag?.({
           viewer: viewer.value!,
-          smaple: plot.smaple,
+          sample: plot.sample,
           packable,
-          defining: plot.defining,
           active: current.value === plot,
           index,
           context: params.context,
@@ -151,15 +128,34 @@ export function useSkeleton(
         });
       }
       else {
-        operatingEntity.value = undefined;
+        activeEntity.value = undefined;
       }
     },
   });
 
+  // 键盘控制当前激活的点位
+  onKeyStroke((keyEvent) => {
+    if (activeEntity.value) {
+      const entity = activeEntity.value;
+      const plot = entity.plot as Plot;
+      const skeleton = entity.skeleton as PlotSkeleton;
+      const index = entity.index as number;
+      const packable = plot.sample.getValue(getCurrentTime());
+
+      skeleton.onKeyPressed?.({
+        viewer: viewer.value!,
+        sample: plot.sample,
+        packable,
+        index,
+        keyEvent,
+      });
+    }
+  });
+
   useGraphicHover({
     listener: ({ hovering, pick }) => {
-      if (hovering && pick.id instanceof Entity && entityScope.scope.has(pick.id)) {
-        const entity = pick.id as Entity;
+      if (hovering && pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(pick.id)) {
+        const entity = pick.id as PlotSkeletonEntity;
         hoverEntity.value = entity;
       }
       else {
@@ -168,20 +164,21 @@ export function useSkeleton(
     },
   });
 
+  // 左键点击，令点位处于激活
   useGraphicLeftClick({
     listener: ({ context, pick }) => {
-      if (pick.id instanceof Entity && entityScope.scope.has(pick.id)) {
-        const entity = pick.id as Entity;
+      if (pick.id instanceof PlotSkeletonEntity && entityScope.scope.has(pick.id)) {
+        const entity = pick.id as PlotSkeletonEntity;
         activeEntity.value = entity;
-        const plot = entity.properties?.plot?.getValue() as Plot;
-        const skeleton = entity.properties?.skeleton?.getValue() as PlotSkeleton;
-        const index = entity.properties?.plot?.getValue() as number;
+        const plot = entity.plot as Plot;
+        const skeleton = entity.skeleton as PlotSkeleton;
+        const index = entity.index as number;
 
-        const packable = plot.smaple.getValue(getCurrentTime());
+        const packable = plot.sample.getValue(getCurrentTime());
 
         skeleton.onLeftClick?.({
           viewer: viewer.value!,
-          smaple: plot.smaple,
+          sample: plot.sample,
           packable: packable!,
           active: current.value === plot,
           defining: plot.defining,
@@ -195,18 +192,31 @@ export function useSkeleton(
     },
   });
 
-  watchArray(plots, (_value, _oldValue, added, removed = []) => {
-    added.forEach(plot => updated(plot));
-    removed.forEach(plot => updated(plot, true));
+  watchArray(plots, (value, oldValue, added, removed = []) => {
+    added.forEach(plot => update(plot));
+    removed.forEach(plot => update(plot, true));
   });
 
-  useCesiumEventListener(() => plots.value.map(plot => plot.definitionChanged), (plot, key) => {
-    if (['disabled', 'defining', 'scheme', 'smaple', 'time'].includes(key)) {
-      updated(plot);
+  useCesiumEventListener(() => plots.value.map(plot => plot.definitionChanged), (plot, key, newValue, oldValue) => {
+    if (['disabled', 'defining', 'scheme', 'sample', 'time'].includes(key)) {
+      update(plot);
+    }
+    if (key === 'skeletonEntities') {
+      const { added, removed } = arrayDifference(newValue as PlotSkeletonEntity[], oldValue as PlotSkeletonEntity[]);
+      added.forEach(item => entityScope.add(item));
+      removed.forEach(item => entityScope.remove(item));
     }
   });
 
+  // 当前激活的标绘变化时，更新渲染
+  watch(current, (plot, previous) => {
+    plot && update(plot);
+    setTimeout(() => {
+      previous && update(previous);
+    }, 2);
+  });
+
   return {
-    skeletonDataSources: dataSource,
+    dataSource,
   };
 }

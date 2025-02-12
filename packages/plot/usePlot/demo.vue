@@ -1,47 +1,25 @@
 <script setup lang="ts">
-import { useViewer } from '@cesium-vueuse/core';
-import { usePlot } from '@cesium-vueuse/plot';
-import * as Cesium from 'cesium';
-import { watchEffect } from 'vue';
-import { control } from '../skeleton/control';
-import { intervalNonclosed } from '../skeleton/intervalNonclosed';
-import { moved } from '../skeleton/moved';
+import { PLOT_LINE_STRING_SCHEME, usePlot } from '@cesium-vueuse/plot';
+import { PLOT_POLYGON_SCHEME } from '../scheme/Polygon';
 
 const { operate } = usePlot();
 
-watchEffect(() => {
-  operate({
-    scheme: {
-      type: 'LineString',
-      complete: packable => packable.positions!.length >= 3,
-      forceComplete: packable => packable.positions!.length >= 2,
-      skeletons: [
-        control,
-        intervalNonclosed,
-        moved,
-      ],
-      render(options) {
-        const { mouse, packable } = options;
-        const entity = options.previous.entities?.[0]
-          ?? new Cesium.Entity({
-            polyline: {
-              width: 1,
-            },
-          });
-        entity.polyline!.positions = new Cesium.CallbackProperty(() => {
-          const positions = [...packable.positions ?? []].concat(mouse ? [mouse] : []);
-          return positions.length >= 2 ? positions : [];
-        }, false);
-
-        return {
-          entities: [entity],
-        };
-      },
-    },
-  });
-});
-const viewer = useViewer();
+const otpions = [
+  {
+    label: 'LineString',
+    scheme: PLOT_LINE_STRING_SCHEME,
+  },
+  {
+    label: 'Polygon',
+    scheme: PLOT_POLYGON_SCHEME,
+  },
+];
 </script>
 
 <template>
+  <div p="10px">
+    <button v-for="item in otpions" :key="item.label" @click="operate(item.scheme)">
+      {{ item.label }}
+    </button>
+  </div>
 </template>

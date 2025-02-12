@@ -17,9 +17,6 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 
-# Editor directories and files
-# .vscode/*
-# !.vscode/extensions.json
 .idea
 *.suo
 *.ntvs*
@@ -28,7 +25,7 @@ coverage
 *.sw?
 
 *.tsbuildinfo
-
+.eslintcache
 
 **/.vitepress/cache
 **/.vitepress/.types

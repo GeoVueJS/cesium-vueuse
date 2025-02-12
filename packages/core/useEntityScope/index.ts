@@ -67,7 +67,7 @@ export function useEntityScope(options: UseEntityScopeOptions = {}): UseEntitySc
     return !!collection.value?.remove(entity);
   };
 
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope(addFn, removeFn, []);
+  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<false>(addFn, removeFn, []);
   return {
     scope,
     add,

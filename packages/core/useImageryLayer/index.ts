@@ -40,7 +40,7 @@ export interface UseImageryLayerOptions {
  * overLoaded1: Parameter supports passing in a single value.
  */
 export function useImageryLayer<T extends ImageryLayer = ImageryLayer>(
-  layer?: MaybeRefOrAsyncGetter< T | undefined>,
+  layer?: MaybeRefOrAsyncGetter<T | undefined>,
   options?: UseImageryLayerOptions
 ): ComputedRef<T | undefined>;
 

@@ -47,19 +47,20 @@ export function useDrag(
 
   const viewer = useViewer();
 
+  const cameraLocked = ref(false);
+
+  watch(cameraLocked, (cameraLocked) => {
+    viewer.value && (viewer.value.scene.screenSpaceCameraController.enableRotate = !cameraLocked);
+  });
+
+  const lockCamera = () => {
+    cameraLocked.value = true;
+  };
+
   const execute = (pick: unknown, startPosition: Cartesian2, endPosition: Cartesian2) => {
     if (!allow(pick)) {
       return;
     }
-
-    let lock = false;
-
-    const lockCamera = () => {
-      nextTick(() => {
-        lock = true;
-        viewer.value!.scene.screenSpaceCameraController.enableRotate = false;
-      });
-    };
 
     listener({
       context: {
@@ -72,8 +73,8 @@ export function useDrag(
     });
     // reset lockCamera
     nextTick(() => {
-      if (lock && !dragging.value) {
-        viewer.value!.scene.screenSpaceCameraController.enableRotate = true;
+      if (!dragging.value && cameraLocked.value) {
+        cameraLocked.value = false;
       }
     });
   };

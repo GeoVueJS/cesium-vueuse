@@ -10,7 +10,7 @@ export function intervalNonclosed(): PlotSkeleton {
   let dragIndex = -1;
   return {
     diabled: ({ active, defining }) => !active || defining,
-    cursor: 'grab',
+    cursor: 'pointer',
     dragCursor: 'crosshair',
     format(packable) {
       const _positions = packable.positions ?? [];
@@ -21,8 +21,8 @@ export function intervalNonclosed(): PlotSkeleton {
         return Cartesian3.midpoint(position, _positions[i + 1], new Cartesian3());
       });
     },
-    onDrag({ viewer, smaple, packable, context, index, lockCamera, dragging }) {
-      dragging && lockCamera();
+    onDrag({ viewer, sample, packable, context, index, lockCamera, dragging }) {
+      lockCamera();
       const position = canvasCoordToCartesian(context.endPosition, viewer.scene);
       if (!position) {
         return;
@@ -38,7 +38,7 @@ export function intervalNonclosed(): PlotSkeleton {
       if (!dragging) {
         dragIndex = -1;
       }
-      smaple.setSample({
+      sample.setSample({
         time: packable.time,
         derivative: packable.derivative,
         positions,
@@ -46,10 +46,9 @@ export function intervalNonclosed(): PlotSkeleton {
     },
     render: ({ position, action }) => {
       const colors = {
-        [PlotAction.IDLE]: Color.GREEN.withAlpha(0.6),
-        [PlotAction.HOVER]: Color.GREEN.withAlpha(0.8),
-        [PlotAction.OPERATING]: Color.GREEN.withAlpha(0.6),
-        [PlotAction.ACTIVE]: Color.GREEN.withAlpha(0.6),
+        [PlotAction.IDLE]: Color.GREEN.withAlpha(0.4),
+        [PlotAction.HOVER]: Color.GREEN.withAlpha(0.6),
+        [PlotAction.ACTIVE]: Color.GREEN.withAlpha(1.0),
       };
       return {
         position,

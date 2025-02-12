@@ -1,14 +1,11 @@
 import type { Arrayable } from '@vueuse/core';
-import type { Cesium3DTileset, Primitive, PrimitiveCollection } from 'cesium';
+import type { Primitive, PrimitiveCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
 import type { MaybeRefOrAsyncGetter } from '../toAwaitValue';
 import { computedAsync } from '@vueuse/core';
 import { toValue, watchEffect } from 'vue';
 import { toAwaitValue } from '../toAwaitValue';
 import { useViewer } from '../useViewer';
-
-// TODO   all primitive type in cesium
-export type CesiumPrimitive = Primitive | PrimitiveCollection | Cesium3DTileset | any;
 
 export interface UsePrimitiveOptions {
   /**
@@ -35,7 +32,7 @@ export interface UsePrimitiveOptions {
  *
  * overLoaded1: Parameter supports passing in a single value.
  */
-export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
+export function usePrimitive<T = any>(
   primitive?: MaybeRefOrAsyncGetter<T | undefined>,
   options?: UsePrimitiveOptions
 ): ComputedRef<T | undefined>;
@@ -45,7 +42,7 @@ export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
  *
  * overLoaded2: Parameter supports passing in an array.
  */
-export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
+export function usePrimitive<T = any>(
   primitives?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
   options?: UsePrimitiveOptions
 ): ComputedRef<T[] | undefined>;

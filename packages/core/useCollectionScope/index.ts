@@ -6,9 +6,9 @@ import { shallowReactive, shallowReadonly } from 'vue';
 export type EffcetRemovePredicate<T> = (instance: T) => boolean;
 
 export interface UseCollectionScopeReturn<
+  isPromise extends boolean,
   T,
   AddArgs extends any[],
-  AddReturn extends T | Promise<T>,
   RemoveArgs extends any[],
   RemoveReturn = any,
 > {
@@ -21,7 +21,7 @@ export interface UseCollectionScopeReturn<
   /**
    * Add SideEffect instance
    */
-  add: <R extends T>(i: R, ...args: AddArgs) => AddReturn extends Promise<T> ? Promise<R> : R;
+  add: (i: T, ...args: AddArgs) => isPromise extends true ? Promise<T> : T;
 
   /**
    * Remove specified SideEffect instance
@@ -47,16 +47,16 @@ export interface UseCollectionScopeReturn<
  * @param removeScopeArgs - The parameters to pass for `removeScope` triggered when the component is unmounted
  */
 export function useCollectionScope<
-  T,
-  AddArgs extends any[],
-  AddReturn extends T | Promise<T>,
-  RemoveArgs extends unknown[],
+  isPromise extends boolean,
+  T = any,
+  AddArgs extends any[] = any[],
+  RemoveArgs extends any[] = any[],
   RemoveReturn = any,
 >(
-  addFn: (i: T, ...args: AddArgs) => AddReturn,
+  addFn: (i: T, ...args: AddArgs) => isPromise extends true ? Promise<T> : T,
   removeFn: (i: T, ...args: RemoveArgs) => RemoveReturn,
   removeScopeArgs: RemoveArgs,
-): UseCollectionScopeReturn<T, AddArgs, AddReturn, RemoveArgs, RemoveReturn> {
+): UseCollectionScopeReturn<isPromise, T, AddArgs, RemoveArgs, RemoveReturn> {
   const scope = shallowReactive(new Set<T>());
 
   const add: any = (instance: T, ...args: AddArgs) => {

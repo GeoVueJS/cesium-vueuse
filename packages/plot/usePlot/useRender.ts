@@ -2,7 +2,7 @@ import type { Cartesian3, Entity, JulianDate } from 'cesium';
 import type { ComputedRef, ShallowRef } from 'vue';
 import type { Plot } from './Plot';
 import { useCesiumEventListener, useDataSource, useEntityScope, usePrimitive, usePrimitiveScope, useScreenSpaceEventHandler, useViewer } from '@cesium-vueuse/core';
-import { canvasCoordToCartesian, throttle } from '@cesium-vueuse/shared';
+import { arrayDifference, canvasCoordToCartesian, throttle } from '@cesium-vueuse/shared';
 import { watchArray } from '@vueuse/core';
 import { CustomDataSource, PrimitiveCollection, ScreenSpaceEventType } from 'cesium';
 import { computed, shallowRef, watch } from 'vue';
@@ -57,33 +57,26 @@ export function useRender(
     () => plots.value.map(item => item.definitionChanged),
     (_scope, key, newValue, oldValue) => {
       if (key === 'entities') {
-        const newSet = new Set(newValue as Entity[]);
-        (oldValue as Entity[]).forEach((prev) => {
-          newSet.has(prev) ? newSet.delete(prev) : entityScope.remove(prev);
-        });
-        newSet.forEach(entity => entityScope.add(entity));
+        const { added, removed } = arrayDifference(newValue as Entity[], oldValue as Entity[]);
+        added.forEach(item => entityScope.add(item));
+        removed.forEach(item => entityScope.remove(item));
       }
       else if (key === 'primitives') {
-        const newSet = new Set(newValue as any[]);
-        (oldValue as any[]).forEach((prev) => {
-          newSet.has(prev) ? newSet.delete(prev) : primitiveScope.remove(prev);
-        });
-        newSet.forEach(entity => primitiveScope.add(entity));
+        const { added, removed } = arrayDifference(newValue as Entity[], oldValue as Entity[]);
+        added.forEach(item => primitiveScope.add(item));
+        removed.forEach(item => primitiveScope.remove(item));
       }
-
       else if (key === 'groundPrimitives') {
-        const newSet = new Set(newValue as any[]);
-        (oldValue as any[]).forEach((prev) => {
-          newSet.has(prev) ? newSet.delete(prev) : groundPrimitiveScope.remove(prev);
-        });
-        newSet.forEach(entity => groundPrimitiveScope.add(entity));
+        const { added, removed } = arrayDifference(newValue as Entity[], oldValue as Entity[]);
+        added.forEach(item => groundPrimitiveScope.add(item));
+        removed.forEach(item => groundPrimitiveScope.remove(item));
       }
     },
   );
 
-  const updated = throttle(async (plot: Plot) => {
+  const update = throttle(async (plot: Plot) => {
     const reslut = await plot.scheme.render?.({
-      packable: plot.smaple.getValue(getCurrentTime()),
+      packable: plot.sample.getValue(getCurrentTime()),
       mouse: plot.defining ? mouseCartesian.value : undefined,
       defining: plot.defining,
       previous: {
@@ -96,19 +89,23 @@ export function useRender(
     plot.entities = reslut?.entities ?? [];
     plot.primitives = reslut?.primitives ?? [];
     plot.groundPrimitives = reslut?.groundPrimitives ?? [];
-  }, 10);
+  }, 1);
+
+  watch(current, (plot, previous) => {
+    previous && update(previous);
+  });
 
   useCesiumEventListener(
     () => plots.value.map(item => item.definitionChanged),
     (plot, key) => {
-      if (['disabled', 'defining', 'scheme', 'smaple', 'time'].includes(key)) {
-        updated(plot);
+      if (['disabled', 'defining', 'scheme', 'sample', 'time'].includes(key)) {
+        update(plot);
       }
     },
   );
 
   watch(mouseCartesian, () => {
-    plots.value.forEach(plot => plot.defining && updated(plot));
+    plots.value.forEach(plot => plot.defining && update(plot));
   });
 
   return {

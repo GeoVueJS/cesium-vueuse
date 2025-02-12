@@ -4,24 +4,24 @@ import { Cartesian3, Event, JulianDate, TimeInterval } from 'cesium';
 /**
  * 标绘采集到的数据
  */
-export interface SmapledPlotPackable<D = any> {
+export interface SampledPlotPackable<D = any> {
   time: JulianDate;
   positions?: Cartesian3[];
   derivative?: D;
 }
 
-export enum SmapledPlotStrategy {
+export enum SampledPlotStrategy {
   NEAR = 0,
   CYCLE = 1,
   STRICT = 2,
 }
 
-export type SmapledPlotInterpolationAlgorithm<D = any> = (
+export type SampledPlotInterpolationAlgorithm<D = any> = (
   time: JulianDate,
-  previous: SmapledPlotPackable<D>,
-  next: SmapledPlotPackable<D>,
+  previous: SampledPlotPackable<D>,
+  next: SampledPlotPackable<D>,
   proportion: number
-) => SmapledPlotPackable;
+) => SampledPlotPackable;
 
 /**
  * 默认插值算法
@@ -32,7 +32,7 @@ export type SmapledPlotInterpolationAlgorithm<D = any> = (
  * @param proportion 比例
  * @returns 插值结果
  */
-const defaultInterpolationAlgorithm: SmapledPlotInterpolationAlgorithm = (time, previous, next, proportion) => {
+const defaultInterpolationAlgorithm: SampledPlotInterpolationAlgorithm = (time, previous, next, proportion) => {
   if (proportion === 0) {
     return {
       time,
@@ -58,19 +58,19 @@ const defaultInterpolationAlgorithm: SmapledPlotInterpolationAlgorithm = (time, 
   };
 };
 
-export interface SmapledPlotPropertyConstructorOptions<D = any> {
-  interpolationAlgorithm?: SmapledPlotInterpolationAlgorithm<D>;
-  strategy?: SmapledPlotStrategy;
-  packables?: SmapledPlotPackable<D>[];
+export interface SampledPlotPropertyConstructorOptions<D = any> {
+  interpolationAlgorithm?: SampledPlotInterpolationAlgorithm<D>;
+  strategy?: SampledPlotStrategy;
+  packables?: SampledPlotPackable<D>[];
 }
 
 /**
  * 标绘属性数据
  */
-export class SmapledPlotProperty<D = any> {
-  constructor(options?: SmapledPlotPropertyConstructorOptions<D>) {
+export class SampledPlotProperty<D = any> {
+  constructor(options?: SampledPlotPropertyConstructorOptions<D>) {
     this.interpolationAlgorithm = options?.interpolationAlgorithm;
-    this.strategy = options?.strategy ?? SmapledPlotStrategy.NEAR;
+    this.strategy = options?.strategy ?? SampledPlotStrategy.NEAR;
     options?.packables?.forEach(packable => this.setSample(packable));
     // 默认将初始化一项数据
     if (!this._times.length) {
@@ -82,11 +82,11 @@ export class SmapledPlotProperty<D = any> {
     }
   }
 
-  static defaultInterpolationAlgorithm: SmapledPlotInterpolationAlgorithm<any> = defaultInterpolationAlgorithm;
+  static defaultInterpolationAlgorithm: SampledPlotInterpolationAlgorithm<any> = defaultInterpolationAlgorithm;
 
-  strategy: SmapledPlotStrategy;
+  strategy: SampledPlotStrategy;
 
-  interpolationAlgorithm?: SmapledPlotInterpolationAlgorithm;
+  interpolationAlgorithm?: SampledPlotInterpolationAlgorithm;
 
   /**
    * @internal
@@ -96,7 +96,7 @@ export class SmapledPlotProperty<D = any> {
   /**
    * @internal
    */
-  private _smapleds: Cartesian3[][] = [];
+  private _sampleds: Cartesian3[][] = [];
 
   /**
    * @internal
@@ -140,16 +140,16 @@ export class SmapledPlotProperty<D = any> {
     const end = this._times[this._times.length - 1];
     if (JulianDate.lessThan(time, start) || JulianDate.greaterThan(time, end)) {
       switch (this.strategy) {
-        case SmapledPlotStrategy.STRICT: {
+        case SampledPlotStrategy.STRICT: {
           return;
         }
-        case SmapledPlotStrategy.NEAR: {
+        case SampledPlotStrategy.NEAR: {
           time = JulianDate.lessThan(time, this._times[0])
             ? this._times[0].clone()
             : this._times[this._times.length - 1].clone();
           break;
         }
-        case SmapledPlotStrategy.CYCLE: {
+        case SampledPlotStrategy.CYCLE: {
           const startMS = JulianDate.toDate(this._times[0]).getTime();
           const endMS = JulianDate.toDate(this._times[this._times.length - 1]).getTime();
           const duration = endMS - startMS;
@@ -183,7 +183,7 @@ export class SmapledPlotProperty<D = any> {
    * @returns 插值后的样本点数据，存储在提供的或新创建的result容器中。
    * @template D 数据类型。
    */
-  getValue(time: JulianDate, result?: SmapledPlotPackable): SmapledPlotPackable<D> {
+  getValue(time: JulianDate, result?: SampledPlotPackable): SampledPlotPackable<D> {
     result ??= { time };
     Object.assign(result, {
       time: time.clone(),
@@ -193,7 +193,7 @@ export class SmapledPlotProperty<D = any> {
 
     if (!time) {
       result.time = this._times[0]?.clone();
-      result.positions = this._smapleds[0]?.map(c => c.clone(c));
+      result.positions = this._sampleds[0]?.map(c => c.clone(c));
       result.derivative = this._derivatives[0];
       return result;
     }
@@ -204,17 +204,17 @@ export class SmapledPlotProperty<D = any> {
 
     result.time = time;
     const { prevIndex, nextIndex, proportion } = scope;
-    const previous: SmapledPlotPackable<D> = {
+    const previous: SampledPlotPackable<D> = {
       time: this._times[prevIndex],
-      positions: this._smapleds[prevIndex],
+      positions: this._sampleds[prevIndex],
       derivative: this._derivatives[prevIndex],
     };
-    const next: SmapledPlotPackable<D> = {
+    const next: SampledPlotPackable<D> = {
       time: this._times[nextIndex],
-      positions: this._smapleds[nextIndex],
+      positions: this._sampleds[nextIndex],
       derivative: this._derivatives[nextIndex],
     };
-    const packable = (this.interpolationAlgorithm || SmapledPlotProperty.defaultInterpolationAlgorithm)(time, previous, next, proportion);
+    const packable = (this.interpolationAlgorithm || SampledPlotProperty.defaultInterpolationAlgorithm)(time, previous, next, proportion);
     Object.assign(result, packable);
     return result;
   }
@@ -224,7 +224,7 @@ export class SmapledPlotProperty<D = any> {
    *
    * @param value 样本数据对象，包含时间、位置和导数信息
    */
-  setSample(value: SmapledPlotPackable<D>): void {
+  setSample(value: SampledPlotPackable<D>): void {
     const time = value.time.clone();
     const positions = value.positions?.map(item => item.clone()) ?? [];
     const derivative = value.derivative;
@@ -232,22 +232,22 @@ export class SmapledPlotProperty<D = any> {
 
     if (index !== -1) {
       this._times[index] = time;
-      this._smapleds[index] = positions;
+      this._sampleds[index] = positions;
       this._derivatives[index] = value.derivative;
     }
     else if (this._times.length === 0) {
       this._times[0] = time;
-      this._smapleds[0] = positions;
+      this._sampleds[0] = positions;
       this._derivatives[0] = value.derivative;
     }
     else if (JulianDate.lessThan(time, this._times[0])) {
       this._times.splice(0, 0, time);
-      this._smapleds.splice(0, 0, positions);
+      this._sampleds.splice(0, 0, positions);
       this._derivatives.splice(0, 0, derivative);
     }
     else if (JulianDate.greaterThan(time, this._times[this._times.length - 1])) {
       this._times.push(time);
-      this._smapleds.push(positions);
+      this._sampleds.push(positions);
       this._derivatives.push(derivative);
     }
 
@@ -257,9 +257,9 @@ export class SmapledPlotProperty<D = any> {
   /**
    * 设置样本数据
    *
-   * @param values 样本数据数组，每个元素都是类型为SmapledPlotPackable<D>的对象
+   * @param values 样本数据数组，每个元素都是类型为SampledPlotPackable<D>的对象
    */
-  setSamples(values: SmapledPlotPackable<D>[]): void {
+  setSamples(values: SampledPlotPackable<D>[]): void {
     values.forEach(value => this.setSample(value));
   }
 
@@ -272,7 +272,7 @@ export class SmapledPlotProperty<D = any> {
   removeSample(time: JulianDate): boolean {
     const index = this._times.findIndex(t => t.equals(time));
     if (index !== -1) {
-      this._smapleds.splice(index, 1);
+      this._sampleds.splice(index, 1);
       this._derivatives.splice(index, 1);
       const removed = this._times.splice(index, 1);
       if (removed.length) {

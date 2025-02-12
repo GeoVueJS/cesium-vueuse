@@ -72,7 +72,7 @@ export function useDataSourceScope(options: UseDataSourceScopeOptions = {}): Use
     return !!collection.value?.remove(dataSource, destroy);
   };
 
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope(addFn, removeFn, [destroyOnRemove]);
+  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<true>(addFn, removeFn, [destroyOnRemove]);
   return {
     scope,
     add,
