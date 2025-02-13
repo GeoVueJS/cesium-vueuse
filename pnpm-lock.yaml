@@ -17,6 +17,9 @@ importers:
       '@cesium-vueuse/shared':
         specifier: workspace:*
         version: link:packages/shared
+      '@cesium-vueuse/special':
+        specifier: workspace:*
+        version: link:packages/special
       '@turf/turf':
         specifier: ^7.2.0
         version: 7.2.0

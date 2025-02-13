@@ -27,6 +27,7 @@
     "@cesium-vueuse/core": "workspace:*",
     "@cesium-vueuse/plot": "workspace:*",
     "@cesium-vueuse/shared": "workspace:*",
+    "@cesium-vueuse/special": "workspace:*",
     "@turf/turf": "^7.2.0",
     "@unocss/reset": "^65.4.3",
     "@vueuse/core": "^12.5.0",
