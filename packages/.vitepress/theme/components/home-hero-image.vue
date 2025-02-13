@@ -29,8 +29,6 @@ watchEffect(() => {
     viewer.value.cesiumWidget.screenSpaceEventHandler.removeInputAction(ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
     viewer.value.cesiumWidget.screenSpaceEventHandler.removeInputAction(ScreenSpaceEventType.LEFT_CLICK);
     viewer.value.clock.multiplier = 1000;
-    // viewer.value.scene.screenSpaceCameraController.enableZoom = false;
-    // viewer.value.scene.screenSpaceCameraController.enableTranslate = false;
     viewer.value.scene.globe.enableLighting = true;
   }
 });

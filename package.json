@@ -1,7 +1,7 @@
 {
   "name": "cesium-vueuse",
   "type": "module",
-  "version": "1.0.1-beta.21",
+  "version": "1.0.1-beta.22",
   "private": true,
   "description": "Cesium hooks like VueUse api.",
   "repository": {
@@ -19,7 +19,7 @@
     "lint": "eslint . --fix",
     "taze": "taze -w -r major minor patch",
     "release": "bumpp -r",
-    "=====================": "",
+    "==========[CI/CD]===========": "",
     "prepublish": "tsx ./internals/build",
     "publish:ci": "pnpm publish -r --no-git-checks --access public"
   },
