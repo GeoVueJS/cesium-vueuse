@@ -11,7 +11,7 @@ export default {
   extends: Theme,
   Layout: () => {
     return h(Theme.Layout, null, {
-      'home-hero-before': () => h(HomeHeroImage),
+      'home-hero-before': import.meta.env.SSR ? undefined : () => h(HomeHeroImage),
       // https://vitepress.dev/guide/extending-default-theme#layout-slots
     });
   },

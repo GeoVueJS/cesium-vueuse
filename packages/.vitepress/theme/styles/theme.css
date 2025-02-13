@@ -24,7 +24,7 @@
     &:hover {
       background-color: var(--vp-c-brand-2);
     }
-    &:nth-last-child() {
+    &:nth-last-child {
       margin-right: 0.5em;
     }
   }
