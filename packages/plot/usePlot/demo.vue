@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { PLOT_LINE_STRING_SCHEME, usePlot } from '@cesium-vueuse/plot';
-import { PLOT_LABEL_SCHEME } from '../scheme/Label';
-import { PLOT_POLYGON_SCHEME } from '../scheme/Polygon';
+import { PLOT_LABEL_SCHEME, PLOT_LINE_STRING_SCHEME, PLOT_POLYGON_SCHEME, usePlot } from '@cesium-vueuse/plot';
 
 const { operate } = usePlot();
 
