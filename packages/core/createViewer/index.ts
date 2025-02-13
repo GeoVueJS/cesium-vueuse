@@ -52,8 +52,8 @@ export function createViewer(...args: any) {
   const canvas = computed(() => viewer.value?.canvas);
 
   // Watch for the canvas being removed from the DOM
-  useMutationObserver(document.body, () => {
-    if (canvas.value && !document.body.contains(canvas.value)) {
+  useMutationObserver(document?.body, () => {
+    if (canvas.value && !document?.body.contains(canvas.value)) {
       viewer.value = undefined;
     }
   }, {
