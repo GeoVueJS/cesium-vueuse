@@ -17,12 +17,17 @@ export function moved(): PlotSkeleton {
     cursor: 'pointer',
     dragCursor: 'crosshair',
     format(packable) {
-      const _positions = packable.positions ?? [];
-      if (_positions.length < 2) {
+      const positions = packable.positions ?? [];
+      if (positions.length === 0) {
         return [];
       }
-      const center = Rectangle.center(Rectangle.fromCartesianArray(_positions));
-      return [toCartesian3(center)!];
+      else if (positions.length === 1) {
+        return [positions[0]];
+      }
+      else {
+        const center = Rectangle.center(Rectangle.fromCartesianArray(positions));
+        return [toCartesian3(center)!];
+      }
     },
     onDrag({ viewer, sample, packable, context, lockCamera, dragging }) {
       dragging && lockCamera();
@@ -43,7 +48,7 @@ export function moved(): PlotSkeleton {
     },
     render: ({ position, action }) => {
       const colors = {
-        [PlotAction.IDLE]: Color.WHITE.withAlpha(0.6),
+        [PlotAction.IDLE]: Color.WHITE,
         [PlotAction.HOVER]: Color.WHITE,
         [PlotAction.ACTIVE]: Color.AQUA.withAlpha(1.0),
       };
