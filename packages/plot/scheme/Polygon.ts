@@ -24,7 +24,6 @@ export const PLOT_POLYGON_SCHEME: PlotConstructorOptions = {
           polygon: {
             material: Color.YELLOW.withAlpha(0.5),
           },
-
         });
 
       const positions = [...packable.positions ?? []];
