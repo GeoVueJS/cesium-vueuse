@@ -1,3 +1,7 @@
+---
+sort: 1
+---
+
 # createViewer
 
 Initializes a Viewer or reuses an existing instance, which can be accessed by `useViewer` in the current component and its descendant components.

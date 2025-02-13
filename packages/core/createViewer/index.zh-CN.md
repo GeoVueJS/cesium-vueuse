@@ -1,3 +1,7 @@
+---
+sort: 1
+---
+
 # createViewer
 
 初始化一个Viewer或重用现有实例，在当前组件及其后代组件中可以通过`useViewer`访问。
