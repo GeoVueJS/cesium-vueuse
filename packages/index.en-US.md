@@ -5,20 +5,45 @@ layout: home
 
 hero:
   name: "Cesium VueUse"
-  text: "A VitePress Site"
-  tagline: My great project tagline
-
+  text: "Elegant Vue 3 Integration for Cesium"
+  tagline: High-performance Map Visualization with Composition API
   actions:
     - theme: brand
       text: Get Started
       link: /guide
+
     - theme: alt
+      text: Best Practices
+      link: /note
 
 features:
-  - title: Type Strong
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - icon:
+      src: /icon-ts.svg
+    title: Type Safe
+    details: Built with TypeScript for complete type inference and IDE hints
+
+  - icon:
+      src: /icon-rainbow.svg
+    title: Full API Coverage
+    details: Complete Cesium API wrapper with core feature support
+
+  - icon:
+      src: /icon-vueuse.svg
+    title: Reactive
+    details: Deep Vue 3 reactivity integration with ref and getter support
+
+  - icon:
+      src: /icon-smiling.svg
+    title: Auto Resource Cleanup
+    details: Smart lifecycle hooks to prevent memory leaks in Cesium resources
+
+  - icon:
+      src: /icon-tree.svg
+    title: Tree Shakable
+    details: Import only what you need, optimized bundle size
+
+  - icon:
+      src: /icon-plugin.svg
+    title: Extensible
+    details: Rich plugin system for custom feature extensions
 ---
