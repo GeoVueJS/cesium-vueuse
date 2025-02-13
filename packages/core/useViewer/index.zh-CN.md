@@ -1,3 +1,7 @@
+---
+sort: 2
+---
+
 # useViewer
 
 获取当前组件或其祖先组件通过`createViewer`注入的`Viewer`实例

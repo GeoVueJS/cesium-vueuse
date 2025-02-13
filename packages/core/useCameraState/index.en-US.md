@@ -1,11 +1,6 @@
----
-type: state
-title: useCameraState
----
-
 # useCameraState
 
-Responsively obtain the state of the `Camera` instance
+Reactive access to the `Camera` instance state
 
 ## Usage
 
@@ -15,3 +10,5 @@ Responsively obtain the state of the `Camera` instance
 ## Type Definitions
 
 :::dts ./index.ts
+
+:::
