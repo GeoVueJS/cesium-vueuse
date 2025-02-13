@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useEntity, useViewer } from '@cesium-vueuse/core';
+import { RadarScanMaterialProperty } from '@cesium-vueuse/special';
 import * as Cesium from 'cesium';
 import { watchEffect } from 'vue';
-import { RadarScanMaterialProperty } from './property';
 
 const position: [number, number] = [110, 25];
 
