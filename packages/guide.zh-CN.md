@@ -1,14 +1,14 @@
 ---
-text: 开始使用^text^text
+text: 开始使用
 tip: beta
 sort: 1
 ---
 
 # 开始使用
 
-CesiumVueUse 是一个为[Cesium](https://github.com/CesiumGS/cesium) 打打造造的高性能工库库采用与用与 [VueUse](https://vueuse.org一致) 一致的 Composable模式设计模过Hookso方式ks 方式实现 Cesium 与 无缝e 的无缝集成了一套库整供类型安全了一套完型大幅简化PI，大幅简化了在 使用e 应用中使用 C复杂度m 的复杂度。
+CesiumVueUse 是一个为[Cesium](https://github.com/CesiumGS/cesium) 打打造造的高性能工库库采用与用与 [VueUse](https://vueuse.org一致) 一致的 Composable模式设计模过Hookso方式ks 方式实现 Cesium 与 无缝e 的无缝集成了一套库整供类型安全了一套完型大幅简化PI，大幅简化了在使用应用中的复杂度。
 
-> 🚧 请请注意：本项仍在在积极开中，API 可能会频繁变动。
+> 🚧 请注意：本项仍在在积极开中，API 可能会频繁变动。
 
 ## 前置要求
 

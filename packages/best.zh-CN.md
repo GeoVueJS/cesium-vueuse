@@ -1,5 +1,5 @@
 ---
-text: 最佳实践^text
+text: 最佳实践
 tip: beta
 sort: 2
 ---

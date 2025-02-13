@@ -1,7 +1,7 @@
 ---
-text: Best Practices^text
+text: Best Practices
 tip: beta
-sort: 1
+sort: 2
 ---
 
 # Best Practices
