@@ -1,6 +1,6 @@
 {
   "name": "@cesium-vueuse/special",
-  "version": "1.0.1-beta.22",
+  "version": "1.0.1-beta.23",
   "buildInfo": {
     "name": "CesiumVueuseSpecial",
     "bundle": true
