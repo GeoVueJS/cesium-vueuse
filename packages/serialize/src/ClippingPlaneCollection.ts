@@ -2,7 +2,7 @@ import type { ClippingPlaneJSON } from './ClippingPlane';
 import type { ColorJSON } from './Color';
 
 import type { Matrix4JSON } from './Matrix4';
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { ClippingPlaneCollection } from 'cesium';
 import { ClippingPlaneSerialize } from './ClippingPlane';
 import { ColorSerialize } from './Color';
@@ -34,7 +34,7 @@ export class ClippingPlaneCollectionSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ClippingPlaneCollection): ClippingPlaneCollectionJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const planes = Array.of({ length: instance.length }).map((_, i) => instance.get(i));
       return {
         planes: planes.map(item => ClippingPlaneSerialize.toJSON(item)!),

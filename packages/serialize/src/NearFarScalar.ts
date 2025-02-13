@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { NearFarScalar } from 'cesium';
 
@@ -26,7 +26,7 @@ export class NearFarScalarSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: NearFarScalar): NearFarScalarJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         near: instance.near,
         nearValue: instance.nearValue,

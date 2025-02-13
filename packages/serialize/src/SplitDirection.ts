@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { SplitDirection } from 'cesium';
 
@@ -21,7 +21,7 @@ export class SplitDirectionSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: SplitDirection): SplitDirectionJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const keys = Object.keys(SplitDirection) as SplitDirectionJSON[];
       return keys.find(key => SplitDirection[key] === instance);
     }

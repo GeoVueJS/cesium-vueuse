@@ -6,7 +6,8 @@ import type { HeightReferenceJSON } from './HeightReference';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { RectangleJSON } from './Rectangle';
 import type { ShadowModeJSON } from './ShadowMode';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { RectangleGraphics } from 'cesium';
 import { ClassificationTypeSerialize } from './ClassificationType';
@@ -56,7 +57,7 @@ export class RectangleGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: RectangleGraphics, time?: JulianDate): RectangleGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         coordinates: RectangleSerialize.toJSON(toPropertyValue(instance.coordinates, time)),

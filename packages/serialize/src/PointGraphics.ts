@@ -4,7 +4,8 @@ import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { HeightReferenceJSON } from './HeightReference';
 import type { NearFarScalarJSON } from './NearFarScalar';
 import type { SplitDirectionJSON } from './SplitDirection';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { PointGraphics } from 'cesium';
 import { ColorSerialize } from './Color';
 import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
@@ -44,7 +45,7 @@ export class PointGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PointGraphics, time?: JulianDate): PointGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         pixelSize: toPropertyValue(instance.pixelSize, time),

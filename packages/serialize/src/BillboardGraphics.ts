@@ -9,7 +9,8 @@ import type { HorizontalOriginJSON } from './HorizontalOrigin';
 import type { NearFarScalarJSON } from './NearFarScalar';
 import type { SplitDirectionJSON } from './SplitDirection';
 import type { VerticalOriginJSON } from './VerticalOrigin';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { BillboardGraphics } from 'cesium';
 import { BoundingRectangleSerialize } from './BoundingRectangle';
 import { Cartesian2Serialize } from './Cartesian2';
@@ -19,8 +20,8 @@ import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
 import { HeightReferenceSerialize } from './HeightReference';
 import { HorizontalOriginSerialize } from './HorizontalOrigin';
 import { NearFarScalarSerialize } from './NearFarScalar';
-import { SplitDirectionSerialize } from './SplitDirection';
 
+import { SplitDirectionSerialize } from './SplitDirection';
 import { VerticalOriginSerialize } from './VerticalOrigin';
 
 export interface BillboardGraphicsJSON {
@@ -64,7 +65,7 @@ export class BillboardGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: BillboardGraphics, time?: JulianDate): BillboardGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         image: toPropertyValue(instance.image, time),

@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { CornerType } from 'cesium';
 
@@ -21,7 +21,7 @@ export class CornerTypeSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: CornerType): CornerTypeJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const keys = Object.keys(CornerType) as CornerTypeJSON[];
       return keys.find(key => CornerType[key] === instance);
     }

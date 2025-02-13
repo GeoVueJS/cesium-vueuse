@@ -1,16 +1,15 @@
-import type { Cartesian2 } from 'cesium';
-import type { ComputedRef, MaybeRefOrGetter } from 'vue';
+import type { Cartesian2, Viewer } from 'cesium';
+import type { MaybeRefOrGetter, ShallowRef } from 'vue';
 import { refThrottled } from '@vueuse/core';
-import { computed, toValue } from 'vue';
+import { computed, shallowRef, toRef, toValue, watchEffect } from 'vue';
 import { useViewer } from '../useViewer';
 
 export interface UseScenePickOptions {
   /**
-   * Whether to activate the pick function.
+   * Whether to active the event listener.
    * @default true
    */
-  isActive?: MaybeRefOrGetter<boolean | undefined>;
-
+  isActive?: MaybeRefOrGetter<boolean>;
   /**
    * Throttled sampling (ms)
    * @default 8
@@ -31,6 +30,8 @@ export interface UseScenePickOptions {
 
 }
 
+const pickCache = new WeakMap<Viewer, [Cartesian2, any]>();
+
 /**
  * Uses the `scene.pick` function in Cesium's Scene object to perform screen point picking,
  * return a computed property containing the pick result, or undefined if no object is picked.
@@ -40,20 +41,33 @@ export interface UseScenePickOptions {
 export function useScenePick(
   windowPosition: MaybeRefOrGetter<Cartesian2 | undefined>,
   options: UseScenePickOptions = {},
-): ComputedRef<any | undefined> {
-  const { width = 3, height = 3, throttled = 8, isActive = true } = options;
+): Readonly<ShallowRef<any | undefined>> {
+  const { width = 3, height = 3, throttled = 8 } = options;
+
+  const isActive = toRef(options.isActive ?? true);
+
   const viewer = useViewer();
-  const position = refThrottled(computed(() => toValue(windowPosition)), throttled, false, true);
 
-  const pick = computed(() => {
-    if (position.value && toValue(isActive)) {
-      return viewer.value?.scene.pick(
-        position.value,
-        toValue(width),
-        toValue(height),
-      );
+  const position = refThrottled(computed(() => toValue(windowPosition)?.clone()), throttled, false, true);
+
+  const pick = shallowRef<any | undefined>();
+  watchEffect(() => {
+    if (viewer.value && position.value && isActive.value) {
+      const cache = pickCache.get(viewer.value);
+      if (cache && cache[0].equals(position.value)) {
+        pick.value = cache[1];
+      }
+      else {
+        pickCache.set(viewer.value, [position.value.clone(), pick.value]);
+        pick.value = viewer.value?.scene.pick(
+          position.value,
+          toValue(width),
+          toValue(height),
+        );
+      }
     }
+  }, {
+    flush: 'post',
   });
-
   return pick;
 }

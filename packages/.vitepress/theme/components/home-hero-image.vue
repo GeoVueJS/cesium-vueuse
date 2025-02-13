@@ -17,7 +17,7 @@ const viewer = createViewer(elRef, {
   navigationHelpButton: false,
   sceneModePicker: false,
   baseLayerPicker: false,
-  creditContainer: document?.createElement('div'),
+  creditContainer: globalThis?.document?.createElement('div'),
   shouldAnimate: true,
   baseLayer: ImageryLayer.fromProviderAsync(IonImageryProvider.fromAssetId(3954), { nightAlpha: 0 }),
 });

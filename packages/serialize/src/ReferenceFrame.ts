@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { ReferenceFrame } from 'cesium';
 
@@ -21,7 +21,7 @@ export class ReferenceFrameSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ReferenceFrame): ReferenceFrameJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const keys = Object.keys(ReferenceFrame) as ReferenceFrameJSON[];
       return keys.find(key => ReferenceFrame[key] === instance);
     }

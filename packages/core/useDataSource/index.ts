@@ -1,10 +1,10 @@
-import type { MaybeRefOrAsyncGetter } from '@cesium-vueuse/shared';
 import type { Arrayable } from '@vueuse/core';
 import type { CustomDataSource, CzmlDataSource, DataSource, DataSourceCollection, GeoJsonDataSource, GpxDataSource, KmlDataSource } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
-import { toAwaitedValue } from '@cesium-vueuse/shared';
+import type { MaybeRefOrAsyncGetter } from '../toAwaitValue';
 import { computedAsync } from '@vueuse/core';
 import { toValue, watchEffect } from 'vue';
+import { toAwaitValue } from '../toAwaitValue';
 import { useViewer } from '../useViewer';
 
 export type CesiumDataSource = DataSource | CustomDataSource | CzmlDataSource | GeoJsonDataSource | GpxDataSource | KmlDataSource;
@@ -18,7 +18,7 @@ export interface UseDataSourceOptions {
 
   /**
    * default value of `isActive`
-   * @defalut true
+   * @default true
    */
   isActive?: MaybeRefOrGetter<boolean>;
 
@@ -68,7 +68,7 @@ export function useDataSource<T extends CesiumDataSource>(
   } = options;
 
   const result = computedAsync(
-    () => toAwaitedValue(dataSources),
+    () => toAwaitValue(dataSources),
     undefined,
     {
       evaluating,
@@ -85,7 +85,7 @@ export function useDataSource<T extends CesiumDataSource>(
       list.forEach(item => (item && _collection?.add(item)));
       onCleanup(() => {
         const destroy = toValue(destroyOnRemove);
-        list.forEach(item => item && _collection?.remove(item, destroy));
+        !_collection?.isDestroyed() && list.forEach(dataSource => dataSource && _collection?.remove(dataSource, destroy));
       });
     }
   });

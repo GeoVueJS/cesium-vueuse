@@ -1,6 +1,6 @@
 import type { TimeIntervalJSON } from './TimeInterval';
 
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { TimeIntervalCollection } from 'cesium';
 import { TimeIntervalSerialize } from './TimeInterval';
 
@@ -25,7 +25,7 @@ export class TimeIntervalCollectionSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: TimeIntervalCollection): TimeIntervalCollectionJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const intervals = Array.of({ length: instance.length }).map((_, i) => instance.get(i));
       return {
         intervals: intervals.map(item => TimeIntervalSerialize.toJSON(item)!),

@@ -57,14 +57,17 @@ export function useEntityScope(options: UseEntityScopeOptions = {}): UseEntitySc
     if (!collection.value) {
       throw new Error('collection is not defined');
     }
-    return collection.value.add(entity) as T;
+    if (!collection.value.contains(entity)) {
+      collection.value.add(entity);
+    }
+    return entity;
   };
 
   const removeFn = (entity: Entity) => {
     return !!collection.value?.remove(entity);
   };
 
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope(addFn, removeFn, []);
+  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<false>(addFn, removeFn, []);
   return {
     scope,
     add,

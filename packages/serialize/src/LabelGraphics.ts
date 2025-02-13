@@ -8,7 +8,8 @@ import type { HorizontalOriginJSON } from './HorizontalOrigin';
 import type { LabelStyleJSON } from './LabelStyle';
 import type { NearFarScalarJSON } from './NearFarScalar';
 import type { VerticalOriginJSON } from './VerticalOrigin';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { LabelGraphics } from 'cesium';
 import { Cartesian2Serialize } from './Cartesian2';
 import { Cartesian3Serialize } from './Cartesian3';
@@ -62,7 +63,7 @@ export class LabelGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: LabelGraphics, time?: JulianDate): LabelGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         text: toPropertyValue(instance.text, time),

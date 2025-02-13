@@ -1,5 +1,5 @@
 import type { JulianDate } from 'cesium';
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { PropertyBag } from 'cesium';
 
@@ -25,7 +25,7 @@ export class PropertyBagSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PropertyBag, time?: JulianDate): PropertyBagJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         propertyNames: instance.propertyNames,
         content: instance.propertyNames.reduce((key, content) => {

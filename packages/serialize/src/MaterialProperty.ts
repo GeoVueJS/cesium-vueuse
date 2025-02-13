@@ -1,6 +1,7 @@
 import type { JulianDate } from 'cesium';
 
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { CheckerboardMaterialProperty, ColorMaterialProperty, GridMaterialProperty, ImageMaterialProperty, MaterialProperty, PolylineArrowMaterialProperty, PolylineDashMaterialProperty, PolylineGlowMaterialProperty, PolylineOutlineMaterialProperty, StripeMaterialProperty } from 'cesium';
 import { Cartesian2Serialize } from './Cartesian2';
 import { ColorSerialize } from './Color';
@@ -59,7 +60,7 @@ export class MaterialPropertySerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: MaterialProperty): MaterialPropertyJSON | undefined {
-    if (!isHasValue(instance)) {
+    if (!notNullish(instance)) {
       return undefined;
     }
     const program = [...this._programs.values()].find(item => item.predicate(instance));
@@ -76,7 +77,7 @@ export class MaterialPropertySerialize {
    * @param json - A JSON containing instance data
    */
   static fromJSON(json?: MaterialPropertyJSON): MaterialProperty | undefined {
-    if (!isHasValue(json)) {
+    if (!notNullish(json)) {
       return undefined;
     }
     const program = [...this._programs.values()].find(item => item.programName === json.name);

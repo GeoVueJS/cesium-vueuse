@@ -5,7 +5,8 @@ import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { PlaneJSON } from './Plane';
 import type { ShadowModeJSON } from './ShadowMode';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { PlaneGraphics } from 'cesium';
 
 import { Cartesian2Serialize } from './Cartesian2';
@@ -46,7 +47,7 @@ export class PlaneGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PlaneGraphics, time?: JulianDate): PlaneGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         plane: PlaneSerialize.toJSON(toPropertyValue(instance.plane, time)),

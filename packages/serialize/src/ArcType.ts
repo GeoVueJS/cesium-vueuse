@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { ArcType } from 'cesium';
 
@@ -21,7 +21,7 @@ export class ArcTypeSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ArcType): ArcTypeJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const keys = Object.keys(ArcType) as ArcTypeJSON[];
       return keys.find(key => ArcType[key] === instance);
     }

@@ -72,7 +72,7 @@ export function useImageryLayerScope(options: UseImageryLayerScopeOptions = {}):
     return !!collection.value?.remove(imageryLayer, destroy);
   };
 
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope(addFn, removeFn, [destroyOnRemove]);
+  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<false>(addFn, removeFn, [destroyOnRemove]);
   return {
     scope,
     add,

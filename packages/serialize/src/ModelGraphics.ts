@@ -7,7 +7,8 @@ import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { HeightReferenceJSON } from './HeightReference';
 import type { PropertyBagJSON } from './PropertyBag';
 import type { ShadowModeJSON } from './ShadowMode';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { ModelGraphics } from 'cesium';
 import { Cartesian2Serialize } from './Cartesian2';
 import { ClippingPlaneCollectionSerialize } from './ClippingPlaneCollection';
@@ -62,7 +63,7 @@ export class ModelGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ModelGraphics, time?: JulianDate): ModelGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         uri: toPropertyValue(instance.uri, time),

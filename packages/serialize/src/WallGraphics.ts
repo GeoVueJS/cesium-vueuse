@@ -4,7 +4,8 @@ import type { ColorJSON } from './Color';
 import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { ShadowModeJSON } from './ShadowMode';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { WallGraphics } from 'cesium';
 import { Cartesian3Serialize } from './Cartesian3';
 import { ColorSerialize } from './Color';
@@ -45,7 +46,7 @@ export class WallGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: WallGraphics, time?: JulianDate): WallGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         positions: toPropertyValue(instance.positions, time)?.map((item: any) => Cartesian3Serialize.toJSON(item)),

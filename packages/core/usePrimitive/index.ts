@@ -1,13 +1,11 @@
-import type { MaybeRefOrAsyncGetter } from '@cesium-vueuse/shared';
 import type { Arrayable } from '@vueuse/core';
-import type { Cesium3DTileset, Primitive, PrimitiveCollection } from 'cesium';
+import type { Primitive, PrimitiveCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
-import { toAwaitedValue } from '@cesium-vueuse/shared';
+import type { MaybeRefOrAsyncGetter } from '../toAwaitValue';
 import { computedAsync } from '@vueuse/core';
 import { toValue, watchEffect } from 'vue';
+import { toAwaitValue } from '../toAwaitValue';
 import { useViewer } from '../useViewer';
-
-export type CesiumPrimitive = Primitive | PrimitiveCollection | Cesium3DTileset;
 
 export interface UsePrimitiveOptions {
   /**
@@ -19,7 +17,7 @@ export interface UsePrimitiveOptions {
 
   /**
    * default value of `isActive`
-   * @defalut true
+   * @default true
    */
   isActive?: MaybeRefOrGetter<boolean>;
 
@@ -34,7 +32,7 @@ export interface UsePrimitiveOptions {
  *
  * overLoaded1: Parameter supports passing in a single value.
  */
-export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
+export function usePrimitive<T = any>(
   primitive?: MaybeRefOrAsyncGetter<T | undefined>,
   options?: UsePrimitiveOptions
 ): ComputedRef<T | undefined>;
@@ -44,7 +42,7 @@ export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
  *
  * overLoaded2: Parameter supports passing in an array.
  */
-export function usePrimitive<T extends CesiumPrimitive = CesiumPrimitive>(
+export function usePrimitive<T = any>(
   primitives?: MaybeRefOrAsyncGetter<Array<T | undefined>>,
   options?: UsePrimitiveOptions
 ): ComputedRef<T[] | undefined>;
@@ -60,7 +58,7 @@ export function usePrimitive<T extends Primitive>(
   } = options;
 
   const result = computedAsync(
-    () => toAwaitedValue(data),
+    () => toAwaitValue(data),
     undefined,
     {
       evaluating,
@@ -77,7 +75,7 @@ export function usePrimitive<T extends Primitive>(
 
       list.forEach(item => (item && _collection?.add(item)));
       onCleanup(() => {
-        list.forEach(item => item && _collection?.remove(item));
+        !_collection?.isDestroyed() && list.forEach(item => item && _collection?.remove(item));
       });
     }
   });

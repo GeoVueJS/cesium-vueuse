@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { HorizontalOrigin } from 'cesium';
 
@@ -21,7 +21,7 @@ export class HorizontalOriginSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: HorizontalOrigin): HorizontalOriginJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const keys = Object.keys(HorizontalOrigin) as HorizontalOriginJSON[];
       return keys.find(key => HorizontalOrigin[key] === instance);
     }

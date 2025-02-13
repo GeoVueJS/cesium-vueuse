@@ -1,10 +1,10 @@
-import type { MaybeRefOrAsyncGetter } from '@cesium-vueuse/shared';
 import type { Arrayable } from '@vueuse/core';
 import type { Entity, EntityCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
-import { toAwaitedValue } from '@cesium-vueuse/shared';
+import type { MaybeRefOrAsyncGetter } from '../toAwaitValue';
 import { computedAsync } from '@vueuse/core';
 import { toValue, watchEffect } from 'vue';
+import { toAwaitValue } from '../toAwaitValue';
 import { useViewer } from '../useViewer';
 
 export interface UseEntityOptions {
@@ -16,7 +16,7 @@ export interface UseEntityOptions {
 
   /**
    * default value of `isActive`
-   * @defalut true
+   * @default true
    */
   isActive?: MaybeRefOrGetter<boolean>;
 
@@ -53,7 +53,7 @@ export function useEntity<T extends Entity>(
   const { collection, isActive = true, evaluating } = options;
 
   const result = computedAsync(
-    () => toAwaitedValue(data),
+    () => toAwaitValue(data),
     [],
     {
       evaluating,

@@ -17,8 +17,6 @@ useCesiumEventListener(() => viewer.value?.camera.moveEnd, () => {
 
 <template>
   <div
-    position="absolute left-0 bottom-0 right-0"
-    bg="[var(--vp-c-bg)]"
     flex="~ col gap-y-10px"
     p="10px"
   >

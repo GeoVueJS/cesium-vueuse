@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { Quaternion } from 'cesium';
 
@@ -26,7 +26,7 @@ export class QuaternionSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Quaternion): QuaternionJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         x: instance.x,
         y: instance.y,

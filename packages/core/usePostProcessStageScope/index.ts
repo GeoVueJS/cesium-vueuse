@@ -64,7 +64,7 @@ export function usePostProcessStageScope(options: UsePostProcessStageScopeOption
     return !!collection.value?.remove(postProcessStage);
   };
 
-  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope(addFn, removeFn, []);
+  const { scope, add, remove, removeWhere, removeScope } = useCollectionScope<false>(addFn, removeFn, []);
   return {
     scope,
     add,

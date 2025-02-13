@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { Color } from 'cesium';
 
@@ -26,7 +26,7 @@ export class ColorSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Color): ColorJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         red: instance.red,
         green: instance.green,

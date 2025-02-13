@@ -1,0 +1,14 @@
+{
+  "entryPointStrategy": "packages",
+  "entryPoints": ["packages/*"],
+  "packageOptions": {
+    "entryPoints": ["./index.ts"]
+  },
+  "interfacePropertiesFormat": "table",
+  "parametersFormat": "table",
+  "classPropertiesFormat": "table",
+  "enumMembersFormat": "table",
+  "typeDeclarationFormat": "table",
+  "propertyMembersFormat": "table"
+
+}

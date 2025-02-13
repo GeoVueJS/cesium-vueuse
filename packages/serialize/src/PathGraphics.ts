@@ -1,7 +1,8 @@
 import type { JulianDate } from 'cesium';
 import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { MaterialPropertyJSON } from './MaterialProperty';
-import { isHasValue, toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { PathGraphics } from 'cesium';
 import { DistanceDisplayConditionSerialize } from './DistanceDisplayCondition';
 
@@ -34,7 +35,7 @@ export class PathGraphicsSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: PathGraphics, time?: JulianDate): PathGraphicsJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return {
         show: toPropertyValue(instance.show, time),
         leadTime: toPropertyValue(instance.leadTime, time),

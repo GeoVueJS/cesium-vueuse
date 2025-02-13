@@ -3,7 +3,7 @@ import type { Cartesian3JSON } from './Cartesian3';
 import type { JulianDateJSON } from './JulianDate';
 import type { ReferenceFrameJSON } from './ReferenceFrame';
 
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { SampledPositionProperty } from 'cesium';
 import { Cartesian3Serialize } from './Cartesian3';
 import { JulianDateSerialize } from './JulianDate';
@@ -33,7 +33,7 @@ export class SampledPositionPropertySerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: SampledPositionProperty): SampledPositionPropertyJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       // SampledProperty
       const property = (instance as any)._property;
       const times: JulianDate[] = property._times;

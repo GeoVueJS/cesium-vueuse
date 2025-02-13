@@ -6,10 +6,6 @@ export function isDef<T = any>(val?: T): val is T {
   return typeof val !== 'undefined';
 }
 
-export function isHasValue<T = any>(val: T | null | undefined): val is T {
-  return typeof val !== 'undefined' && val !== null;
-}
-
 export function isBoolean(val: any): val is boolean {
   return typeof val === 'boolean';
 }
@@ -48,4 +44,10 @@ export function isBase64(val: string): boolean {
   // eslint-disable-next-line regexp/no-unused-capturing-group, regexp/no-super-linear-backtracking
   const reg = /^\s*data:([a-z]+\/[\d+.a-z-]+(;[a-z-]+=[\da-z-]+)?)?(;base64)?,([\s\w!$%&'()*+,./:;=?@~-]*?)\s*$/i;
   return reg.test(val);
+}
+
+export function assertError(condition: boolean, error: any) {
+  if (condition) {
+    throw new Error(error);
+  }
 }

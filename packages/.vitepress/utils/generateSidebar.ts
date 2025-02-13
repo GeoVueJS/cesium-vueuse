@@ -1,19 +1,17 @@
 import type { FilterPattern } from 'vite';
 import type { DefaultTheme } from 'vitepress';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import FastGlob from 'fast-glob';
+import matter from 'gray-matter';
 import { createFilter, normalizePath } from 'vite';
+import { VITEPRESS_PACKAGE_PATH } from '../path';
 
 export interface GenerateSidebarOptions {
   base: string;
   include?: FilterPattern;
   exclude?: FilterPattern;
   filter?: (path: string) => boolean;
-}
-
-export interface GenerateSidebarRetrun {
-
 }
 
 interface TreeItem {
@@ -23,8 +21,6 @@ interface TreeItem {
   link: string;
   parent?: string;
 }
-//  `/packages`
-const root = fileURLToPath(new URL('../../', import.meta.url));
 
 export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.SidebarItem[] {
   let base = options.base || '/';
@@ -33,7 +29,7 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
   }
 
   const data = FastGlob.sync(['**/*.md', '*.md'], {
-    cwd: root,
+    cwd: VITEPRESS_PACKAGE_PATH,
     ignore: ['**/node_modules/**', '**/dist/**', '.vitepress'],
   });
 
@@ -46,15 +42,18 @@ export function generateSidebar(options: GenerateSidebarOptions): DefaultTheme.S
 
   const flatList: TreeItem[] = [];
 
-  filePaths.forEach((filePath) => {
+  filePaths.forEach(async (filePath) => {
     const link = filePath
       .replace(/\.md$/, '')
       .replace(/(\.(\w|-)*)$/, '')
       .replace(/(\/?index)+$/, '');
-
+    const file = path.resolve(VITEPRESS_PACKAGE_PATH, filePath);
+    const m = matter(readFileSync(file).toString());
+    let text = link.split('/').pop();
+    m.data?.tip && (text += `<Badge type="tip" text="${m.data.tip}" />`);
     const item: TreeItem = {
-      file: path.resolve(root, filePath),
-      text: link.split('/').pop(),
+      file,
+      text,
       link,
       parent: link.includes('/') ? link.replace(/\/.+$/, '') : undefined,
       isRoot: !link.includes('/'),

@@ -1,5 +1,5 @@
 import type { JulianDate } from 'cesium';
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 import { ConstantPositionProperty } from 'cesium';
 import { Cartesian3Serialize } from './Cartesian3';
 
@@ -26,7 +26,7 @@ export class ConstantPositionPropertySerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: ConstantPositionProperty, time?: JulianDate): ConstantPositionPropertyJSON | undefined {
-    if (!isHasValue(instance)) {
+    if (!notNullish(instance)) {
       return;
     }
     return Cartesian3Serialize.toJSON(instance.getValue(time));

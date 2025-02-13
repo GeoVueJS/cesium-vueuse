@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { VerticalOrigin } from 'cesium';
 
@@ -21,7 +21,7 @@ export class VerticalOriginSerialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: VerticalOrigin): VerticalOriginJSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       const keys = Object.keys(VerticalOrigin) as VerticalOriginJSON[];
       return keys.find(key => VerticalOrigin[key] === instance);
     }

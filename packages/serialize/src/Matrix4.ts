@@ -1,4 +1,4 @@
-import { isHasValue } from '@cesium-vueuse/shared';
+import { notNullish } from '@vueuse/core';
 
 import { Matrix4 } from 'cesium';
 
@@ -21,7 +21,7 @@ export class Matrix4Serialize {
    * Convert an instance to a JSON
    */
   static toJSON(instance?: Matrix4): Matrix4JSON | undefined {
-    if (isHasValue(instance)) {
+    if (notNullish(instance)) {
       return Array.from(instance);
     }
   }

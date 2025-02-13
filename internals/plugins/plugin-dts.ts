@@ -10,7 +10,7 @@ import dts from 'vite-plugin-dts';
  */
 export function InternalPluginDts(root: string, output: string, bundle?: boolean) {
   return dts({
-    tsconfigPath: fileURLToPath(new URL('./tsconfig.build.json', import.meta.url)),
+    tsconfigPath: fileURLToPath(new URL('../../tsconfig.build.json', import.meta.url)),
     rollupTypes: bundle,
     strictOutput: true,
     staticImport: true,
