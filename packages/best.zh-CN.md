@@ -1,7 +1,7 @@
 ---
 text: 最佳实践^text
 tip: beta
-sort: 1
+sort: 2
 ---
 
 # Cesium VueUse 最佳实践
