@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { PLOT_LINE_STRING_SCHEME, usePlot } from '@cesium-vueuse/plot';
+import { PLOT_LABEL_SCHEME } from '../scheme/Label';
 import { PLOT_POLYGON_SCHEME } from '../scheme/Polygon';
 
 const { operate } = usePlot();
 
 const otpions = [
+  {
+    label: 'Lebel',
+    scheme: PLOT_LABEL_SCHEME,
+  },
   {
     label: 'LineString',
     scheme: PLOT_LINE_STRING_SCHEME,
