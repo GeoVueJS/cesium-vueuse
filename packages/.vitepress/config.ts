@@ -1,9 +1,24 @@
 import { fileURLToPath, URL } from 'node:url';
+import { getPackageInfoSync } from 'local-pkg';
 import { defineConfig } from 'vitepress';
 import { badgeTransform } from './plugins/badge';
 import { markdownDemoContainer } from './plugins/demoContainer';
 import { markdownDtsContainer } from './plugins/dtsContainer';
 import { generateSidebar } from './utils/generateSidebar';
+
+const CESIUM_VERSION = (getPackageInfoSync('cesium'))!.version;
+
+const importmap = `
+<script> window.CESIUM_BASE_URL="https://cdn.jsdelivr.net/npm/cesium@${CESIUM_VERSION}/Build/Cesium/";</script>
+<script type="importmap">${
+  JSON.stringify(
+    {
+      imports: {
+        cesium: `https://cdn.jsdelivr.net/npm/cesium@${CESIUM_VERSION}/+esm`,
+      },
+    },
+  )
+}</script>`;
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -11,7 +26,9 @@ export default defineConfig({
   vite: { configFile: fileURLToPath(new URL('vite.config.ts', import.meta.url)) },
   title: 'Cesium VueUse',
   description: 'A VitePress Site',
-  head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
+  head: [
+    ['link', { rel: 'icon', href: '/favicon.svg' }],
+  ],
   rewrites: {
     '(.*).en-US.md': '(.*).md',
     '(.*).zh-CN.md': 'zh/(.*).md',
@@ -29,6 +46,7 @@ export default defineConfig({
       label: 'English',
       lang: 'en-US',
       themeConfig: {
+
         nav: [
           { text: 'Home', link: '/' },
           { text: 'Guide', link: '/guide' },
@@ -77,5 +95,11 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/GeoVueJS/cesium-vueuse' },
     ],
+    logo: {
+      src: '/favicon.svg',
+    },
+  },
+  transformHtml(html) {
+    return html.replace('<head>', `<head>${importmap}`);
   },
 });
