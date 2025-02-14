@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { AsyncComponentLoader } from 'vue';
 import { refAutoReset, useClipboard, useFullscreen } from '@vueuse/core';
-import * as Cesium from 'cesium';
+
 import { defineAsyncComponent, ref, shallowRef } from 'vue';
 
 const props = withDefaults(defineProps<{
@@ -40,8 +40,6 @@ const props = withDefaults(defineProps<{
 }>(), {
   cesium: true,
 });
-
-Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxM2QxOTZmOC00NGEwLTRjOTMtODUzYi03ZmM3MmFhMDhmYjEiLCJpZCI6ODUxMDcsImlhdCI6MTcyNTI3NjU4NH0.ZmrKQrRWFRCQLRSUEuPvVa6kFYvJ_3othkPumVfvQmU';
 
 const containerRef = shallowRef<HTMLDivElement>();
 const { toggle } = useFullscreen(containerRef);
