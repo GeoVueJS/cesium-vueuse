@@ -30,4 +30,5 @@ watchEffect(() => {
 
 <template>
   <div ref="elRef" class="h-550px max-h-80vh w-100%" />
+  <slot />
 </template>
