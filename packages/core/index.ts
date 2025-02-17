@@ -1,4 +1,3 @@
-export * from './createElementOverlay';
 export * from './createViewer';
 export * from './toAwaitValue';
 export * from './useCameraState';
@@ -7,6 +6,7 @@ export * from './useCesiumFps';
 export * from './useCollectionScope';
 export * from './useDataSource';
 export * from './useDataSourceScope';
+export * from './useElementOverlay';
 export * from './useEntity';
 export * from './useEntityScope';
 export * from './useGraphicGesture';
