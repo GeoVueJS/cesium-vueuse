@@ -122,40 +122,40 @@ function openGithub() {
 </template>
 
 <style lang="scss">
-.demo-container {
-  .demo-view {
-    button {
-      padding: 3px 15px;
-      border: none;
-      outline: none;
-      color: #fff;
-      margin-right: 0.5em;
-      border-radius: 4px;
-      font-size: 14px;
-      box-sizing: border-box;
-      vertical-align: middle;
+  .preview-code-area {
+  z-index: 1;
+  position: relative;
+  transition: height 3s ease;
+  overflow: hidden;
+  height: 0;
 
-      &:nth-last-child {
-        margin-right: 0.5em;
-      }
-    }
+  &.preview-code-area--active {
+    border-top: 1px solid var(--vp-c-divider);
+    height: auto;
   }
 
-  .preview-code-area {
-    z-index: 1;
-    position: relative;
-    transition: height 3s ease;
-    overflow: hidden;
-    height: 0;
-
-    &.preview-code-area--active {
-      border-top: 1px solid var(--vp-c-divider);
-      height: auto;
+  :deep(div[class*='language-']) {
+    margin: 0px;
+    border-radius: 0;
+  }
+}
+.demo-view {
+  button {
+    padding: 3px 15px;
+    background-color: var(--vp-c-brand);
+    border: none;
+    outline: none;
+    color: #fff;
+    margin-right: 0.5em;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    vertical-align: middle;
+    &:hover {
+      background-color: var(--vp-c-brand-2);
     }
-
-    :deep(div[class*='language-']) {
-      margin: 0px;
-      border-radius: 0;
+    &:nth-last-child {
+      margin-right: 0.5em;
     }
   }
 }
