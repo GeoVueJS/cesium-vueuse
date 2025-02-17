@@ -4,156 +4,151 @@ tip: beta
 sort: 2
 ---
 
-# Best Practices
+# Cesium VueUse Best Practices
 
-## Use `shallowRef` and `shallowReactive` for Better Performance
+This document aims to help you better use Cesium VueUse, avoid common issues, and improve application performance.
 
-When working with Cesium instances in Vue applications, it's important to understand that each Cesium object maintains its own complex internal state and bindings. These instances contain numerous properties and handle complex `this` context interactions internally.
+## Performance Optimization Practices
 
-Using Vue's deep reactive APIs like `ref` or `reactive` to wrap Cesium instances can:
+### Using Shallow Reactive APIs
 
-- Interfere with Cesium's internal state management
-- Significantly degrade performance due to unnecessary deep reactivity tracking
-- Create potential conflicts between Vue's reactivity system and Cesium's internal updates
+When interacting with Cesium instances, it is recommended to use Vue's shallow reactive APIs (`shallowRef`, `shallowReactive`). The reasons are as follows:
 
-For optimal performance and stability, use `shallowRef`. If you need to track deep reactive changes, you can manually trigger updates using `triggerRef` after modifying internal values.
+1. Cesium instances contain a large amount of associated data and complex `this` context bindings
+2. Using deep reactive APIs may interfere with Cesium's internal data interaction mechanisms
+3. Deep monitoring of Cesium instances significantly reduces performance and has no practical significance
+
+It is recommended to use `shallowRef` to create reactive references. If deep reactive updates are indeed needed, you can manually trigger updates by calling `triggerRef` after modifying internal values.
+
+Example code:
 
 ```ts
-// ❌ Wrong - Using ref causes unnecessary deep reactivity
+// ❌ Not recommended: using deep reactivity
 const entity = ref(new Cesium.Entity());
 
 useEntity(entity);
 
 watch(position, (position) => {
-  entity.position = position; // Incorrect access and may cause performance issues
+  entity.position = position; // Error: not accessing with .value
 });
 ```
 
 ```ts
-// ✅ Recommended - Using shallowRef for better performance
+// ✅ Recommended: using shallow reactivity
 const entity = shallowRef(new Cesium.Entity());
 
 useEntity(entity);
 
 watch(position, (position) => {
-  entity.value.position = position;
-  triggerRef(entity); // Manually trigger updates when needed
+  entity.value.position = position; // Correct: accessing with .value
+  triggerRef(entity); // Manually trigger update
 });
 ```
 
-For more information, see:
+Related documentation:
 
-- [vue.js shallowRef Documentation](https://vuejs.org/api/reactivity-advanced.html#shallowref)
-- [vue.js Performance Optimization Guide](https://vuejs.org/guide/best-practices/performance.html#reduce-reactivity-overhead-for-large-immutable-structures)
+- [Vue.js - shallowRef](https://vuejs.org/api/reactivity-advanced.html#shallowref)
+- [Vue.js - Reduce Reactivity Overhead for Large Immutable Structures](https://vuejs.org/guide/best-practices/performance.html#reduce-reactivity-overhead-for-large-immutable-structures)
 
-## Handle Reactive Instances Properly in Setup Function
+## Lifecycle Best Practices
 
-In Vue's composition API, the `setup` function executes only once during component initialization. At this point, various hook functions and their associated resources might not be fully initialized. This is particularly important when working with Cesium entities and viewers.
+### Avoid Directly Accessing Reactive Instances at Setup Top Level
 
-To ensure proper initialization and reactivity, always access and modify reactive instances within Vue's lifecycle hooks such as `watch`, `watchEffect`, or `computed`.
+During the rendering process of a Vue component, the `setup` function is executed only once, and at this time, related hooks may not have completed initialization. Therefore, please access and operate reactive instances within Vue's lifecycle hooks (such as `watch`, `watchEffect`, `computed`).
 
 ```vue
-// ❌ Wrong - Direct access in setup might fail
+// ❌ Not recommended: accessing directly in setup
 <script setup>
 const entity = useEntity(new Cesium.Entity());
-entity.value.position = 'xxx'; // Unsafe: entity.value might be undefined
+entity.value.position = 'xxx'; // Error: entity.value might be undefined at this time
 </script>
 ```
 
 ```vue
-// ✅ Recommended - Safe access within lifecycle hooks
+// ✅ Recommended: accessing in lifecycle hooks
 <script setup>
 const entity = useEntity(new Cesium.Entity());
 
 watchEffect(() => {
-  if (entity.value) {
-    entity.value.position = 'xxx'; // Safe: checks for existence first
+  if (entity.value) { // Ensure instance is initialized
+    entity.value.position = 'xxx';
   }
 });
 </script>
 ```
 
-## Keep Hooks Outside of Global State Management
+## Architecture Design Best Practices
 
-This library's hooks are designed to work with component-scoped Cesium instances. A key architectural decision to understand is:
+### Avoid Using Hooks in Global State Management
 
-- `createViewer` creates component-scoped Cesium viewer instances
-- Vuex and Pinia operate at the global application level
-- The `viewer` instance is passed through component context
+Due to how Cesium VueUse works, it is not recommended to use this library's Hooks in global state management like Vuex/Pinia. The reasons are:
 
-Even though Pinia and Vuex support the Composition API, you cannot use `useViewer` or other hooks from this library within them because nearly all hooks internally depend on `useViewer` to access the component-scoped Cesium viewer.
+1. `createViewer` is component instance-based
+2. `viewer` instance transmission depends on the component tree
+3. Even if global state management supports Composition API, it cannot obtain the viewer instance through `useViewer`
+4. Most hook functions in this library depend on `useViewer`
 
-For global state management:
-
-1. Store only viewer-independent state in Pinia/Vuex
-2. Handle all Cesium-related operations within components
-3. Use the store as a data source, not for direct Cesium interactions
+Recommended approach: Store viewer-unrelated states in global state management, and handle data consumption and viewer interaction within components.
 
 ```ts
-// ❌ Wrong - Hooks won't work in store modules
+// ❌ Not recommended: using Hooks in store
 // /src/store/main.ts
 defineStore('main', () => {
   const entity = shallowRef(new Cesium.Entity({}));
-  useEntity(entity); // This will fail
+  useEntity(entity); // Error: cannot access viewer instance
 });
 ```
 
 ```ts
-// ✅ Recommended - Proper separation of concerns
+// ✅ Recommended: separation of concerns
 // /src/store/main.ts
 defineStore('main', () => {
   const entity = shallowRef(new Cesium.Entity({}));
-  return { entity }; // Only store the entity reference
+  return { entity };
 });
 
 // /src/components/entity.vue
-const mainStore = useMainSotre();
+const mainStore = useMainStore();
+
 const { viewer } = useViewer();
-useEntity(() => mainStore.entity); // Handle Cesium operations in component
+useEntity(() => mainStore.entity); // Handle viewer-related logic in component
 ```
 
-## Understanding Reactive Types and Values
+## Reactive Data Handling
 
-### MaybeRefOrGetter | toValue
+### MaybeRefOrGetter and toValue
 
-Vue and VueUse introduce flexible ways to handle reactive values. The `MaybeRefOrGetter` type represents a value that could be:
-
-- A direct value
-- A `ref` containing a value
-- A getter function returning a value
-
-The `toValue` utility unwraps these different forms consistently:
+Vue and VueUse extensively use the reactive variable parameter pattern. When the parameter type is `MaybeRefOrGetter`, the hook function internally uses `toValue` to get the actual value to ensure compliance with Vue's reactivity specifications.
 
 ```ts
 type MaybeRefOrGetter<T> = Ref<T> | (() => T) | T;
 
 function toValue<T>(value: MaybeRefOrGetter<T>): T;
 
-toValue(1); //       --> 1         // Direct value
-toValue(ref(1)); //  --> 1         // Ref value
-toValue(() => 1); // --> 1         // Getter function
+toValue(1); // -> 1
+toValue(ref(1)); // -> 1
+toValue(() => 1); // -> 1
 ```
 
-### MaybeRefOrAsyncGetter | toAwaitValue
+### MaybeRefOrAsyncGetter and toAwaitValue
 
-CesiumVueUse extends this pattern to handle async operations seamlessly. The `MaybeRefOrAsyncGetter` type and `toAwaitValue` utility enable working with:
+To better support asynchronous data processing, Cesium VueUse extends the concept of `MaybeRefOrGetter`:
 
-- Synchronous values
-- Async values
-- Refs containing either sync or async values
-- Getter functions returning promises
+1. Introduces the `MaybeRefOrAsyncGetter` type
+2. Implements the `toAwaitValue` method
+3. Supports working with VueUse's `computedAsync`
 
-This is particularly useful when working with Cesium's async operations like loading terrain or imagery:
+This makes handling asynchronous data in Vue's reactive system more convenient.
 
 ```ts
 export type MaybeAsyncGetter<T> = () => Promise<T> | T;
 export type MaybeRefOrAsyncGetter<T> = MaybeRef<T> | MaybeAsyncGetter<T>;
 function toAwaitValue<T>(value: MaybeRefOrAsyncGetter<T>): Promise<T>;
 
+// Usage examples
 toAwaitValue(1);
 toAwaitValue(ref(1));
-toAwaitValue(async () => fn()); // Handles async operations
+toAwaitValue(async () => await fetchData()); // -> Promise<T>
 
-// Use with computedAsync for reactive async values
-const value = componentAsync(() => toAwaitValue(any));
+const value = computedAsync(() => toAwaitValue(asyncData));
 ```
