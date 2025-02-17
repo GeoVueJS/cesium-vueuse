@@ -66,7 +66,7 @@ function openGithub() {
     of="hidden"
   >
     <client-only>
-      <div ref="containerRef" class="relative min-h-550px text-12px">
+      <div ref="containerRef" class="demo-view relative min-h-550px text-12px">
         <Suspense v-if="reset">
           <component :is="defineAsyncComponent(() => import('./cesium-container.vue'))" v-if="cesium">
             <component :is="demo" />
@@ -123,6 +123,24 @@ function openGithub() {
 
 <style lang="scss" scoped>
 .demo-container {
+  .demo-view {
+    button {
+      padding: 3px 15px;
+      border: none;
+      outline: none;
+      color: #fff;
+      margin-right: 0.5em;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+      vertical-align: middle;
+
+      &:nth-last-child {
+        margin-right: 0.5em;
+      }
+    }
+  }
+
   .preview-code-area {
     z-index: 1;
     position: relative;
