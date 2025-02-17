@@ -121,7 +121,7 @@ function openGithub() {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .demo-container {
   .demo-view {
     button {
@@ -153,7 +153,7 @@ function openGithub() {
       height: auto;
     }
 
-    :deep()div[class*='language-'] {
+    :deep(div[class*='language-']) {
       margin: 0px;
       border-radius: 0;
     }

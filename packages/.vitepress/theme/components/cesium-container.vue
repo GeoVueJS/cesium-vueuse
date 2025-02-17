@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { createViewer } from '@cesium-vueuse/core';
-import { ScreenSpaceEventType } from 'cesium';
+import { Ion, ScreenSpaceEventType } from 'cesium';
 import { shallowRef, watchEffect } from 'vue';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 defineOptions({ name: 'CesiumContainer' });
+
+Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxM2QxOTZmOC00NGEwLTRjOTMtODUzYi03ZmM3MmFhMDhmYjEiLCJpZCI6ODUxMDcsImlhdCI6MTcyNTI3NjU4NH0.ZmrKQrRWFRCQLRSUEuPvVa6kFYvJ_3othkPumVfvQmU';
 
 const elRef = shallowRef<HTMLElement>();
 const viewer = createViewer(elRef, {
