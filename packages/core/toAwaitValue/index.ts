@@ -4,7 +4,7 @@ import { toRaw, toValue } from 'vue';
 
 export type OnAsyncGetterCancel = (onCancel: () => void) => void;
 
-export type MaybeAsyncGetter<T> = () => Promise<T> | T;
+export type MaybeAsyncGetter<T> = () => (Promise<T> | T);
 export type MaybeRefOrAsyncGetter<T> = MaybeRef<T> | MaybeAsyncGetter<T>;
 
 export interface ToAwaitValueOptions {
@@ -16,7 +16,7 @@ export interface ToAwaitValueOptions {
 }
 
 /**
- * Similar to Vue's built-in `toValue`, but capable of handling asynchronous functions, thus returning a Promise.
+ * Similar to Vue's built-in `toValue`, but capable of handling asynchronous functions, thus returning a `await value`.
  *
  * Used in conjunction with VueUse's `computedAsync`.
  *
