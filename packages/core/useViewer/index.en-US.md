@@ -4,19 +4,47 @@ sort: 2
 
 # useViewer
 
-获取当前组件或其祖先组件通过`createViewer`注入的`Viewer`实例
+Retrieve the `Viewer` instance injected by `createViewer` in the current component or its ancestor components.
 
 ## Usage
 
+:::warning
+If `useViewer` and `createViewer` are used in the same component:
+
+- `useViewer` must be called after `createViewer`.
+- `useViewer` will prioritize using the `Viewer` instance created by `createViewer` in the current component.
+  :::
+
+#### Inject and Retrieve in the Same Component
+
 ```ts
+createViewer(/** options */);
+
+// Must be called after `createViewer`
 const viewer = useViewer();
 ```
 
-::: warning 注意
+#### Inject and Retrieve in Descendant Components
 
-- 如果在同一个组件中同时调用了`createViewer`，则`useViewer`将优先使用当前组件注入的`Viewer`实例
-- 在同一组件中调用`createViewer`和`useViewer`时，应在`useViewer`之前调用`createViewer`
-  :::
+```vue
+// parent.vue
+<script setup>
+const elRef = ref<HTMLElement>();
+const viewer = createViewer(elRef);
+</script>
+
+<template>
+  <div ref="elRef" />
+  <Child />
+</template>
+```
+
+```vue
+// child.vue
+<script setup>
+const viewer = useViewer();
+</script>
+```
 
 ## Type Definitions
 
