@@ -1,6 +1,6 @@
-# useEntity
+# useDataSource
 
-响应式加载`DataSource`，当数据变化时自动销毁或重载dataSource实例
+Used for reactive loading of Cesium `DataSource`. It automatically destroys or reloads the `DataSource` instance when the data changes.
 
 ## Usage
 
@@ -8,23 +8,23 @@
 :::
 
 ```ts
-// 加载基础实例
-const imageryLayer = useDataSource(imageryLayer);
+// Load a basic instance
+const dataSource = useDataSource(someDataSource);
 
-// 加载异步实例
-const imageryLayer = useDataSource(async () => await getDataSource());
+// Asynchronous loading
+const dataSource = useDataSource(async () => await getDataSource());
 
-// 加载数组
+// Load an array
 const dataSources = useDataSource([dataSource1, dataSource2]);
 
 const isLoading = ref(true);
 
-// 配置项
-const imageryLayer = useDataSource(imageryLayer, {
-  collection,
-  isActive,
-  evaluating: isLoading,
-  destroyOnRemove: true,
+// Use options
+const dataSource = useDataSource(someDataSource, {
+  collection: someCollection, // DataSource collection
+  isActive: true, // Whether to activate
+  evaluating: isLoading, // Loading status reference
+  destroyOnRemove: true, // Whether to destroy when the DataSource is removed
 });
 ```
 
