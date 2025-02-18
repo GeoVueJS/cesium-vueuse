@@ -1,5 +1,6 @@
 {
   "name": "vesium",
+  "type": "module",
   "version": "1.0.1-beta.25",
   "buildInfo": {
     "name": "Vesium",

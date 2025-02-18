@@ -1,11 +1,12 @@
 {
   "name": "@vesium/plot",
+  "type": "module",
   "version": "1.0.1-beta.25",
   "buildInfo": {
     "name": "VesiumPlot",
     "bundle": true
   },
-"description": "Vue component and composition-api library for Cesium.",
+  "description": "Vue component and composition-api library for Cesium.",
   "license": "MIT",
   "homepage": "https://github.com/GeoVueJS/vesium",
   "repository": {
