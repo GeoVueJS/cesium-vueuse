@@ -1,6 +1,6 @@
 # useEntity
 
-Reactively load a Cesium `Entity`. Automatically destroy or reload the entity instance when the data changes.
+Used for reactive loading of `Entity`. It automatically destroys or reloads the `Entity` instance when the data changes.
 
 ## Usage
 
@@ -8,22 +8,20 @@ Reactively load a Cesium `Entity`. Automatically destroy or reload the entity in
 :::
 
 ```ts
-import { useEntity } from '@cesium-vueuse/core';
-
-// Overload 1: Load a single entity instance
+// Overload 1: Load a single instance
 const entity = useEntity(entity);
 
-// Overload 2: Load an array of entity instances
+// Overload 2: Load an array of instances
 const entities = useEntity([entity1, entity2]);
 
-// Example with configuration options
 const isActive = ref(true);
 const isLoading = ref(true);
 
-const configuredEntity = useEntity(entity, {
-  collection, // Optional: specify the entity collection
-  isActive, // Optional: reactive boolean to control entity activity
-  evaluating: isLoading // Optional: reactive boolean for loading state
+// Options
+const entity = useEntity(entity, {
+  collection, // Entity collection
+  isActive, // Whether to activate
+  evaluating: isLoading // Loading status reference
 });
 ```
 
