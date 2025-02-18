@@ -130,12 +130,12 @@ toValue(ref(1)); // -> 1
 toValue(() => 1); // -> 1
 ```
 
-### MaybeRefOrAsyncGetter 与 toAwaitValue
+### MaybeRefOrAsyncGetter 与 toPromiseValue
 
 Cesium VueUse 为了更好地支持异步数据处理，扩展了 `MaybeRefOrGetter` 的概念：
 
 1. 引入 `MaybeRefOrAsyncGetter` 类型
-2. 实现 `toAwaitValue` 方法
+2. 实现 `toPromiseValue` 方法
 3. 支持与 VueUse 的 `computedAsync` 配合使用
 
 这使得在 Vue 响应式系统中处理异步数据变得更加便捷。
@@ -143,12 +143,12 @@ Cesium VueUse 为了更好地支持异步数据处理，扩展了 `MaybeRefOrGet
 ```ts
 export type MaybeAsyncGetter<T> = () => Promise<T> | T;
 export type MaybeRefOrAsyncGetter<T> = MaybeRef<T> | MaybeAsyncGetter<T>;
-function toAwaitValue<T>(value: MaybeRefOrAsyncGetter<T>): Promise<T>;
+function toPromiseValue<T>(value: MaybeRefOrAsyncGetter<T>): Promise<T>;
 
 // 使用示例
-toAwaitValue(1);
-toAwaitValue(ref(1));
-toAwaitValue(async () => await fetchData()); // -> Promise<T>
+toPromiseValue(1);
+toPromiseValue(ref(1));
+toPromiseValue(async () => await fetchData()); // -> Promise<T>
 
-const value = computedAsync(() => toAwaitValue(asyncData));
+const value = computedAsync(() => toPromiseValue(asyncData));
 ```

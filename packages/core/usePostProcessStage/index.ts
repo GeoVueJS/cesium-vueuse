@@ -1,10 +1,10 @@
 import type { Arrayable } from '@vueuse/core';
 import type { PostProcessStage, PostProcessStageCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
-import type { MaybeRefOrAsyncGetter } from '../toAwaitValue';
+import type { MaybeRefOrAsyncGetter } from '../toPromiseValue';
 import { computedAsync } from '@vueuse/core';
 import { toValue, watchEffect } from 'vue';
-import { toAwaitValue } from '../toAwaitValue';
+import { toPromiseValue } from '../toPromiseValue';
 import { useViewer } from '../useViewer';
 
 export interface UsePostProcessStageOptions {
@@ -57,7 +57,7 @@ export function usePostProcessStage<T extends PostProcessStage>(
   } = options;
 
   const result = computedAsync(
-    () => toAwaitValue(data),
+    () => toPromiseValue(data),
     undefined,
     {
       evaluating,

@@ -130,12 +130,12 @@ toValue(ref(1)); // -> 1
 toValue(() => 1); // -> 1
 ```
 
-### MaybeRefOrAsyncGetter and toAwaitValue
+### MaybeRefOrAsyncGetter and toPromiseValue
 
 To better support asynchronous data processing, Cesium VueUse extends the concept of `MaybeRefOrGetter`:
 
 1. Introduces the `MaybeRefOrAsyncGetter` type
-2. Implements the `toAwaitValue` method
+2. Implements the `toPromiseValue` method
 3. Supports working with VueUse's `computedAsync`
 
 This makes handling asynchronous data in Vue's reactive system more convenient.
@@ -143,12 +143,12 @@ This makes handling asynchronous data in Vue's reactive system more convenient.
 ```ts
 export type MaybeAsyncGetter<T> = () => Promise<T> | T;
 export type MaybeRefOrAsyncGetter<T> = MaybeRef<T> | MaybeAsyncGetter<T>;
-function toAwaitValue<T>(value: MaybeRefOrAsyncGetter<T>): Promise<T>;
+function toPromiseValue<T>(value: MaybeRefOrAsyncGetter<T>): Promise<T>;
 
 // Usage examples
-toAwaitValue(1);
-toAwaitValue(ref(1));
-toAwaitValue(async () => await fetchData()); // -> Promise<T>
+toPromiseValue(1);
+toPromiseValue(ref(1));
+toPromiseValue(async () => await fetchData()); // -> Promise<T>
 
-const value = computedAsync(() => toAwaitValue(asyncData));
+const value = computedAsync(() => toPromiseValue(asyncData));
 ```

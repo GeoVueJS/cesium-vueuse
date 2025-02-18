@@ -7,7 +7,7 @@ export type OnAsyncGetterCancel = (onCancel: () => void) => void;
 export type MaybeAsyncGetter<T> = () => (Promise<T> | T);
 export type MaybeRefOrAsyncGetter<T> = MaybeRef<T> | MaybeAsyncGetter<T>;
 
-export interface ToAwaitValueOptions {
+export interface ToPromiseValueOptions {
   /**
    * Determines whether the source should be unwrapped to its raw value.
    * @default true
@@ -27,12 +27,12 @@ export interface ToAwaitValueOptions {
  * ```ts
  *
  * const data = computedAsync(async ()=> {
- *  return await toAwaitValue(promiseRef)
+ *  return await toPromiseValue(promiseRef)
  * })
  *
  * ```
  */
-export async function toAwaitValue<T>(source: MaybeRefOrAsyncGetter<T>, options: ToAwaitValueOptions = {}): Promise<T> {
+export async function toPromiseValue<T>(source: MaybeRefOrAsyncGetter<T>, options: ToPromiseValueOptions = {}): Promise<T> {
   try {
     const { raw = true } = options;
     let value: T;

@@ -1,5 +1,5 @@
 export * from './createViewer';
-export * from './toAwaitValue';
+export * from './toPromiseValue';
 export * from './useCameraState';
 export * from './useCesiumEventListener';
 export * from './useCesiumFps';
