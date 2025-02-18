@@ -1,6 +1,6 @@
 # usePrimitive
 
-响应式加载`Primitive`，当数据变化时自动销毁或重载primitive实例
+用于响应式加载`Primitive`，当数据变化时自动销毁或重载primitive实例
 
 ## Usage
 
