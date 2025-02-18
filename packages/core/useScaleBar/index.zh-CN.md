@@ -1,6 +1,6 @@
 # useScaleBar
 
-响应式生成比例尺
+响应式生成Cesium比例尺数据
 
 ## Usage
 
