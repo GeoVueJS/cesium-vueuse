@@ -6,8 +6,11 @@ const { fps, interval } = useCesiumFps({ delay: 300 });
 
 <template>
   <div
-    flex="~ col gap-10px"
+    position="absolute top-0 right-0"
+    bg="[var(--vp-c-bg)]"
+    w="200px"
     p="10px"
+    flex="~ col"
   >
     <span>FPS:{{ fps }}</span>
     <span>Interval:{{ interval }}ms</span>
