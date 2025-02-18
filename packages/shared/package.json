@@ -5,10 +5,22 @@
     "name": "VesiumShared",
     "bundle": true
   },
-  "description": "",
+"description": "Vue component and composition-api library for Cesium.",
+  "license": "MIT",
+  "homepage": "https://github.com/GeoVueJS/vesium",
   "repository": {
     "url": "https://github.com/GeoVueJS/vesium"
   },
+  "bugs": {
+    "url": "https://github.com/GeoVueJS/vesium/issues"
+  },
+  "keywords": [
+    "vue",
+    "cesium",
+    "vueuse",
+    "hooks",
+    "composition-api"
+  ],
   "main": "index",
   "module": "index",
   "files": [
@@ -17,7 +29,9 @@
   "publishConfig": {
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
-    "types": "./dist/index.d.ts"
+    "types": "./dist/index.d.ts",
+    "unpkg": "./dist/index.iife.min.js",
+    "jsdelivr": "./dist/index.iife.min.js"
   },
   "dependencies": {
     "@vueuse/shared": "^12.7.0",

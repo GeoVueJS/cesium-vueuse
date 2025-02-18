@@ -5,6 +5,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "baseUrl": ".",
     "paths": {
+      "vesium": ["./packages/alias"],
       "@vesium/core": ["./packages/core"],
       "@vesium/shared": ["./packages/shared"]
     },

@@ -1,12 +1,24 @@
 {
   "name": "vesium-lib",
   "type": "module",
-  "version": "1.0.1-beta.25",
+  "version": "1.0.1-beta.23",
   "private": true,
-  "description": "Cesium hooks like VueUse api.",
+  "description": "Vue component and composition-api library for Cesium.",
+  "license": "MIT",
+  "homepage": "https://github.com/GeoVueJS/vesium",
   "repository": {
     "url": "https://github.com/GeoVueJS/vesium"
   },
+  "bugs": {
+    "url": "https://github.com/GeoVueJS/vesium/issues"
+  },
+  "keywords": [
+    "vue",
+    "cesium",
+    "vueuse",
+    "hooks",
+    "composition-api"
+  ],
   "scripts": {
     "docs:dev": "vitepress dev packages --host",
     "docs:build": "npm run build:types && vitepress build packages",
@@ -33,6 +45,7 @@
     "@vueuse/core": "^12.7.0",
     "cesium": "^1.126.0",
     "pinia": "^3.0.1",
+    "vesium": "workspace:*",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },

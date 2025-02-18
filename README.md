@@ -36,36 +36,14 @@
 
 ```bash
 # npm
-npm i cesium @vueuse/core @vesium/core
+npm i cesium @vueuse/core vesium
 
 # yarn
-yarn add cesium @vueuse/core @vesium/core
+yarn add cesium @vueuse/core vesium
 
 # pnpm
-pnpm add cesium @vueuse/core @vesium/core
+pnpm add cesium @vueuse/core vesium
 ```
-
-## Quick Start
-
-```vue
-<script setup>
-import { createViewer, useCameraState } from '@vesium/core';
-import { ref } from 'vue';
-
-// Create container ref
-const cesiumContainer = ref(null);
-
-// Create Cesium viewer instance
-const viewer = createViewer(cesiumContainer);
-
-// Use camera control hook
-const { position, heading, pitch, roll } = useCameraState(viewer);
-
-// Watch camera position changes
-watch(position, (newPosition) => {
-  console.log('Camera position updated:', newPosition);
-});
-</script>
 
 <template>
   <div ref="cesiumContainer" style="width: 100%; height: 100%" />

@@ -100,7 +100,7 @@ export async function build(options: BuildOptions, externalPackageMap: Record<st
             name: options.name,
             globals: getRollupGlobals,
             dir: outputDir('bundle'),
-            entryFileNames: `[name].js`,
+            entryFileNames: `[name].iife.js`,
           },
           {
             ...sharedOptions,
@@ -126,7 +126,7 @@ export async function build(options: BuildOptions, externalPackageMap: Record<st
             name: options.name,
             globals: getRollupGlobals,
             dir: outputDir('bundle'),
-            entryFileNames: `[name].min.js`,
+            entryFileNames: `[name].iife.min.js`,
             plugins: [minify({ sourceMap: true })],
           },
           {
