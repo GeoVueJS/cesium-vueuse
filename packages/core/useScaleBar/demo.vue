@@ -16,8 +16,9 @@ const { pixelDistance, width, distance, distanceText } = useScaleBar();
 
 <template>
   <div
-    position="absolute left-0 bottom-0 right-0"
+    position="absolute top-0 right-0"
     bg="[var(--vp-c-bg)]"
+    w="200px"
     p="10px"
     flex="~ col"
   >
