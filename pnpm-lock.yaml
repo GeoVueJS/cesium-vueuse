@@ -211,6 +211,15 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2(typescript@5.6.3)
 
+  packages/alias:
+    dependencies:
+      '@cesium-vueuse/core':
+        specifier: workspace:*
+        version: link:../core
+      '@cesium-vueuse/shared':
+        specifier: workspace:*
+        version: link:../shared
+
   packages/core:
     dependencies:
       '@cesium-vueuse/shared':
