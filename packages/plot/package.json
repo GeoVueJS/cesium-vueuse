@@ -1,6 +1,6 @@
 {
   "name": "@vesium/plot",
-  "version": "1.0.1-beta.24",
+  "version": "1.0.1-beta.25",
   "buildInfo": {
     "name": "VesiumPlot",
     "bundle": true
