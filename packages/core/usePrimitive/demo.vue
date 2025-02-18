@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usePrimitive } from '@cesium-vueuse/core';
+import { usePrimitive } from '@vesium/core';
 import * as Cesium from 'cesium';
 import { watchEffect } from 'vue';
 

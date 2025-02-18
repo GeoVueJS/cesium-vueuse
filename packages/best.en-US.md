@@ -4,9 +4,9 @@ tip: beta
 sort: 2
 ---
 
-# Cesium VueUse Best Practices
+# Vesium Best Practices
 
-This document aims to help you better use Cesium VueUse, avoid common issues, and improve application performance.
+This document aims to help you better use Vesium, avoid common issues, and improve application performance.
 
 ## Performance Optimization Practices
 
@@ -81,7 +81,7 @@ watchEffect(() => {
 
 ### Avoid Using Hooks in Global State Management
 
-Due to how Cesium VueUse works, it is not recommended to use this library's Hooks in global state management like Vuex/Pinia. The reasons are:
+Due to how Vesium works, it is not recommended to use this library's Hooks in global state management like Vuex/Pinia. The reasons are:
 
 1. `createViewer` is component instance-based
 2. `viewer` instance transmission depends on the component tree
@@ -132,7 +132,7 @@ toValue(() => 1); // -> 1
 
 ### MaybeRefOrAsyncGetter and toPromiseValue
 
-To better support asynchronous data processing, Cesium VueUse extends the concept of `MaybeRefOrGetter`:
+To better support asynchronous data processing, Vesium extends the concept of `MaybeRefOrGetter`:
 
 1. Introduces the `MaybeRefOrAsyncGetter` type
 2. Implements the `toPromiseValue` method

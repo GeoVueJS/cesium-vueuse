@@ -1,5 +1,5 @@
 import type { MaybeRefOrGetter, Ref } from 'vue';
-import { throttle } from '@cesium-vueuse/shared';
+import { throttle } from '@vesium/shared';
 import { useElementSize, watchImmediate } from '@vueuse/core';
 import { Cartesian2, EllipsoidGeodesic } from 'cesium';
 import { computed, nextTick, readonly, ref, toValue } from 'vue';

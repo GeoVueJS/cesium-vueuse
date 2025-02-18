@@ -1,9 +1,9 @@
-import type { Nullable } from '@cesium-vueuse/shared';
+import type { Nullable } from '@vesium/shared';
 import type { JulianDate } from 'cesium';
 import type { CSSProperties, ShallowRef } from 'vue';
 import type { Plot } from './Plot';
-import { useCesiumEventListener, useScreenSpaceEventHandler, useViewer } from '@cesium-vueuse/core';
-import { canvasCoordToCartesian, isFunction } from '@cesium-vueuse/shared';
+import { useCesiumEventListener, useScreenSpaceEventHandler, useViewer } from '@vesium/core';
+import { canvasCoordToCartesian, isFunction } from '@vesium/shared';
 import { promiseTimeout } from '@vueuse/core';
 import { ScreenSpaceEventType } from 'cesium';
 import { computed, ref, toValue, watch } from 'vue';

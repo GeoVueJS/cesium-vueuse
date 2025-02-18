@@ -21,6 +21,7 @@ const { x, y, elementOverlay } = useElementOverlay(
   }
 );
 ```
+
 ## Type Definitions
 
 :::dts ./index.ts

@@ -9,7 +9,7 @@ import type { HorizontalOriginJSON } from './HorizontalOrigin';
 import type { NearFarScalarJSON } from './NearFarScalar';
 import type { SplitDirectionJSON } from './SplitDirection';
 import type { VerticalOriginJSON } from './VerticalOrigin';
-import { toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { BillboardGraphics } from 'cesium';
 import { BoundingRectangleSerialize } from './BoundingRectangle';

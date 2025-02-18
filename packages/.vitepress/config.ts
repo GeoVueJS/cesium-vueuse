@@ -24,7 +24,7 @@ const importmap = `
 export default defineConfig({
   srcDir: './',
   vite: { configFile: fileURLToPath(new URL('vite.config.ts', import.meta.url)) },
-  title: 'Cesium VueUse',
+  title: 'Vesium',
   description: 'A VitePress Site',
   head: [
     ['link', { rel: 'icon', href: '/favicon.svg' }],
@@ -61,7 +61,7 @@ export default defineConfig({
         editLink: {
           text: 'Edit this page on GitHub',
           pattern: (payload) => {
-            return `https://github.com/GeoVueJS/cesium-vueuse/edit/main/packages/${payload.relativePath}`;
+            return `https://github.com/GeoVueJS/vesium/edit/main/packages/${payload.relativePath}`;
           },
         },
       },
@@ -85,7 +85,7 @@ export default defineConfig({
         editLink: {
           text: '在github中编辑此页',
           pattern: (payload) => {
-            return `https://github.com/GeoVueJS/cesium-vueuse/edit/main/packages/${payload.relativePath.replace('zh/', '')}`;
+            return `https://github.com/GeoVueJS/vesium/edit/main/packages/${payload.relativePath.replace('zh/', '')}`;
           },
         },
       },
@@ -93,7 +93,7 @@ export default defineConfig({
   },
   themeConfig: {
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/GeoVueJS/cesium-vueuse' },
+      { icon: 'github', link: 'https://github.com/GeoVueJS/vesium' },
     ],
     logo: {
       src: '/favicon.svg',

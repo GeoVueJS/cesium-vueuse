@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useElementOverlay, useEntity, useViewer } from '@cesium-vueuse/core';
+import { useElementOverlay, useEntity, useViewer } from '@vesium/core';
 import * as Cesium from 'cesium';
 import { shallowRef, watchEffect } from 'vue';
 

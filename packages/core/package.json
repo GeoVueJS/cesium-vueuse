@@ -1,13 +1,13 @@
 {
-  "name": "@cesium-vueuse/core",
+  "name": "@vesium/core",
   "version": "1.0.1-beta.23",
   "buildInfo": {
-    "name": "CesiumVueuseCore",
+    "name": "VesiumCore",
     "bundle": true
   },
   "description": "",
   "repository": {
-    "url": "https://github.com/GeoVueJS/cesium-vueuse"
+    "url": "https://github.com/GeoVueJS/vesium"
   },
   "main": "index",
   "module": "index",
@@ -20,7 +20,7 @@
     "types": "./dist/index.d.ts"
   },
   "dependencies": {
-    "@cesium-vueuse/shared": "workspace:*",
+    "@vesium/shared": "workspace:*",
     "@vueuse/core": "^12.7.0",
     "cesium": "^1.126.0",
     "vue": "^3.5.13"

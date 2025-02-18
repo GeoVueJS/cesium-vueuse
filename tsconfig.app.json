@@ -5,8 +5,8 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "baseUrl": ".",
     "paths": {
-      "@cesium-vueuse/core": ["./packages/core"],
-      "@cesium-vueuse/shared": ["./packages/shared"]
+      "@vesium/core": ["./packages/core"],
+      "@vesium/shared": ["./packages/shared"]
     },
     "types": [
       "vite/client"

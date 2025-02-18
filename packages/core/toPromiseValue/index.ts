@@ -1,5 +1,5 @@
 import type { MaybeRef } from 'vue';
-import { isFunction, isPromise } from '@cesium-vueuse/shared';
+import { isFunction, isPromise } from '@vesium/shared';
 import { toRaw, toValue } from 'vue';
 
 export type OnAsyncGetterCancel = (onCancel: () => void) => void;

@@ -1,4 +1,4 @@
-import type { CesiumDataSource } from '@cesium-vueuse/shared';
+import type { CesiumDataSource } from '@vesium/shared';
 import type { Arrayable } from '@vueuse/core';
 import type { DataSourceCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';

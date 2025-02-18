@@ -7,7 +7,7 @@ import type { HeightReferenceJSON } from './HeightReference';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { PolygonHierarchyJSON } from './PolygonHierarchy';
 import type { ShadowModeJSON } from './ShadowMode';
-import { toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { PolygonGraphics } from 'cesium';
 import { ArcTypeSerialize } from './ArcType';

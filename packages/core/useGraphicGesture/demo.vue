@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useEntity, useGraphicGesture, useViewer } from '@cesium-vueuse/core';
-import { canvasCoordToCartesian, toProperty } from '@cesium-vueuse/shared';
+import { useEntity, useGraphicGesture, useViewer } from '@vesium/core';
+import { canvasCoordToCartesian, toProperty } from '@vesium/shared';
 import * as Cesium from 'cesium';
 import { watchEffect } from 'vue';
 

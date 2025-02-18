@@ -1,6 +1,6 @@
 import type { KeyboardEventModifier, ScreenSpaceEventType } from 'cesium';
 import type { MaybeRefOrGetter, WatchStopHandle } from 'vue';
-import { isDef } from '@cesium-vueuse/shared';
+import { isDef } from '@vesium/shared';
 import { tryOnScopeDispose } from '@vueuse/core';
 import { ScreenSpaceEventHandler } from 'cesium';
 import { computed, toRef, toValue, watch, watchEffect } from 'vue';

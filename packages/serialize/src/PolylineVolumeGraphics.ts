@@ -6,7 +6,7 @@ import type { CornerTypeJSON } from './CornerType';
 import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { ShadowModeJSON } from './ShadowMode';
-import { toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { PolylineVolumeGraphics } from 'cesium';
 import { Cartesian2Serialize } from './Cartesian2';

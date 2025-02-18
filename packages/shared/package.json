@@ -1,13 +1,13 @@
 {
-  "name": "@cesium-vueuse/shared",
+  "name": "@vesium/shared",
   "version": "1.0.1-beta.23",
   "buildInfo": {
-    "name": "CesiumVueuseShared",
+    "name": "VesiumShared",
     "bundle": true
   },
   "description": "",
   "repository": {
-    "url": "https://github.com/GeoVueJS/cesium-vueuse"
+    "url": "https://github.com/GeoVueJS/vesium"
   },
   "main": "index",
   "module": "index",

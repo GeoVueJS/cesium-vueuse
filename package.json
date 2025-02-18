@@ -1,11 +1,11 @@
 {
-  "name": "cesium-vueuse",
+  "name": "vesium-lib",
   "type": "module",
   "version": "1.0.1-beta.23",
   "private": true,
   "description": "Cesium hooks like VueUse api.",
   "repository": {
-    "url": "https://github.com/GeoVueJS/cesium-vueuse"
+    "url": "https://github.com/GeoVueJS/vesium"
   },
   "scripts": {
     "docs:dev": "vitepress dev packages --host",
@@ -24,12 +24,12 @@
     "publish:ci": "pnpm publish -r --no-git-checks --access public"
   },
   "dependencies": {
-    "@cesium-vueuse/core": "workspace:*",
-    "@cesium-vueuse/plot": "workspace:*",
-    "@cesium-vueuse/shared": "workspace:*",
-    "@cesium-vueuse/special": "workspace:*",
     "@turf/turf": "^7.2.0",
     "@unocss/reset": "^65.5.0",
+    "@vesium/core": "workspace:*",
+    "@vesium/plot": "workspace:*",
+    "@vesium/shared": "workspace:*",
+    "@vesium/special": "workspace:*",
     "@vueuse/core": "^12.7.0",
     "cesium": "^1.126.0",
     "pinia": "^3.0.1",

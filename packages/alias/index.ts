@@ -1,2 +1,2 @@
-export * from '@cesium-vueuse/core';
-export * from '@cesium-vueuse/shared';
+export * from '@vesium/core';
+export * from '@vesium/shared';

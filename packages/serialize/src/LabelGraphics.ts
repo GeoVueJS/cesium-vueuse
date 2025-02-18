@@ -8,7 +8,7 @@ import type { HorizontalOriginJSON } from './HorizontalOrigin';
 import type { LabelStyleJSON } from './LabelStyle';
 import type { NearFarScalarJSON } from './NearFarScalar';
 import type { VerticalOriginJSON } from './VerticalOrigin';
-import { toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { LabelGraphics } from 'cesium';
 import { Cartesian2Serialize } from './Cartesian2';

@@ -1,8 +1,8 @@
-import type { CommonCoord } from '@cesium-vueuse/shared';
+import type { CommonCoord } from '@vesium/shared';
 import type { MaybeComputedElementRef } from '@vueuse/core';
 import type { Cartesian2 } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-import { cartesianToCanvasCoord, throttle, toCartesian3 } from '@cesium-vueuse/shared';
+import { cartesianToCanvasCoord, throttle, toCartesian3 } from '@vesium/shared';
 import { useElementBounding } from '@vueuse/core';
 import { computed, shallowRef, toValue, watchEffect } from 'vue';
 import { useCesiumEventListener } from '../useCesiumEventListener';

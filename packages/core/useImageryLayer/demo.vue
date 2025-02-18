@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useImageryLayer, useViewer } from '@cesium-vueuse/core';
+import { useImageryLayer, useViewer } from '@vesium/core';
 import * as Cesium from 'cesium';
 import { ref, watchPostEffect } from 'vue';
 

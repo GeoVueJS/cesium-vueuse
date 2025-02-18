@@ -1,10 +1,10 @@
-import type { Nullable } from '@cesium-vueuse/shared';
+import type { Nullable } from '@vesium/shared';
 import type { Arrayable } from '@vueuse/core';
 import type { CSSProperties, MaybeRef, MaybeRefOrGetter, WatchStopHandle } from 'vue';
 import type { GraphicDragParams } from './useDrag';
 import type { GraphicHoverParams } from './useHover';
 import type { GraphicTapParams } from './useTap';
-import { isFunction, pickHitGraphic } from '@cesium-vueuse/shared';
+import { isFunction, pickHitGraphic } from '@vesium/shared';
 import { computed, ref, shallowRef, toValue, watch } from 'vue';
 import { useViewer } from '../useViewer';
 import { useDrag } from './useDrag';

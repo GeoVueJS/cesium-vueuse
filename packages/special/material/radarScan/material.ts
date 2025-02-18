@@ -1,4 +1,4 @@
-import { addMaterialCache } from '@cesium-vueuse/shared';
+import { addMaterialCache } from '@vesium/shared';
 import { Color } from 'cesium';
 import { RadarScanMaterialSource } from './source';
 

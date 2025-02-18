@@ -1,5 +1,5 @@
 import type { ShallowReactive } from 'vue';
-import { isPromise } from '@cesium-vueuse/shared';
+import { isPromise } from '@vesium/shared';
 import { tryOnScopeDispose } from '@vueuse/core';
 import { shallowReactive, shallowReadonly } from 'vue';
 

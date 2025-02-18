@@ -1,10 +1,10 @@
-import type { Nullable } from '@cesium-vueuse/shared';
+import type { Nullable } from '@vesium/shared';
 import type { MaybeRef } from '@vueuse/core';
 import type { Cartesian3, Entity } from 'cesium';
 import type { CSSProperties } from 'vue';
 import type { PlotSkeleton } from './PlotSkeleton';
 import type { SampledPlotPackable } from './SampledPlotProperty';
-import { assertError, isFunction } from '@cesium-vueuse/shared';
+import { assertError, isFunction } from '@vesium/shared';
 import { assert } from '@vueuse/core';
 
 export interface PlotRenderResult {

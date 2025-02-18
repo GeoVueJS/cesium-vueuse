@@ -1,4 +1,4 @@
-import { addMaterialCache, getMaterialCache } from '@cesium-vueuse/shared';
+import { addMaterialCache, getMaterialCache } from '@vesium/shared';
 import { buildModuleUrl, Color, Material } from 'cesium';
 
 export interface WaterRippleMaterialUniforms {

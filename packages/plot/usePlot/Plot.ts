@@ -2,7 +2,7 @@ import type { Entity, JulianDate } from 'cesium';
 import type { PlotSchemeConstructorOptions } from './PlotScheme';
 import type { PlotSkeletonEntity } from './PlotSkeletonEntity';
 import type { SampledPlotPropertyConstructorOptions } from './SampledPlotProperty';
-import { assertError, createCesiumAttribute, createCesiumProperty } from '@cesium-vueuse/shared';
+import { assertError, createCesiumAttribute, createCesiumProperty } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { createGuid, Event } from 'cesium';
 import { PlotScheme } from './PlotScheme';
