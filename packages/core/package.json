@@ -1,6 +1,6 @@
 {
   "name": "@cesium-vueuse/core",
-  "version": "1.0.1-beta.23",
+  "version": "1.0.1-beta.24",
   "buildInfo": {
     "name": "CesiumVueuseCore",
     "bundle": true

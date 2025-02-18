@@ -1,6 +1,6 @@
 {
   "name": "@cesium-vueuse/serialize",
-  "version": "1.0.1-beta.23",
+  "version": "1.0.1-beta.24",
   "buildInfo": {
     "name": "CesiumVueuseSerialize",
     "bundle": true
