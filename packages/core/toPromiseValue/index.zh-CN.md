@@ -5,7 +5,7 @@
 ## Usage
 
 ```ts
-import { toPromiseValue } from '@cesium-vueuse/core';
+import { toPromiseValue } from '@vesium/core';
 import { computedAsync, ref } from '@vueuse/core';
 
 // 处理 Promise 实例

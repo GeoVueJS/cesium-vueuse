@@ -5,7 +5,7 @@ import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { HeightReferenceJSON } from './HeightReference';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { ShadowModeJSON } from './ShadowMode';
-import { toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { EllipseGraphics } from 'cesium';
 import { ClassificationTypeSerialize } from './ClassificationType';

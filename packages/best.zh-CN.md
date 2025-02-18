@@ -4,9 +4,9 @@ tip: beta
 sort: 2
 ---
 
-# Cesium VueUse 最佳实践
+# Vesium 最佳实践
 
-本文档旨在帮助您更好地使用 Cesium VueUse，避免常见问题，提升应用性能。
+本文档旨在帮助您更好地使用 Vesium，避免常见问题，提升应用性能。
 
 ## 性能优化实践
 
@@ -81,7 +81,7 @@ watchEffect(() => {
 
 ### 避免在全局状态管理中使用 Hooks
 
-由于 Cesium VueUse 的工作原理，不建议在 Vuex/Pinia 等全局状态管理中使用本库的 Hooks。原因如下：
+由于 Vesium 的工作原理，不建议在 Vuex/Pinia 等全局状态管理中使用本库的 Hooks。原因如下：
 
 1. `createViewer` 是基于组件实例的
 2. `viewer` 实例的传递依赖于组件树
@@ -132,7 +132,7 @@ toValue(() => 1); // -> 1
 
 ### MaybeRefOrAsyncGetter 与 toPromiseValue
 
-Cesium VueUse 为了更好地支持异步数据处理，扩展了 `MaybeRefOrGetter` 的概念：
+Vesium 为了更好地支持异步数据处理，扩展了 `MaybeRefOrGetter` 的概念：
 
 1. 引入 `MaybeRefOrAsyncGetter` 类型
 2. 实现 `toPromiseValue` 方法

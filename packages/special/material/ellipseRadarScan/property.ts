@@ -1,8 +1,8 @@
-import type { CesiumMaterialProperty, MaybeProperty } from '@cesium-vueuse/shared';
+import type { CesiumMaterialProperty, MaybeProperty } from '@vesium/shared';
 import type { Color, JulianDate } from 'cesium';
 import type { EllipseRadarScanMaterialUniforms } from './material';
 
-import { cesiumEquals, createPropertyField, isCesiumConstant, toPropertyValue } from '@cesium-vueuse/shared';
+import { cesiumEquals, createPropertyField, isCesiumConstant, toPropertyValue } from '@vesium/shared';
 import { Event } from 'cesium';
 import { EllipseRadarScanMaterialDefaultUniforms, EllipseRadarScanMaterialType } from './material';
 

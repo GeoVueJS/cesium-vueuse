@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useCesiumEventListener, useViewer } from '@cesium-vueuse/core';
+import { useCesiumEventListener, useViewer } from '@vesium/core';
 import { ref } from 'vue';
 
 const viewer = useViewer();

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useScreenSpaceEventHandler } from '@cesium-vueuse/core';
+import { useScreenSpaceEventHandler } from '@vesium/core';
 import * as Cesium from 'cesium';
 import { ref } from 'vue';
 

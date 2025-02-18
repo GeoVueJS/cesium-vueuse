@@ -1,8 +1,8 @@
 import type { Cartesian3, Entity, JulianDate } from 'cesium';
 import type { ComputedRef, ShallowRef } from 'vue';
 import type { Plot } from './Plot';
-import { useCesiumEventListener, useDataSource, useEntityScope, usePrimitive, usePrimitiveScope, useScreenSpaceEventHandler, useViewer } from '@cesium-vueuse/core';
-import { arrayDifference, canvasCoordToCartesian, throttle } from '@cesium-vueuse/shared';
+import { useCesiumEventListener, useDataSource, useEntityScope, usePrimitive, usePrimitiveScope, useScreenSpaceEventHandler, useViewer } from '@vesium/core';
+import { arrayDifference, canvasCoordToCartesian, throttle } from '@vesium/shared';
 import { watchArray } from '@vueuse/core';
 import { CustomDataSource, PrimitiveCollection, ScreenSpaceEventType } from 'cesium';
 import { computed, shallowRef, watch } from 'vue';

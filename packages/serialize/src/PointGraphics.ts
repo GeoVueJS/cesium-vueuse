@@ -4,7 +4,7 @@ import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { HeightReferenceJSON } from './HeightReference';
 import type { NearFarScalarJSON } from './NearFarScalar';
 import type { SplitDirectionJSON } from './SplitDirection';
-import { toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { PointGraphics } from 'cesium';
 import { ColorSerialize } from './Color';

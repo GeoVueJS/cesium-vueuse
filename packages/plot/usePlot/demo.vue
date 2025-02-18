@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PLOT_LABEL_SCHEME, PLOT_LINE_STRING_SCHEME, PLOT_POLYGON_SCHEME, usePlot } from '@cesium-vueuse/plot';
+import { PLOT_LABEL_SCHEME, PLOT_LINE_STRING_SCHEME, PLOT_POLYGON_SCHEME, usePlot } from '@vesium/plot';
 
 const { operate } = usePlot();
 

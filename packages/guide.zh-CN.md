@@ -5,7 +5,7 @@ sort: 1
 
 # 开始使用
 
-CesiumVueUse 是一个为 [Cesium](https://github.com/CesiumGS/cesium) 打造的高性能库，采用与 [VueUse](https://vueuse.org) 一致的 Composable 模式设计，通过 Hooks 方式实现 Cesium 的无缝集成，提供类型安全的 API，大幅简化了在 Vue 应用中使用 Cesium 的复杂度。
+Vesium 是一个为 [Cesium](https://github.com/CesiumGS/cesium) 打造的高性能库，采用与 [VueUse](https://vueuse.org) 一致的 Composable 模式设计，通过 Hooks 方式实现 Cesium 的无缝集成，提供类型安全的 API，大幅简化了在 Vue 应用中使用 Cesium 的复杂度。
 
 > 🚧 **请注意**：本项目仍在积极开发中，API 可能会频繁变动。
 
@@ -23,18 +23,18 @@ CesiumVueUse 是一个为 [Cesium](https://github.com/CesiumGS/cesium) 打造的
 
 ```bash
 # NPM
-npm install cesium @vueuse/core @cesium-vueuse/core
+npm install cesium @vueuse/core @vesium/core
 
 # Yarn
-yarn add cesium @vueuse/core @cesium-vueuse/core
+yarn add cesium @vueuse/core @vesium/core
 
 # pnpm
-pnpm add cesium @vueuse/core @cesium-vueuse/core
+pnpm add cesium @vueuse/core @vesium/core
 ```
 
 ### 使用 CDN 引入
 
-您也可以通过 CDN 方式使用 CesiumVueUse：
+您也可以通过 CDN 方式使用 Vesium：
 
 ```html
 <!-- 加载 Cesium 核心库 -->
@@ -44,20 +44,20 @@ pnpm add cesium @vueuse/core @cesium-vueuse/core
 <script src="https://unpkg.com/@vueuse/shared"></script>
 <script src="https://unpkg.com/@vueuse/core"></script>
 
-<!-- 加载 CesiumVueUse 库 -->
-<script src="https://unpkg.com/@cesium-vueuse/shared"></script>
-<script src="https://unpkg.com/@cesium-vueuse/core"></script>
+<!-- 加载 Vesium 库 -->
+<script src="https://unpkg.com/@vesium/shared"></script>
+<script src="https://unpkg.com/@vesium/core"></script>
 ```
 
-通过 CDN 引入后，所有功能将通过 `window.CesiumVueUse` 全局对象进行暴露。
+通过 CDN 引入后，所有功能将通过 `window.Vesium` 全局对象进行暴露。
 
 ## 基本使用
 
-以下是一个简单的示例，展示如何在 Vue 项目中使用 CesiumVueUse：
+以下是一个简单的示例，展示如何在 Vue 项目中使用 Vesium：
 
 ```vue
 <script setup>
-import { createViewer, useCameraState } from '@cesium-vueuse/core';
+import { createViewer, useCameraState } from '@vesium/core';
 import { ref, watch } from 'vue';
 
 // 创建容器引用
@@ -82,9 +82,9 @@ watch(position, (newPosition) => {
 
 ## 模块说明
 
-CesiumVueUse 包含以下主要模块：
+Vesium 包含以下主要模块：
 
-- **@cesium-vueuse/core**: 主要功能模块，提供基础的 Cesium 操作钩子
+- **@vesium/core**: 主要功能模块，提供基础的 Cesium 操作钩子
 
   - `createViewer`: 创建 Cesium 视图实例
   - `useCameraState`: 相机状态控制
@@ -92,17 +92,17 @@ CesiumVueUse 包含以下主要模块：
   - `useImageryLayer`: 影像图层控制
   - 更多功能请参考 API 文档
 
-- **@cesium-vueuse/plot**: 绘图工具模块
+- **@vesium/plot**: 绘图工具模块
 
   - 支持点、线、面等几何图形的绘制
   - 提供图形编辑和样式控制能力
 
-- **@cesium-vueuse/serialize**: 序列化工具模块
+- **@vesium/serialize**: 序列化工具模块
 
   - 支持场景状态的保存与恢复
   - 提供数据导入导出功能
 
-- **@cesium-vueuse/special**: 特效模块
+- **@vesium/special**: 特效模块
   - 提供材质特效
   - 后期处理效果
   - 自定义图元渲染

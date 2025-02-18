@@ -6,7 +6,7 @@ import type { HeightReferenceJSON } from './HeightReference';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { RectangleJSON } from './Rectangle';
 import type { ShadowModeJSON } from './ShadowMode';
-import { toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 
 import { RectangleGraphics } from 'cesium';

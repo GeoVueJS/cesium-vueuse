@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createViewer } from '@cesium-vueuse/core';
+import { createViewer } from '@vesium/core';
 import { shallowRef } from 'vue';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 

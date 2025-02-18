@@ -1,13 +1,12 @@
+import type { CesiumDataSource } from '@vesium/shared';
 import type { Arrayable } from '@vueuse/core';
-import type { CustomDataSource, CzmlDataSource, DataSource, DataSourceCollection, GeoJsonDataSource, GpxDataSource, KmlDataSource } from 'cesium';
+import type { DataSourceCollection } from 'cesium';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
 import type { MaybeRefOrAsyncGetter } from '../toPromiseValue';
 import { computedAsync } from '@vueuse/core';
 import { toValue, watchEffect } from 'vue';
 import { toPromiseValue } from '../toPromiseValue';
 import { useViewer } from '../useViewer';
-
-export type CesiumDataSource = DataSource | CustomDataSource | CzmlDataSource | GeoJsonDataSource | GpxDataSource | KmlDataSource;
 
 export interface UseDataSourceOptions {
   /**

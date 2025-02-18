@@ -4,7 +4,7 @@ import type { ColorJSON } from './Color';
 import type { DistanceDisplayConditionJSON } from './DistanceDisplayCondition';
 import type { MaterialPropertyJSON } from './MaterialProperty';
 import type { ShadowModeJSON } from './ShadowMode';
-import { toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { WallGraphics } from 'cesium';
 import { Cartesian3Serialize } from './Cartesian3';

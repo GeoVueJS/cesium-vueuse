@@ -4,7 +4,7 @@
 layout: home
 
 hero:
-  name: "Cesium VueUse"
+  name: "Vesium"
   text: "Elegant Vue 3 Integration for Cesium"
   tagline: High-performance Map Visualization with Composition API
   actions:

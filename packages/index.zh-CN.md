@@ -4,7 +4,7 @@
 layout: home
 
 hero:
-  name: "Cesium VueUse"
+  name: "Vesium"
   text: "Vue 3 与 Cesium 的优雅集成方案"
   tagline: 基于 Composition API 的高性能地图可视化解决方案
   actions:

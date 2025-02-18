@@ -4,7 +4,7 @@ sort: 1
 
 # Getting Started
 
-CesiumVueUse is a high-performance library designed for [Cesium](https://github.com/CesiumGS/cesium), adopting the Composable pattern consistent with [VueUse](https://vueuse.org). It integrates Cesium seamlessly using Hooks, providing type-safe APIs that significantly simplify the complexity of using Cesium in Vue applications.
+Vesium is a high-performance library designed for [Cesium](https://github.com/CesiumGS/cesium), adopting the Composable pattern consistent with [VueUse](https://vueuse.org). It integrates Cesium seamlessly using Hooks, providing type-safe APIs that significantly simplify the complexity of using Cesium in Vue applications.
 
 > 🚧 **Note**: This project is actively under development, and the API may change frequently.
 
@@ -22,18 +22,18 @@ Before you start, ensure you have the following:
 
 ```bash
 # NPM
-npm install cesium @vueuse/core @cesium-vueuse/core
+npm install cesium @vueuse/core @vesium/core
 
 # Yarn
-yarn add cesium @vueuse/core @cesium-vueuse/core
+yarn add cesium @vueuse/core @vesium/core
 
 # pnpm
-pnpm add cesium @vueuse/core @cesium-vueuse/core
+pnpm add cesium @vueuse/core @vesium/core
 ```
 
 ### Using CDN
 
-You can also use CesiumVueUse via CDN:
+You can also use Vesium via CDN:
 
 ```html
 <!-- Load Cesium core library -->
@@ -43,20 +43,20 @@ You can also use CesiumVueUse via CDN:
 <script src="https://unpkg.com/@vueuse/shared"></script>
 <script src="https://unpkg.com/@vueuse/core"></script>
 
-<!-- Load CesiumVueUse library -->
-<script src="https://unpkg.com/@cesium-vueuse/shared"></script>
-<script src="https://unpkg.com/@cesium-vueuse/core"></script>
+<!-- Load Vesium library -->
+<script src="https://unpkg.com/@vesium/shared"></script>
+<script src="https://unpkg.com/@vesium/core"></script>
 ```
 
-When using CDN, all functionalities are exposed through the global object `window.CesiumVueUse`.
+When using CDN, all functionalities are exposed through the global object `window.Vesium`.
 
 ## Basic Usage
 
-Below is a simple example demonstrating how to use CesiumVueUse in a Vue project:
+Below is a simple example demonstrating how to use Vesium in a Vue project:
 
 ```vue
 <script setup>
-import { createViewer, useCameraState } from '@cesium-vueuse/core';
+import { createViewer, useCameraState } from '@vesium/core';
 import { ref, watch } from 'vue';
 
 // Create container reference
@@ -81,9 +81,9 @@ watch(position, (newPosition) => {
 
 ## Module Overview
 
-CesiumVueUse includes the following main modules:
+Vesium includes the following main modules:
 
-- **@cesium-vueuse/core**: Main functionality module, providing basic Cesium operation hooks
+- **@vesium/core**: Main functionality module, providing basic Cesium operation hooks
 
   - `createViewer`: Creates a Cesium viewer instance
   - `useCameraState`: Camera state control
@@ -91,17 +91,17 @@ CesiumVueUse includes the following main modules:
   - `useImageryLayer`: Imagery layer control
   - For more features, refer to the API documentation
 
-- **@cesium-vueuse/plot**: Drawing tools module
+- **@vesium/plot**: Drawing tools module
 
   - Supports drawing geometric shapes such as points, lines, and polygons
   - Provides capabilities for editing and styling graphics
 
-- **@cesium-vueuse/serialize**: Serialization tools module
+- **@vesium/serialize**: Serialization tools module
 
   - Supports saving and restoring scene states
   - Provides data import/export functionality
 
-- **@cesium-vueuse/special**: Effects module
+- **@vesium/special**: Effects module
   - Provides material effects
   - Post-processing effects
   - Custom primitive rendering

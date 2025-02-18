@@ -22,7 +22,7 @@ import type { QuaternionJSON } from './Quaternion';
 import type { RectangleGraphicsJSON } from './RectangleGraphics';
 import type { TimeIntervalCollectionJSON } from './TimeIntervalCollection';
 import type { WallGraphicsJSON } from './WallGraphics';
-import { toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 import { Entity } from 'cesium';
 import { BillboardGraphicsSerialize } from './BillboardGraphics';

@@ -1,13 +1,13 @@
 {
-  "name": "@cesium-vueuse/special",
+  "name": "@vesium/special",
   "version": "1.0.1-beta.24",
   "buildInfo": {
-    "name": "CesiumVueuseSpecial",
+    "name": "VesiumSpecial",
     "bundle": true
   },
   "description": "",
   "repository": {
-    "url": "https://github.com/GeoVueJS/cesium-vueuse"
+    "url": "https://github.com/GeoVueJS/vesium"
   },
   "main": "index",
   "module": "index",

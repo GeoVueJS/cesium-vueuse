@@ -1,6 +1,6 @@
 import type { Cartesian2, ScreenSpaceEventHandler } from 'cesium';
 import type { WatchStopHandle } from 'vue';
-import { throttle } from '@cesium-vueuse/shared';
+import { throttle } from '@vesium/shared';
 import { tryOnScopeDispose } from '@vueuse/core';
 import { ScreenSpaceEventType } from 'cesium';
 import { nextTick, ref, shallowRef, watch } from 'vue';

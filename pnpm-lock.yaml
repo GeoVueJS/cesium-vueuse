@@ -8,24 +8,24 @@ importers:
 
   .:
     dependencies:
-      '@cesium-vueuse/core':
-        specifier: workspace:*
-        version: link:packages/core
-      '@cesium-vueuse/plot':
-        specifier: workspace:*
-        version: link:packages/plot
-      '@cesium-vueuse/shared':
-        specifier: workspace:*
-        version: link:packages/shared
-      '@cesium-vueuse/special':
-        specifier: workspace:*
-        version: link:packages/special
       '@turf/turf':
         specifier: ^7.2.0
         version: 7.2.0
       '@unocss/reset':
         specifier: ^65.5.0
         version: 65.5.0
+      '@vesium/core':
+        specifier: workspace:*
+        version: link:packages/core
+      '@vesium/plot':
+        specifier: workspace:*
+        version: link:packages/plot
+      '@vesium/shared':
+        specifier: workspace:*
+        version: link:packages/shared
+      '@vesium/special':
+        specifier: workspace:*
+        version: link:packages/special
       '@vueuse/core':
         specifier: ^12.7.0
         version: 12.7.0(typescript@5.6.3)
@@ -211,9 +211,18 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2(typescript@5.6.3)
 
+  packages/alias:
+    dependencies:
+      '@vesium/core':
+        specifier: workspace:*
+        version: link:../core
+      '@vesium/shared':
+        specifier: workspace:*
+        version: link:../shared
+
   packages/core:
     dependencies:
-      '@cesium-vueuse/shared':
+      '@vesium/shared':
         specifier: workspace:*
         version: link:../shared
       '@vueuse/core':
@@ -228,10 +237,10 @@ importers:
 
   packages/plot:
     dependencies:
-      '@cesium-vueuse/core':
+      '@vesium/core':
         specifier: workspace:*
         version: link:../core
-      '@cesium-vueuse/shared':
+      '@vesium/shared':
         specifier: workspace:*
         version: link:../shared
       '@vueuse/core':
@@ -246,7 +255,7 @@ importers:
 
   packages/serialize:
     dependencies:
-      '@cesium-vueuse/shared':
+      '@vesium/shared':
         specifier: workspace:*
         version: link:../shared
       '@vueuse/core':

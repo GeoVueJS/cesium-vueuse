@@ -1,8 +1,8 @@
 {
-  "name": "@vesium/plot",
-  "version": "1.0.1-beta.24",
+  "name": "vesium",
+  "version": "1.0.1-beta.23",
   "buildInfo": {
-    "name": "VesiumPlot",
+    "name": "Vesium",
     "bundle": true
   },
   "description": "",
@@ -21,9 +21,6 @@
   },
   "dependencies": {
     "@vesium/core": "workspace:*",
-    "@vesium/shared": "workspace:*",
-    "@vueuse/core": "^12.7.0",
-    "cesium": "^1.126.0",
-    "vue": "^3.5.13"
+    "@vesium/shared": "workspace:*"
   }
 }

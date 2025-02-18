@@ -1,5 +1,5 @@
 import type { PlotSkeleton } from '../usePlot/PlotSkeleton';
-import { canvasCoordToCartesian, toCartesian3 } from '@cesium-vueuse/shared';
+import { canvasCoordToCartesian, toCartesian3 } from '@vesium/shared';
 import { Cartesian3, Color, HorizontalOrigin, Rectangle, VerticalOrigin } from 'cesium';
 import { PlotAction } from '../usePlot/PlotSkeleton';
 

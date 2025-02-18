@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useEntity, useViewer } from '@cesium-vueuse/core';
-import { RadarScanMaterialProperty } from '@cesium-vueuse/special';
+import { useEntity, useViewer } from '@vesium/core';
+import { RadarScanMaterialProperty } from '@vesium/special';
 import * as Cesium from 'cesium';
 import { watchEffect } from 'vue';
 

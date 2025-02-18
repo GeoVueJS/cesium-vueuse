@@ -1,5 +1,5 @@
 import type { JulianDate, Resource } from 'cesium';
-import { toPropertyValue } from '@cesium-vueuse/shared';
+import { toPropertyValue } from '@vesium/shared';
 import { notNullish } from '@vueuse/core';
 
 import { Cesium3DTilesetGraphics } from 'cesium';

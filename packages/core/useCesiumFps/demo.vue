@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useCesiumFps } from '@cesium-vueuse/core';
+import { useCesiumFps } from '@vesium/core';
 
 const { fps, interval } = useCesiumFps({ delay: 300 });
 </script>

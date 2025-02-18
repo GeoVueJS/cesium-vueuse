@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useEntity, useViewer } from '@cesium-vueuse/core';
-import { toCartesian3 } from '@cesium-vueuse/shared';
-import { WaterRippleMaterialProperty } from '@cesium-vueuse/special';
+import { useEntity, useViewer } from '@vesium/core';
+import { toCartesian3 } from '@vesium/shared';
+import { WaterRippleMaterialProperty } from '@vesium/special';
 import * as Cesium from 'cesium';
 import { watchEffect } from 'vue';
 
