@@ -39,7 +39,7 @@ export type CommonCoord = Cartesian3 | Cartographic | CoordArray | CoordArray_AL
 /**
  * Common DataSource
  */
-export type CesiumDataSource = CustomDataSource | GeoJsonDataSource | CzmlDataSource | KmlDataSource | GpxDataSource | DataSource;
+export type CesiumDataSource = DataSource | CustomDataSource | CzmlDataSource | GeoJsonDataSource | GpxDataSource | KmlDataSource;
 
 // TODO   all primitive type in cesium
 export type CesiumPrimitive = Primitive | PrimitiveCollection | Cesium3DTileset | any;
