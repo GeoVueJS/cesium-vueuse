@@ -1,6 +1,6 @@
 # useImageryLayer
 
-响应式加载`ImageryLayer`，当数据变化时自动销毁或重载imageryLayer实例
+用于响应式加载`ImageryLayer`，当数据变化时自动销毁或重载imageryLayer实例
 
 ## Usage
 
